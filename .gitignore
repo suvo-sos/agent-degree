@@ -40,6 +40,9 @@ yarn-error.log*
 .testmuai/evidence/
 .testmuai/variables/
 
+# local kane run logs
+*.ndjson
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

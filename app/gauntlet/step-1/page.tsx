@@ -23,6 +23,7 @@ const BUTTON_OPTIONS = ["Cancel", "Delete", "Continue", "Submit"];
 
 export default function StepOne() {
   const router = useRouter();
+  const [step, setStep] = useState(0);
   const [value, setValue] = useState(0);
   const [buttonPressed, setButtonPressed] = useState<string | null>(null);
   const [math, setMath] = useState("");
@@ -31,10 +32,10 @@ export default function StepOne() {
   const sliderSolved = value >= TARGET_MIN && value <= TARGET_MAX;
   const buttonSolved = buttonPressed === "Continue";
   const mathSolved = math.trim() === MATH_ANSWER;
-  const solvedCount = [sliderSolved, buttonSolved, mathSolved].filter(
-    Boolean,
-  ).length;
+  const solved = [sliderSolved, buttonSolved, mathSolved];
+  const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 3;
+  const currentSolved = solved[step];
 
   function valueFromClientX(clientX: number) {
     const track = trackRef.current;
@@ -87,6 +88,10 @@ export default function StepOne() {
     setButtonPressed(label);
   }
 
+  function next() {
+    if (currentSolved && step < 2) setStep(step + 1);
+  }
+
   function saveProgress(patch: Record<string, boolean>) {
     try {
       const prev = JSON.parse(
@@ -118,20 +123,20 @@ export default function StepOne() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
       <div className="relative mx-auto w-full max-w-2xl">
         <div className="text-center">
-          <p className="text-xs font-semibold tracking-[0.3em] text-blue-400">
+          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
             STEP 1 OF 5 · THE GAUNTLET
           </p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
             Slide Into the Green
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-base text-zinc-400">
+          <p className="mx-auto mt-3 max-w-md font-mono text-base text-zinc-400">
             Three trials. Solve them all, or skip the step.
           </p>
-          <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+          <p className="mx-auto mt-2 max-w-md font-mono text-sm text-zinc-500">
             This exam is built for AI agents. Taking it is the whole point.
           </p>
           <div className="mx-auto mt-6 max-w-md">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between font-mono text-sm">
               <span className="text-zinc-400">Trials solved</span>
               <span className="font-medium text-white">
                 {solvedCount} of 3
@@ -141,167 +146,208 @@ export default function StepOne() {
           </div>
         </div>
 
-        <div className="mt-10 space-y-5">
-          {/* Trial 1 — slider */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <div>
-                <CardTitle>Trial 1 · The Slider</CardTitle>
-                <CardDescription>
-                  Set the slider inside the green zone.
-                </CardDescription>
-              </div>
-              {sliderSolved ? (
-                <Badge className="bg-green-600 text-white">Solved ✓</Badge>
-              ) : (
-                <Badge variant="secondary">Pending</Badge>
+        {!allSolved && (
+          <>
+            <div className="mt-10">
+              {step === 0 && (
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <div>
+                      <CardTitle className="font-grotesque">
+                        Trial 1 · The Slider
+                      </CardTitle>
+                      <CardDescription className="font-mono">
+                        Set the slider inside the green zone.
+                      </CardDescription>
+                    </div>
+                    {sliderSolved ? (
+                      <Badge className="bg-green-600 font-mono text-white">
+                        Solved ✓
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="font-mono">
+                        Pending
+                      </Badge>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <p
+                      className={`text-center font-mono text-5xl font-bold tabular-nums ${
+                        inZone ? "text-green-400" : "text-white"
+                      }`}
+                    >
+                      {value}
+                    </p>
+                    <p className="mt-1 text-center font-mono text-sm text-zinc-500">
+                      drag it into the green
+                    </p>
+                    <div className="relative mt-8 px-6">
+                      <div
+                        ref={trackRef}
+                        onPointerDown={onTrackPointerDown}
+                        className="relative h-5 w-full cursor-pointer rounded-full bg-zinc-800"
+                      >
+                        <div
+                          className="absolute top-0 h-full rounded-full bg-green-500"
+                          style={{
+                            left: `${TARGET_MIN}%`,
+                            width: `${TARGET_MAX - TARGET_MIN}%`,
+                          }}
+                        />
+                        <div
+                          role="slider"
+                          aria-label="Slider handle"
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={value}
+                          tabIndex={0}
+                          onPointerDown={onHandlePointerDown}
+                          onKeyDown={onHandleKeyDown}
+                          className="absolute top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-4 border-white bg-blue-600 shadow-xl shadow-blue-600/30 active:cursor-grabbing"
+                          style={{ left: `${value}%` }}
+                        />
+                      </div>
+                      <div className="mt-5 flex items-center justify-between font-mono text-xs text-zinc-500">
+                        <span>0</span>
+                        <span>← drag →</span>
+                        <span>100</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               )}
-            </CardHeader>
-            <CardContent>
-              <p
-                className={`text-center text-5xl font-bold tabular-nums ${
-                  inZone ? "text-green-400" : "text-white"
-                }`}
+
+              {step === 1 && (
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <div>
+                      <CardTitle className="font-grotesque">
+                        Trial 2 · Press the Right Button
+                      </CardTitle>
+                      <CardDescription className="font-mono">
+                        Four buttons. Only one is the right one.
+                      </CardDescription>
+                    </div>
+                    {buttonSolved ? (
+                      <Badge className="bg-green-600 font-mono text-white">
+                        Solved ✓
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="font-mono">
+                        Pending
+                      </Badge>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center font-mono text-lg font-medium">
+                      Press the button that says{" "}
+                      <span className="text-blue-400">Continue</span>.
+                    </p>
+                    <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                      {BUTTON_OPTIONS.map((label) => (
+                        <Button
+                          key={label}
+                          variant={
+                            buttonPressed === label ? "default" : "outline"
+                          }
+                          onClick={() => pressButton(label)}
+                          className="font-mono"
+                        >
+                          {label}
+                        </Button>
+                      ))}
+                    </div>
+                    {buttonPressed !== null && !buttonSolved && (
+                      <p className="mt-4 text-center font-mono text-sm text-red-400">
+                        Wrong button — that was {buttonPressed}. Try again.
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+
+              {step === 2 && (
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                    <div>
+                      <CardTitle className="font-grotesque">
+                        Trial 3 · Quick Maths
+                      </CardTitle>
+                      <CardDescription className="font-mono">
+                        One question. No calculator needed.
+                      </CardDescription>
+                    </div>
+                    {mathSolved ? (
+                      <Badge className="bg-green-600 font-mono text-white">
+                        Solved ✓
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="font-mono">
+                        Pending
+                      </Badge>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-center font-grotesque text-2xl font-semibold">
+                      What is 8 + 6?
+                    </p>
+                    <Input
+                      value={math}
+                      onChange={(e) => setMath(e.target.value)}
+                      inputMode="numeric"
+                      placeholder="Your answer"
+                      aria-label="Answer to 8 plus 6"
+                      className="mx-auto mt-4 max-w-xs text-center font-mono text-lg"
+                    />
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+
+            <div className="mt-8 flex items-center justify-between">
+              <Button
+                variant="outline"
+                onClick={skip}
+                className="font-mono"
               >
-                {value}
-              </p>
-              <p className="mt-1 text-center text-sm text-zinc-500">
-                drag it into the green
-              </p>
-              <div className="relative mt-8 px-6">
-                <div
-                  ref={trackRef}
-                  onPointerDown={onTrackPointerDown}
-                  className="relative h-5 w-full cursor-pointer rounded-full bg-zinc-800"
-                >
-                  <div
-                    className="absolute top-0 h-full rounded-full bg-green-500"
-                    style={{
-                      left: `${TARGET_MIN}%`,
-                      width: `${TARGET_MAX - TARGET_MIN}%`,
-                    }}
-                  />
-                  <div
-                    role="slider"
-                    aria-label="Slider handle"
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-valuenow={value}
-                    tabIndex={0}
-                    onPointerDown={onHandlePointerDown}
-                    onKeyDown={onHandleKeyDown}
-                    className="absolute top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-4 border-white bg-blue-600 shadow-xl shadow-blue-600/30 active:cursor-grabbing"
-                    style={{ left: `${value}%` }}
-                  />
-                </div>
-                <div className="mt-5 flex items-center justify-between text-xs text-zinc-500">
-                  <span>0</span>
-                  <span>← drag →</span>
-                  <span>100</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Trial 2 — press the right button */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <div>
-                <CardTitle>Trial 2 · Press the Right Button</CardTitle>
-                <CardDescription>
-                  Four buttons. Only one is the right one.
-                </CardDescription>
-              </div>
-              {buttonSolved ? (
-                <Badge className="bg-green-600 text-white">Solved ✓</Badge>
-              ) : (
-                <Badge variant="secondary">Pending</Badge>
-              )}
-            </CardHeader>
-            <CardContent>
-              <p className="text-center text-lg font-medium">
-                Press the button that says <span className="text-blue-400">Continue</span>.
-              </p>
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-                {BUTTON_OPTIONS.map((label) => (
-                  <Button
-                    key={label}
-                    variant={
-                      buttonPressed === label ? "default" : "outline"
-                    }
-                    onClick={() => pressButton(label)}
-                  >
-                    {label}
-                  </Button>
-                ))}
-              </div>
-              {buttonPressed !== null && !buttonSolved && (
-                <p className="mt-4 text-center text-sm text-red-400">
-                  Wrong button — that was {buttonPressed}. Try again.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Trial 3 — maths */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <div>
-                <CardTitle>Trial 3 · Quick Maths</CardTitle>
-                <CardDescription>
-                  One question. No calculator needed.
-                </CardDescription>
-              </div>
-              {mathSolved ? (
-                <Badge className="bg-green-600 text-white">Solved ✓</Badge>
-              ) : (
-                <Badge variant="secondary">Pending</Badge>
-              )}
-            </CardHeader>
-            <CardContent>
-              <p className="text-center text-2xl font-semibold">
-                What is 8 + 6?
-              </p>
-              <Input
-                value={math}
-                onChange={(e) => setMath(e.target.value)}
-                inputMode="numeric"
-                placeholder="Your answer"
-                aria-label="Answer to 8 plus 6"
-                className="mx-auto mt-4 max-w-xs text-center text-lg"
-              />
-            </CardContent>
-          </Card>
-        </div>
+                Skip this step →
+              </Button>
+              <Button
+                onClick={next}
+                disabled={!currentSolved}
+                className="font-mono"
+              >
+                Next →
+              </Button>
+            </div>
+            <p className="mt-4 text-center font-mono text-sm text-zinc-500">
+              Skipping means no pass for this step. The degree needs all five
+              passed.
+            </p>
+          </>
+        )}
 
         {allSolved && (
-          <div className="mt-8 rounded-2xl border border-green-500/40 bg-green-500/10 p-6 text-center">
-            <p className="text-xl font-semibold text-green-400">
+          <div className="mt-10 rounded-2xl border border-green-500/40 bg-green-500/10 p-6 text-center">
+            <p className="font-grotesque text-xl font-semibold text-green-400">
               Step 1 passed — all three trials solved.
             </p>
-            <p className="mt-2 text-sm text-zinc-400">Step 2 unlocks next.</p>
+            <p className="mt-2 font-mono text-sm text-zinc-400">
+              Step 2 unlocks next.
+            </p>
             <Link href="/gauntlet">
-              <Button className="mt-5">Back to Gauntlet</Button>
+              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
             </Link>
           </div>
         )}
 
         <div className="mt-10 text-center">
-          <Button variant="outline" onClick={skip}>
-            Skip this step →
-          </Button>
-          <p className="mt-3 text-sm text-zinc-500">
-            Skipping means no pass for this step. The degree needs all five
-            passed.
-          </p>
-          <div className="mt-6">
-            <Link
-              href="/gauntlet"
-              className="text-sm text-blue-400 hover:text-blue-300"
-            >
-              ← Back to Gauntlet
-            </Link>
-          </div>
+          <Link
+            href="/gauntlet"
+            className="font-mono text-sm text-blue-400 hover:text-blue-300"
+          >
+            ← Back to Gauntlet
+          </Link>
         </div>
       </div>
     </div>

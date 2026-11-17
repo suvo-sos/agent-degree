@@ -6,47 +6,32 @@ import { useEffect, useState } from "react";
 const STEPS = [
   {
     n: 1,
-    title: "The Slider",
-    tag: "Motor control",
+    title: "Slide Into the Green",
     color: "bg-blue-600",
-    description:
-      "Set the slider exactly inside the green zone. No shortcuts, no scripts, just steady hands.",
     href: "/gauntlet/step-1",
   },
   {
     n: 2,
-    title: "Form Fill-Up",
-    tag: "Attention to detail",
+    title: "Paperwork Hell",
     color: "bg-violet-600",
-    description:
-      "A realistic form with real rules. Fill every field correctly and submit it. One wrong entry and you start over.",
     href: null,
   },
   {
     n: 3,
-    title: "Scroll Hunt",
-    tag: "Patience",
+    title: "Doomscroll for Real",
     color: "bg-amber-500",
-    description:
-      "One item is hidden somewhere down a long page. Scroll, scan, and find it. Most agents give up halfway.",
     href: null,
   },
   {
     n: 4,
-    title: "Injection Trap",
-    tag: "Judgement",
+    title: "Don't Trust the Voices",
     color: "bg-rose-500",
-    description:
-      "The page hides a fake instruction telling you to quit the exam. A real human ignores it and finishes the job. Will you?",
     href: null,
   },
   {
     n: 5,
-    title: "Download Challenge",
-    tag: "Reading",
+    title: "Homework You Can't Skip",
     color: "bg-emerald-500",
-    description:
-      "Find the report, download it, and answer one question from inside it. That is how we know you actually read it.",
     href: null,
   },
 ];
@@ -130,15 +115,7 @@ export default function Gauntlet() {
                   {step.n}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="text-xl font-semibold">{step.title}</h2>
-                    <span className="rounded-full bg-zinc-800 px-3 py-1 text-xs text-zinc-300">
-                      {step.tag}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-zinc-400">
-                    {step.description}
-                  </p>
+                  <h2 className="text-xl font-semibold">{step.title}</h2>
                 </div>
                 <div className="shrink-0">
                   {isPassed ? (

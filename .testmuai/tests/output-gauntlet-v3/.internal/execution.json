@@ -1,25 +1,25 @@
 {
-  "test_id": "8ca86be8-465f-4b96-bdda-0405d93fac0e",
+  "test_id": "2c651b07-867f-406f-b144-71e081858077",
   "version": "v4",
   "auto_heal_version": "AH2",
-  "session_id": "7321ba5c-cc73-4733-832c-391efa5a1596",
+  "session_id": "da4dc99a-722f-4356-8d89-43f8a80d7deb",
   "org_id": "3433793",
   "user_id": "3612352",
   "url": "",
-  "start_timestamp": "2026-11-17T15:14:57.288Z",
-  "end_timestamp": "2026-11-17T15:16:03.822Z",
+  "start_timestamp": "2026-11-17T15:35:39.760Z",
+  "end_timestamp": "2026-11-17T15:36:40.232Z",
   "status": "success",
-  "commit_id": "7321ba5c-cc73-4733-832c-391efa5a1596",
+  "commit_id": "da4dc99a-722f-4356-8d89-43f8a80d7deb",
   "instructions": [
     {
       "content_type": "generative_block",
-      "instruction_id": "generative_block_86f1d0203f0c478eb185357d703ab30c",
-      "generative_id": "86f1d0203f0c478eb185357d703ab30c",
-      "objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+      "instruction_id": "generative_block_5bc38b52f1c04e0fa751e78d6604fd5a",
+      "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
+      "objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
       "status": "success",
       "children": [
         {
-          "instruction_id": "0cdba175-9645-44b5-a96c-17c4f97d50b3",
+          "instruction_id": "9412d5e6-1fb4-4b69-95de-72ed2634a62f",
           "instruction_class": "driver_action",
           "module_id": "",
           "instruction": "Navigate to http://localhost:3000/gauntlet",
@@ -30,12 +30,12 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "6830543b-379a-47d0-b72e-b1ed5f326ef7",
-              "instruction_id": "0cdba175-9645-44b5-a96c-17c4f97d50b3",
+              "operation_id": "82b9576a-e14e-4f34-bed4-0882f19e86a4",
+              "instruction_id": "9412d5e6-1fb4-4b69-95de-72ed2634a62f",
               "instruction": "Navigate to http://localhost:3000/gauntlet",
               "intent": "Navigate to http://localhost:3000/gauntlet",
-              "operation_start": "2026-11-17T15:15:13.617006+00:00",
-              "operation_end": "2026-11-17T15:15:15.931Z",
+              "operation_start": "2026-11-17T15:35:53.578853+00:00",
+              "operation_end": "2026-11-17T15:35:55.255Z",
               "status": "success",
               "command": "OPEN",
               "name": "",
@@ -60,7 +60,7 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/6830543b-379a-47d0-b72e-b1ed5f326ef7.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/82b9576a-e14e-4f34-bed4-0882f19e86a4.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
@@ -158,8 +158,8 @@
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:13.617006+00:00",
-          "end_timestamp": "2026-11-17T15:15:15.931Z",
+          "start_timestamp": "2026-11-17T15:35:53.578853+00:00",
+          "end_timestamp": "2026-11-17T15:35:55.255Z",
           "type": "agent_generated",
           "tags": [],
           "html_paths": [],
@@ -185,9 +185,9 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
@@ -196,7 +196,7 @@
           "reasoning": "Navigate to http://localhost:3000/gauntlet"
         },
         {
-          "instruction_id": "7a17014c-2d78-48cd-a969-fa71b327a5c7",
+          "instruction_id": "907d0651-55bc-4bf5-b039-c80b494f3a54",
           "instruction_class": "driver_action",
           "module_id": "",
           "instruction": "Checking whether The Gauntlet is present",
@@ -207,11 +207,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "fa77942e-e018-43cf-bbcc-2a18e0708dac",
-              "instruction_id": "7a17014c-2d78-48cd-a969-fa71b327a5c7",
+              "operation_id": "40e0bc42-3d50-475b-a199-0ccb268d6f81",
+              "instruction_id": "907d0651-55bc-4bf5-b039-c80b494f3a54",
               "instruction": "Checking whether The Gauntlet is present",
               "intent": "Checking whether The Gauntlet is present",
-              "operation_start": "2026-11-17T15:15:38.159019+00:00",
+              "operation_start": "2026-11-17T15:36:14.495694+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -226,7 +226,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether The Gauntlet is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the The Gauntlet heading is present in the page header\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(4).textContent.trim() === 'The Gauntlet' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {4: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(4).textContent.trim() === 'The Gauntlet' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"The Gauntlet\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the The Gauntlet heading is present in the page header\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows The Gauntlet\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether The Gauntlet is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the The Gauntlet heading is present and visible at the top of the page\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(4).textContent.trim() === 'The Gauntlet' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {4: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(4).textContent.trim() === 'The Gauntlet' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"The Gauntlet\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the The Gauntlet heading is present and visible at the top of the page\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows The Gauntlet.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -237,14 +237,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/fa77942e-e018-43cf-bbcc-2a18e0708dac.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/40e0bc42-3d50-475b-a199-0ccb268d6f81.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "gauntlet_page_shown",
+              "query_variable_name": "the_gauntlet_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -330,14 +330,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "gauntlet_page_shown": "true"
+                "the_gauntlet_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether the The Gauntlet heading is present in the page header"
+              "reasoning": "whether the The Gauntlet heading is present and visible at the top of the page"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.159019+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.495694+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -364,21 +364,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether the The Gauntlet heading is present in the page header"
+          "reasoning": "whether the The Gauntlet heading is present and visible at the top of the page"
         },
         {
-          "instruction_id": "99a56290-3782-4e80-93e3-54b7b92dced6",
+          "instruction_id": "c67b3431-b91a-44d5-821f-b50ca7aad6a6",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the The Slider card is present",
+          "instruction": "Checking whether the Slide Into the Green card is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -386,11 +386,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "8779e048-3937-4a09-857f-40f6b3fc37fe",
-              "instruction_id": "99a56290-3782-4e80-93e3-54b7b92dced6",
-              "instruction": "Checking whether the The Slider card is present",
-              "intent": "Checking whether the The Slider card is present",
-              "operation_start": "2026-11-17T15:15:38.159653+00:00",
+              "operation_id": "1341c57b-3b98-48af-b9d8-f055ed4e7451",
+              "instruction_id": "c67b3431-b91a-44d5-821f-b50ca7aad6a6",
+              "instruction": "Checking whether the Slide Into the Green card is present",
+              "intent": "Checking whether the Slide Into the Green card is present",
+              "operation_start": "2026-11-17T15:36:14.496084+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -405,7 +405,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the The Slider card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether a card for The Slider is present in the challenge list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(6).textContent.trim() === 'The Slider' && !!(el(6).offsetWidth || el(6).offsetHeight || el(6).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {6: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(6).textContent.trim() === 'The Slider' && !!(el(6).offsetWidth || el(6).offsetHeight || el(6).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"The Slider\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether a card for The Slider is present in the challenge list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows a card for The Slider\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Slide Into the Green card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the card named Slide Into the Green is present and visible in the challenges list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(6).textContent.trim() === 'Slide Into the Green' && !!(el(6).offsetWidth || el(6).offsetHeight || el(6).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {6: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(6).textContent.trim() === 'Slide Into the Green' && !!(el(6).offsetWidth || el(6).offsetHeight || el(6).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Slide Into the Green\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the card named Slide Into the Green is present and visible in the challenges list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows a card named Slide Into the Green.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -416,14 +416,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/8779e048-3937-4a09-857f-40f6b3fc37fe.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/1341c57b-3b98-48af-b9d8-f055ed4e7451.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "slider_card_shown",
+              "query_variable_name": "slide_into_the_green_card_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -509,14 +509,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "slider_card_shown": "true"
+                "slide_into_the_green_card_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether a card for The Slider is present in the challenge list"
+              "reasoning": "whether the card named Slide Into the Green is present and visible in the challenges list"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.159653+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.496084+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -543,21 +543,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether a card for The Slider is present in the challenge list"
+          "reasoning": "whether the card named Slide Into the Green is present and visible in the challenges list"
         },
         {
-          "instruction_id": "48efefb0-5677-439d-bca0-8f357a747473",
+          "instruction_id": "10a84a73-4736-4b78-8da5-f5aef3672ce8",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the Form Fill-Up card is present",
+          "instruction": "Checking whether the Paperwork Hell card is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -565,11 +565,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "f9b6295e-34a0-4444-abca-204d257acc51",
-              "instruction_id": "48efefb0-5677-439d-bca0-8f357a747473",
-              "instruction": "Checking whether the Form Fill-Up card is present",
-              "intent": "Checking whether the Form Fill-Up card is present",
-              "operation_start": "2026-11-17T15:15:38.161102+00:00",
+              "operation_id": "7b9c6259-8248-4b5d-a423-17abce8bb22f",
+              "instruction_id": "10a84a73-4736-4b78-8da5-f5aef3672ce8",
+              "instruction": "Checking whether the Paperwork Hell card is present",
+              "intent": "Checking whether the Paperwork Hell card is present",
+              "operation_start": "2026-11-17T15:36:14.496319+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -584,7 +584,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the Form Fill-Up card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether a card for Form Fill-Up is present in the challenge list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(9).textContent.trim() === 'Form Fill-Up' && !!(el(9).offsetWidth || el(9).offsetHeight || el(9).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {9: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(9).textContent.trim() === 'Form Fill-Up' && !!(el(9).offsetWidth || el(9).offsetHeight || el(9).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Form Fill-Up\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether a card for Form Fill-Up is present in the challenge list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows a card for Form Fill-Up\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Paperwork Hell card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the card named Paperwork Hell is present and visible in the challenges list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(8).textContent.trim() === 'Paperwork Hell' && !!(el(8).offsetWidth || el(8).offsetHeight || el(8).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {8: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(8).textContent.trim() === 'Paperwork Hell' && !!(el(8).offsetWidth || el(8).offsetHeight || el(8).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Paperwork Hell\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the card named Paperwork Hell is present and visible in the challenges list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows a card named Paperwork Hell.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -595,14 +595,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/f9b6295e-34a0-4444-abca-204d257acc51.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/7b9c6259-8248-4b5d-a423-17abce8bb22f.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "form_fill_up_card_shown",
+              "query_variable_name": "paperwork_hell_card_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -688,14 +688,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "form_fill_up_card_shown": "true"
+                "paperwork_hell_card_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether a card for Form Fill-Up is present in the challenge list"
+              "reasoning": "whether the card named Paperwork Hell is present and visible in the challenges list"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.161102+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.496319+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -722,21 +722,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether a card for Form Fill-Up is present in the challenge list"
+          "reasoning": "whether the card named Paperwork Hell is present and visible in the challenges list"
         },
         {
-          "instruction_id": "3758c5ff-06fa-4b19-b554-7ee670839fb9",
+          "instruction_id": "ec2f130f-4c12-4171-bf00-f1978224c42c",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the Scroll Hunt card is present",
+          "instruction": "Checking whether the Doomscroll for Real card is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -744,11 +744,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "26b98597-d575-4e37-ad09-0da3720661d1",
-              "instruction_id": "3758c5ff-06fa-4b19-b554-7ee670839fb9",
-              "instruction": "Checking whether the Scroll Hunt card is present",
-              "intent": "Checking whether the Scroll Hunt card is present",
-              "operation_start": "2026-11-17T15:15:38.161534+00:00",
+              "operation_id": "61beac10-7363-43cb-bd67-e2b95fa671ce",
+              "instruction_id": "ec2f130f-4c12-4171-bf00-f1978224c42c",
+              "instruction": "Checking whether the Doomscroll for Real card is present",
+              "intent": "Checking whether the Doomscroll for Real card is present",
+              "operation_start": "2026-11-17T15:36:14.496875+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -763,7 +763,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the Scroll Hunt card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether a card for Scroll Hunt is present in the challenge list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(12).textContent.trim() === 'Scroll Hunt' && !!(el(12).offsetWidth || el(12).offsetHeight || el(12).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {12: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(12).textContent.trim() === 'Scroll Hunt' && !!(el(12).offsetWidth || el(12).offsetHeight || el(12).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Scroll Hunt\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether a card for Scroll Hunt is present in the challenge list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows a card for Scroll Hunt\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Doomscroll for Real card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the card named Doomscroll for Real is present and visible in the challenges list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(10).textContent.trim() === 'Doomscroll for Real' && !!(el(10).offsetWidth || el(10).offsetHeight || el(10).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {10: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(10).textContent.trim() === 'Doomscroll for Real' && !!(el(10).offsetWidth || el(10).offsetHeight || el(10).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Doomscroll for Real\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the card named Doomscroll for Real is present and visible in the challenges list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows a card named Doomscroll for Real.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -774,14 +774,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/26b98597-d575-4e37-ad09-0da3720661d1.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/61beac10-7363-43cb-bd67-e2b95fa671ce.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "scroll_hunt_card_shown",
+              "query_variable_name": "doomscroll_for_real_card_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -867,14 +867,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "scroll_hunt_card_shown": "true"
+                "doomscroll_for_real_card_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether a card for Scroll Hunt is present in the challenge list"
+              "reasoning": "whether the card named Doomscroll for Real is present and visible in the challenges list"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.161534+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.496875+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -901,21 +901,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether a card for Scroll Hunt is present in the challenge list"
+          "reasoning": "whether the card named Doomscroll for Real is present and visible in the challenges list"
         },
         {
-          "instruction_id": "15075f5e-51e5-49bc-b8ea-28b0ee3d56eb",
+          "instruction_id": "66c377f8-27a9-4c5c-9f6d-13317cc0c583",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the Injection Trap card is present",
+          "instruction": "Checking whether the Don't Trust the Voices card is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -923,11 +923,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "7a5a76cc-2799-4a61-a89e-ca1f335c3a61",
-              "instruction_id": "15075f5e-51e5-49bc-b8ea-28b0ee3d56eb",
-              "instruction": "Checking whether the Injection Trap card is present",
-              "intent": "Checking whether the Injection Trap card is present",
-              "operation_start": "2026-11-17T15:15:38.161906+00:00",
+              "operation_id": "56f455a2-4e6d-4255-8c06-92a89a255f5a",
+              "instruction_id": "66c377f8-27a9-4c5c-9f6d-13317cc0c583",
+              "instruction": "Checking whether the Don't Trust the Voices card is present",
+              "intent": "Checking whether the Don't Trust the Voices card is present",
+              "operation_start": "2026-11-17T15:36:14.497101+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -942,7 +942,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the Injection Trap card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether a card for Injection Trap is present in the challenge list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(15).textContent.trim() === 'Injection Trap' && !!(el(15).offsetWidth || el(15).offsetHeight || el(15).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {15: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(15).textContent.trim() === 'Injection Trap' && !!(el(15).offsetWidth || el(15).offsetHeight || el(15).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Injection Trap\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether a card for Injection Trap is present in the challenge list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows a card for Injection Trap\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Don't Trust the Voices card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the card named Don't Trust the Voices is present and visible in the challenges list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(12).textContent.trim() === \\\"Don't Trust the Voices\\\" && !!(el(12).offsetWidth || el(12).offsetHeight || el(12).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {12: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(12).textContent.trim() === \\\"Don't Trust the Voices\\\" && !!(el(12).offsetWidth || el(12).offsetHeight || el(12).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Don't Trust the Voices\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the card named Don't Trust the Voices is present and visible in the challenges list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows a card named Don't Trust the Voices.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -953,14 +953,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/7a5a76cc-2799-4a61-a89e-ca1f335c3a61.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/56f455a2-4e6d-4255-8c06-92a89a255f5a.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "injection_trap_card_shown",
+              "query_variable_name": "dont_trust_the_voices_card_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -1046,14 +1046,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "injection_trap_card_shown": "true"
+                "dont_trust_the_voices_card_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether a card for Injection Trap is present in the challenge list"
+              "reasoning": "whether the card named Don't Trust the Voices is present and visible in the challenges list"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.161906+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.497101+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -1080,21 +1080,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether a card for Injection Trap is present in the challenge list"
+          "reasoning": "whether the card named Don't Trust the Voices is present and visible in the challenges list"
         },
         {
-          "instruction_id": "de9d9ea4-19a2-42ee-8e5a-827b617d9491",
+          "instruction_id": "b997eb44-4847-4fcc-91b0-0299f18036d6",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the Download Challenge card is present",
+          "instruction": "Checking whether the Homework You Can't Skip card is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -1102,11 +1102,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "fe533fb7-118f-4898-8c70-3cc930a53d5f",
-              "instruction_id": "de9d9ea4-19a2-42ee-8e5a-827b617d9491",
-              "instruction": "Checking whether the Download Challenge card is present",
-              "intent": "Checking whether the Download Challenge card is present",
-              "operation_start": "2026-11-17T15:15:38.162303+00:00",
+              "operation_id": "7825f554-a4b0-4ef5-83f7-70520e7c658f",
+              "instruction_id": "b997eb44-4847-4fcc-91b0-0299f18036d6",
+              "instruction": "Checking whether the Homework You Can't Skip card is present",
+              "intent": "Checking whether the Homework You Can't Skip card is present",
+              "operation_start": "2026-11-17T15:36:14.497328+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -1121,7 +1121,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the Download Challenge card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether a card for Download Challenge is present in the challenge list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(18).textContent.trim() === 'Download Challenge' && !!(el(18).offsetWidth || el(18).offsetHeight || el(18).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {18: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(18).textContent.trim() === 'Download Challenge' && !!(el(18).offsetWidth || el(18).offsetHeight || el(18).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Download Challenge\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether a card for Download Challenge is present in the challenge list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows a card for Download Challenge\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Homework You Can't Skip card is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the card named Homework You Can't Skip is present and visible in the challenges list\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(14).textContent.trim() === \\\"Homework You Can't Skip\\\" && !!(el(14).offsetWidth || el(14).offsetHeight || el(14).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {14: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(14).textContent.trim() === \\\"Homework You Can't Skip\\\" && !!(el(14).offsetWidth || el(14).offsetHeight || el(14).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Homework You Can't Skip\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the card named Homework You Can't Skip is present and visible in the challenges list\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows a card named Homework You Can't Skip.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -1132,14 +1132,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/fe533fb7-118f-4898-8c70-3cc930a53d5f.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/7825f554-a4b0-4ef5-83f7-70520e7c658f.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "download_challenge_card_shown",
+              "query_variable_name": "homework_you_cant_skip_card_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -1225,14 +1225,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "download_challenge_card_shown": "true"
+                "homework_you_cant_skip_card_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether a card for Download Challenge is present in the challenge list"
+              "reasoning": "whether the card named Homework You Can't Skip is present and visible in the challenges list"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.162303+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.497328+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -1259,18 +1259,18 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether a card for Download Challenge is present in the challenge list"
+          "reasoning": "whether the card named Homework You Can't Skip is present and visible in the challenges list"
         },
         {
-          "instruction_id": "1985408f-d149-40e6-99f5-9050c7f5be4d",
+          "instruction_id": "2f1cec1c-9c05-441b-8e82-386d2286f816",
           "instruction_class": "driver_action",
           "module_id": "",
           "instruction": "Checking whether the Start Step 1 button is present",
@@ -1281,11 +1281,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "e5fccfcc-e9b2-4bb5-ab0e-ba9ff421bb16",
-              "instruction_id": "1985408f-d149-40e6-99f5-9050c7f5be4d",
+              "operation_id": "4c92d91d-97bc-4303-85d5-9f0dd57d83c1",
+              "instruction_id": "2f1cec1c-9c05-441b-8e82-386d2286f816",
               "instruction": "Checking whether the Start Step 1 button is present",
               "intent": "Checking whether the Start Step 1 button is present",
-              "operation_start": "2026-11-17T15:15:38.164121+00:00",
+              "operation_start": "2026-11-17T15:36:14.497525+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -1300,7 +1300,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the Start Step 1 button is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the Start Step 1 button is present in the The Slider challenge card\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(8).textContent.replace(/\\\\s+/g, ' ').trim() === 'Start Step 1 →' && !!(el(8).offsetWidth || el(8).offsetHeight || el(8).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {8: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(8).textContent.replace(/\\\\s+/g, ' ').trim() === 'Start Step 1 →' && !!(el(8).offsetWidth || el(8).offsetHeight || el(8).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=link[name=\\\"Start Step 1 →\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the Start Step 1 button is present in the The Slider challenge card\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the Start Step 1 button is visible\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Start Step 1 button is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the Start Step 1 button is present and visible in the Slide Into the Green card\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(7).textContent.trim() === 'Start Step 1 →' && !!(el(7).offsetWidth || el(7).offsetHeight || el(7).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {7: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(7).textContent.trim() === 'Start Step 1 →' && !!(el(7).offsetWidth || el(7).offsetHeight || el(7).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=link[name=\\\"Start Step 1 →\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the Start Step 1 button is present and visible in the Slide Into the Green card\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The Start Step 1 button is visible.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -1311,7 +1311,7 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/e5fccfcc-e9b2-4bb5-ab0e-ba9ff421bb16.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/4c92d91d-97bc-4303-85d5-9f0dd57d83c1.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
@@ -1407,11 +1407,11 @@
                 "start_step_1_button_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether the Start Step 1 button is present in the The Slider challenge card"
+              "reasoning": "whether the Start Step 1 button is present and visible in the Slide Into the Green card"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.164121+00:00",
+          "start_timestamp": "2026-11-17T15:36:14.497525+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -1438,18 +1438,18 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether the Start Step 1 button is present in the The Slider challenge card"
+          "reasoning": "whether the Start Step 1 button is present and visible in the Slide Into the Green card"
         },
         {
-          "instruction_id": "892ab0a0-068b-42c4-81d6-3aee4366b213",
+          "instruction_id": "6ed122e6-da9c-4e1f-8937-d5aec23bdb7c",
           "instruction_class": "non_driver_action",
           "module_id": "",
           "instruction": "Assertion check",
@@ -1465,85 +1465,85 @@
                 "assertion_tree": {
                   "sub_results": [
                     {
-                      "description": "the page shows The Gauntlet",
+                      "description": "The page shows The Gauntlet.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{gauntlet_page_shown}}",
-                      "store_key": "gauntlet_page_shown",
+                      "extracted_value": "{{the_gauntlet_visible}}",
+                      "store_key": "the_gauntlet_visible",
                       "variable_refs": {
-                        "{{gauntlet_page_shown}}": "true"
+                        "{{the_gauntlet_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the page shows a card for The Slider",
+                      "description": "The page shows a card named Slide Into the Green.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{slider_card_shown}}",
-                      "store_key": "slider_card_shown",
+                      "extracted_value": "{{slide_into_the_green_card_visible}}",
+                      "store_key": "slide_into_the_green_card_visible",
                       "variable_refs": {
-                        "{{slider_card_shown}}": "true"
+                        "{{slide_into_the_green_card_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the page shows a card for Form Fill-Up",
+                      "description": "The page shows a card named Paperwork Hell.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{form_fill_up_card_shown}}",
-                      "store_key": "form_fill_up_card_shown",
+                      "extracted_value": "{{paperwork_hell_card_visible}}",
+                      "store_key": "paperwork_hell_card_visible",
                       "variable_refs": {
-                        "{{form_fill_up_card_shown}}": "true"
+                        "{{paperwork_hell_card_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the page shows a card for Scroll Hunt",
+                      "description": "The page shows a card named Doomscroll for Real.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{scroll_hunt_card_shown}}",
-                      "store_key": "scroll_hunt_card_shown",
+                      "extracted_value": "{{doomscroll_for_real_card_visible}}",
+                      "store_key": "doomscroll_for_real_card_visible",
                       "variable_refs": {
-                        "{{scroll_hunt_card_shown}}": "true"
+                        "{{doomscroll_for_real_card_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the page shows a card for Injection Trap",
+                      "description": "The page shows a card named Don't Trust the Voices.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{injection_trap_card_shown}}",
-                      "store_key": "injection_trap_card_shown",
+                      "extracted_value": "{{dont_trust_the_voices_card_visible}}",
+                      "store_key": "dont_trust_the_voices_card_visible",
                       "variable_refs": {
-                        "{{injection_trap_card_shown}}": "true"
+                        "{{dont_trust_the_voices_card_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the page shows a card for Download Challenge",
+                      "description": "The page shows a card named Homework You Can't Skip.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{download_challenge_card_shown}}",
-                      "store_key": "download_challenge_card_shown",
+                      "extracted_value": "{{homework_you_cant_skip_card_visible}}",
+                      "store_key": "homework_you_cant_skip_card_visible",
                       "variable_refs": {
-                        "{{download_challenge_card_shown}}": "true"
+                        "{{homework_you_cant_skip_card_visible}}": "true"
                       }
                     },
                     {
-                      "description": "the Start Step 1 button is visible",
+                      "description": "The Start Step 1 button is visible.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
@@ -1558,55 +1558,55 @@
                   ],
                   "sub_checks": [
                     {
-                      "description": "the page shows The Gauntlet",
-                      "store_key": "gauntlet_page_shown",
+                      "description": "The page shows The Gauntlet.",
+                      "store_key": "the_gauntlet_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{gauntlet_page_shown}}",
+                      "extracted_value": "{{the_gauntlet_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the page shows a card for The Slider",
-                      "store_key": "slider_card_shown",
+                      "description": "The page shows a card named Slide Into the Green.",
+                      "store_key": "slide_into_the_green_card_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{slider_card_shown}}",
+                      "extracted_value": "{{slide_into_the_green_card_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the page shows a card for Form Fill-Up",
-                      "store_key": "form_fill_up_card_shown",
+                      "description": "The page shows a card named Paperwork Hell.",
+                      "store_key": "paperwork_hell_card_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{form_fill_up_card_shown}}",
+                      "extracted_value": "{{paperwork_hell_card_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the page shows a card for Scroll Hunt",
-                      "store_key": "scroll_hunt_card_shown",
+                      "description": "The page shows a card named Doomscroll for Real.",
+                      "store_key": "doomscroll_for_real_card_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{scroll_hunt_card_shown}}",
+                      "extracted_value": "{{doomscroll_for_real_card_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the page shows a card for Injection Trap",
-                      "store_key": "injection_trap_card_shown",
+                      "description": "The page shows a card named Don't Trust the Voices.",
+                      "store_key": "dont_trust_the_voices_card_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{injection_trap_card_shown}}",
+                      "extracted_value": "{{dont_trust_the_voices_card_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the page shows a card for Download Challenge",
-                      "store_key": "download_challenge_card_shown",
+                      "description": "The page shows a card named Homework You Can't Skip.",
+                      "store_key": "homework_you_cant_skip_card_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{download_challenge_card_shown}}",
+                      "extracted_value": "{{homework_you_cant_skip_card_visible}}",
                       "operator": "equals",
                       "transforms": []
                     },
                     {
-                      "description": "the Start Step 1 button is visible",
+                      "description": "The Start Step 1 button is visible.",
                       "store_key": "start_step_1_button_visible",
                       "expected_value": "true",
                       "extracted_value": "{{start_step_1_button_visible}}",
@@ -1616,7 +1616,7 @@
                   ],
                   "composite_operator": "and",
                   "verification": "",
-                  "claim": "the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible",
+                  "claim": "the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible",
                   "operator": [],
                   "assertion_operands": [],
                   "left_operand": null,
@@ -1632,11 +1632,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "e00d65e6-1e1f-4ca6-b52c-fba5baaa541f",
-              "instruction_id": "892ab0a0-068b-42c4-81d6-3aee4366b213",
+              "operation_id": "c45c629f-dbe5-48c8-a067-801569cf54b1",
+              "instruction_id": "6ed122e6-da9c-4e1f-8937-d5aec23bdb7c",
               "instruction": "Assertion check",
               "intent": "Assertion check",
-              "operation_start": "2026-11-17T15:15:38.879569+00:00",
+              "operation_start": "2026-11-17T15:36:15.180844+00:00",
               "operation_end": "",
               "status": "success",
               "command": "ASSERTION",
@@ -1662,7 +1662,7 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/e00d65e6-1e1f-4ca6-b52c-fba5baaa541f.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/c45c629f-dbe5-48c8-a067-801569cf54b1.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
@@ -1728,85 +1728,85 @@
                 "operands": [],
                 "sub_results": [
                   {
-                    "description": "the page shows The Gauntlet",
+                    "description": "The page shows The Gauntlet.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{gauntlet_page_shown}}",
-                    "store_key": "gauntlet_page_shown",
+                    "extracted_value": "{{the_gauntlet_visible}}",
+                    "store_key": "the_gauntlet_visible",
                     "variable_refs": {
-                      "{{gauntlet_page_shown}}": "true"
+                      "{{the_gauntlet_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for The Slider",
+                    "description": "The page shows a card named Slide Into the Green.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{slider_card_shown}}",
-                    "store_key": "slider_card_shown",
+                    "extracted_value": "{{slide_into_the_green_card_visible}}",
+                    "store_key": "slide_into_the_green_card_visible",
                     "variable_refs": {
-                      "{{slider_card_shown}}": "true"
+                      "{{slide_into_the_green_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Form Fill-Up",
+                    "description": "The page shows a card named Paperwork Hell.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{form_fill_up_card_shown}}",
-                    "store_key": "form_fill_up_card_shown",
+                    "extracted_value": "{{paperwork_hell_card_visible}}",
+                    "store_key": "paperwork_hell_card_visible",
                     "variable_refs": {
-                      "{{form_fill_up_card_shown}}": "true"
+                      "{{paperwork_hell_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Scroll Hunt",
+                    "description": "The page shows a card named Doomscroll for Real.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{scroll_hunt_card_shown}}",
-                    "store_key": "scroll_hunt_card_shown",
+                    "extracted_value": "{{doomscroll_for_real_card_visible}}",
+                    "store_key": "doomscroll_for_real_card_visible",
                     "variable_refs": {
-                      "{{scroll_hunt_card_shown}}": "true"
+                      "{{doomscroll_for_real_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Injection Trap",
+                    "description": "The page shows a card named Don't Trust the Voices.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{injection_trap_card_shown}}",
-                    "store_key": "injection_trap_card_shown",
+                    "extracted_value": "{{dont_trust_the_voices_card_visible}}",
+                    "store_key": "dont_trust_the_voices_card_visible",
                     "variable_refs": {
-                      "{{injection_trap_card_shown}}": "true"
+                      "{{dont_trust_the_voices_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Download Challenge",
+                    "description": "The page shows a card named Homework You Can't Skip.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{download_challenge_card_shown}}",
-                    "store_key": "download_challenge_card_shown",
+                    "extracted_value": "{{homework_you_cant_skip_card_visible}}",
+                    "store_key": "homework_you_cant_skip_card_visible",
                     "variable_refs": {
-                      "{{download_challenge_card_shown}}": "true"
+                      "{{homework_you_cant_skip_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the Start Step 1 button is visible",
+                    "description": "The Start Step 1 button is visible.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
@@ -1821,55 +1821,55 @@
                 ],
                 "sub_checks": [
                   {
-                    "description": "the page shows The Gauntlet",
-                    "store_key": "gauntlet_page_shown",
+                    "description": "The page shows The Gauntlet.",
+                    "store_key": "the_gauntlet_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{gauntlet_page_shown}}",
+                    "extracted_value": "{{the_gauntlet_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the page shows a card for The Slider",
-                    "store_key": "slider_card_shown",
+                    "description": "The page shows a card named Slide Into the Green.",
+                    "store_key": "slide_into_the_green_card_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{slider_card_shown}}",
+                    "extracted_value": "{{slide_into_the_green_card_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the page shows a card for Form Fill-Up",
-                    "store_key": "form_fill_up_card_shown",
+                    "description": "The page shows a card named Paperwork Hell.",
+                    "store_key": "paperwork_hell_card_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{form_fill_up_card_shown}}",
+                    "extracted_value": "{{paperwork_hell_card_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the page shows a card for Scroll Hunt",
-                    "store_key": "scroll_hunt_card_shown",
+                    "description": "The page shows a card named Doomscroll for Real.",
+                    "store_key": "doomscroll_for_real_card_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{scroll_hunt_card_shown}}",
+                    "extracted_value": "{{doomscroll_for_real_card_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the page shows a card for Injection Trap",
-                    "store_key": "injection_trap_card_shown",
+                    "description": "The page shows a card named Don't Trust the Voices.",
+                    "store_key": "dont_trust_the_voices_card_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{injection_trap_card_shown}}",
+                    "extracted_value": "{{dont_trust_the_voices_card_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the page shows a card for Download Challenge",
-                    "store_key": "download_challenge_card_shown",
+                    "description": "The page shows a card named Homework You Can't Skip.",
+                    "store_key": "homework_you_cant_skip_card_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{download_challenge_card_shown}}",
+                    "extracted_value": "{{homework_you_cant_skip_card_visible}}",
                     "operator": "equals",
                     "transforms": []
                   },
                   {
-                    "description": "the Start Step 1 button is visible",
+                    "description": "The Start Step 1 button is visible.",
                     "store_key": "start_step_1_button_visible",
                     "expected_value": "true",
                     "extracted_value": "{{start_step_1_button_visible}}",
@@ -1878,94 +1878,94 @@
                   }
                 ],
                 "composite_operator": "and",
-                "verification": "The current page displays The Gauntlet, cards for each named challenge, and a visible Start Step 1 button.",
-                "claim": "the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible"
+                "verification": "The current page displays The Gauntlet, the five named cards, and a visible Start Step 1 button.",
+                "claim": "the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible"
               },
               "assertion_tree": {
                 "assertion_id": "assert_cp_1",
                 "status": "passed",
-                "description": "the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible",
+                "description": "the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible",
                 "sub_results": [
                   {
-                    "description": "the page shows The Gauntlet",
+                    "description": "The page shows The Gauntlet.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{gauntlet_page_shown}}",
-                    "store_key": "gauntlet_page_shown",
+                    "extracted_value": "{{the_gauntlet_visible}}",
+                    "store_key": "the_gauntlet_visible",
                     "variable_refs": {
-                      "{{gauntlet_page_shown}}": "true"
+                      "{{the_gauntlet_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for The Slider",
+                    "description": "The page shows a card named Slide Into the Green.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{slider_card_shown}}",
-                    "store_key": "slider_card_shown",
+                    "extracted_value": "{{slide_into_the_green_card_visible}}",
+                    "store_key": "slide_into_the_green_card_visible",
                     "variable_refs": {
-                      "{{slider_card_shown}}": "true"
+                      "{{slide_into_the_green_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Form Fill-Up",
+                    "description": "The page shows a card named Paperwork Hell.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{form_fill_up_card_shown}}",
-                    "store_key": "form_fill_up_card_shown",
+                    "extracted_value": "{{paperwork_hell_card_visible}}",
+                    "store_key": "paperwork_hell_card_visible",
                     "variable_refs": {
-                      "{{form_fill_up_card_shown}}": "true"
+                      "{{paperwork_hell_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Scroll Hunt",
+                    "description": "The page shows a card named Doomscroll for Real.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{scroll_hunt_card_shown}}",
-                    "store_key": "scroll_hunt_card_shown",
+                    "extracted_value": "{{doomscroll_for_real_card_visible}}",
+                    "store_key": "doomscroll_for_real_card_visible",
                     "variable_refs": {
-                      "{{scroll_hunt_card_shown}}": "true"
+                      "{{doomscroll_for_real_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Injection Trap",
+                    "description": "The page shows a card named Don't Trust the Voices.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{injection_trap_card_shown}}",
-                    "store_key": "injection_trap_card_shown",
+                    "extracted_value": "{{dont_trust_the_voices_card_visible}}",
+                    "store_key": "dont_trust_the_voices_card_visible",
                     "variable_refs": {
-                      "{{injection_trap_card_shown}}": "true"
+                      "{{dont_trust_the_voices_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the page shows a card for Download Challenge",
+                    "description": "The page shows a card named Homework You Can't Skip.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{download_challenge_card_shown}}",
-                    "store_key": "download_challenge_card_shown",
+                    "extracted_value": "{{homework_you_cant_skip_card_visible}}",
+                    "store_key": "homework_you_cant_skip_card_visible",
                     "variable_refs": {
-                      "{{download_challenge_card_shown}}": "true"
+                      "{{homework_you_cant_skip_card_visible}}": "true"
                     }
                   },
                   {
-                    "description": "the Start Step 1 button is visible",
+                    "description": "The Start Step 1 button is visible.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
@@ -1982,7 +1982,7 @@
                 "passed": true,
                 "step": 3,
                 "is_final": false,
-                "verification": "The current page displays The Gauntlet, cards for each named challenge, and a visible Start Step 1 button.",
+                "verification": "The current page displays The Gauntlet, the five named cards, and a visible Start Step 1 button.",
                 "error_message": null,
                 "duration_ms": 0
               },
@@ -2024,7 +2024,7 @@
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:38.879569+00:00",
+          "start_timestamp": "2026-11-17T15:36:15.180844+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -2051,9 +2051,9 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
@@ -2062,10 +2062,10 @@
           "reasoning": ""
         },
         {
-          "instruction_id": "dbbfa1c3-9a05-4677-9a38-32a0f6b90413",
+          "instruction_id": "4c41a8cc-3341-4aa0-86d4-51be2b4ff1a5",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Clicking Start Step 1 link in the Slider card",
+          "instruction": "Clicking Start Step 1 in the Slide Into the Green card",
           "command": "CLICK",
           "error": null,
           "parent_instruction_id": "",
@@ -2073,12 +2073,12 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "59ae383b-120c-4cf9-a60f-6599b92ba7f0",
-              "instruction_id": "dbbfa1c3-9a05-4677-9a38-32a0f6b90413",
-              "instruction": "Clicking Start Step 1 link in the Slider card",
-              "intent": "Clicking Start Step 1 link in the Slider card",
-              "operation_start": "2026-11-17T15:15:44.200850+00:00",
-              "operation_end": "2026-11-17T15:15:44.300Z",
+              "operation_id": "eb2baddb-6250-40d9-8988-cee58388775f",
+              "instruction_id": "4c41a8cc-3341-4aa0-86d4-51be2b4ff1a5",
+              "instruction": "Clicking Start Step 1 in the Slide Into the Green card",
+              "intent": "Clicking Start Step 1 in the Slide Into the Green card",
+              "operation_start": "2026-11-17T15:36:20.941178+00:00",
+              "operation_end": "2026-11-17T15:36:21.112Z",
               "status": "success",
               "command": "CLICK",
               "name": "",
@@ -2092,7 +2092,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Clicking Start Step 1 link in the Slider card\",\"agent\":\"Vision Agent\",\"operation_dict\":{\"operation_type\":\"CLICK\"},\"reasoning\":\"PRIMARY: Click Start Step 1; role=link; text=\\\"Start Step 1 →\\\" | HINTS: container=The Slider card\",\"variable\":{},\"secrets\":{},\"params\":{}}",
+              "sub_instruction_obj": "{\"operation\":\"Clicking Start Step 1 in the Slide Into the Green card\",\"agent\":\"Vision Agent\",\"operation_dict\":{\"operation_type\":\"CLICK\"},\"reasoning\":\"PRIMARY: Click Start Step 1; role=link; text=\\\"Start Step 1 →\\\" | HINTS: within the first Slide Into the Green card\",\"variable\":{},\"secrets\":{},\"params\":{}}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -2103,7 +2103,7 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/59ae383b-120c-4cf9-a60f-6599b92ba7f0.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/eb2baddb-6250-40d9-8988-cee58388775f.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
@@ -2204,12 +2204,12 @@
               "api_data": {},
               "output_variables": {},
               "visual_context": {
-                "x": 1238,
-                "y": 381,
+                "x": 1246,
+                "y": 367,
                 "confidence": 0,
                 "bbox": {
-                  "x": 1191,
-                  "y": 359,
+                  "x": 1199,
+                  "y": 345,
                   "width": 95,
                   "height": 44
                 },
@@ -2217,17 +2217,17 @@
                 "viewport_width": 1920,
                 "viewport_height": 1080,
                 "scale_factor": null,
-                "raw_image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/59ae383b-120c-4cf9-a60f-6599b92ba7f0.webp",
+                "raw_image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/eb2baddb-6250-40d9-8988-cee58388775f.webp",
                 "raw_image_sas_url": "",
                 "annotated_image_url": "",
                 "annotated_image_sas_url": ""
               },
-              "reasoning": "PRIMARY: Click Start Step 1; role=link; text=\"Start Step 1 →\" | HINTS: container=The Slider card"
+              "reasoning": "PRIMARY: Click Start Step 1; role=link; text=\"Start Step 1 →\" | HINTS: within the first Slide Into the Green card"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:44.200850+00:00",
-          "end_timestamp": "2026-11-17T15:15:44.300Z",
+          "start_timestamp": "2026-11-17T15:36:20.941178+00:00",
+          "end_timestamp": "2026-11-17T15:36:21.112Z",
           "type": "agent_generated",
           "tags": [],
           "html_paths": [],
@@ -2253,21 +2253,21 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "PRIMARY: Click Start Step 1; role=link; text=\"Start Step 1 →\" | HINTS: container=The Slider card"
+          "reasoning": "PRIMARY: Click Start Step 1; role=link; text=\"Start Step 1 →\" | HINTS: within the first Slide Into the Green card"
         },
         {
-          "instruction_id": "a8e3007c-3046-4ad1-a341-11f7c2f34e92",
+          "instruction_id": "418c51e7-1632-4460-9f2d-91d3cd951326",
           "instruction_class": "driver_action",
           "module_id": "",
-          "instruction": "Checking whether the The Slider page is present",
+          "instruction": "Checking whether the Slide Into the Green heading is present",
           "command": "TEXTUAL_ANALYZER",
           "error": null,
           "parent_instruction_id": "",
@@ -2275,11 +2275,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "461e0ca3-8ca4-4d07-b41b-a99000519833",
-              "instruction_id": "a8e3007c-3046-4ad1-a341-11f7c2f34e92",
-              "instruction": "Checking whether the The Slider page is present",
-              "intent": "Checking whether the The Slider page is present",
-              "operation_start": "2026-11-17T15:15:59.664126+00:00",
+              "operation_id": "fbd3abbf-0ea7-4372-bfd6-b807620c8eaa",
+              "instruction_id": "418c51e7-1632-4460-9f2d-91d3cd951326",
+              "instruction": "Checking whether the Slide Into the Green heading is present",
+              "intent": "Checking whether the Slide Into the Green heading is present",
+              "operation_start": "2026-11-17T15:36:36.145695+00:00",
               "operation_end": "",
               "status": "success",
               "command": "TEXTUAL_ANALYZER",
@@ -2294,7 +2294,7 @@
               "grounded_by": "",
               "error_message": "",
               "code_snippet": "",
-              "sub_instruction_obj": "{\"operation\":\"Checking whether the The Slider page is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the The Slider heading is present at the top of the gauntlet page\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(4).textContent.trim() === 'The Slider'\",\"wrapped_js\":\"(els) => {\\n  const __m = {4: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(4).textContent.trim() === 'The Slider');\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"The Slider\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the The Slider heading is present at the top of the gauntlet page\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"the page shows The Slider\"}",
+              "sub_instruction_obj": "{\"operation\":\"Checking whether the Slide Into the Green heading is present\",\"agent\":\"Operation Agent\",\"operation_dict\":{\"operation_type\":\"TEXTUAL_ANALYZER\"},\"reasoning\":\"whether the Slide Into the Green heading is present and visible in the main page content\",\"variable\":{},\"secrets\":{},\"params\":{},\"code_js\":\"el(4).textContent.trim() === 'Slide Into the Green' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length)\",\"wrapped_js\":\"(els) => {\\n  const __m = {4: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(4).textContent.trim() === 'Slide Into the Green' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"Slide Into the Green\\\"i]\"],\"operator\":\"equals\",\"transforms\":[],\"query\":\"whether the Slide Into the Green heading is present and visible in the main page content\",\"expected_value\":\"true\",\"needs_unit_conversion\":false,\"condition\":\"The page shows Slide Into the Green.\"}",
               "test_id": "",
               "test_version": "",
               "action": "",
@@ -2305,14 +2305,14 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/461e0ca3-8ca4-4d07-b41b-a99000519833.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/fbd3abbf-0ea7-4372-bfd6-b807620c8eaa.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
               "url": "",
               "navigation_direction": "",
               "tagified_image_url": "",
-              "query_variable_name": "slider_page_shown",
+              "query_variable_name": "slide_into_the_green_visible",
               "query_variable_value": "true",
               "query_variable_type": "",
               "expected_value": "",
@@ -2398,14 +2398,14 @@
               "until_settle_ms": 0,
               "api_data": {},
               "output_variables": {
-                "slider_page_shown": "true"
+                "slide_into_the_green_visible": "true"
               },
               "visual_context": null,
-              "reasoning": "whether the The Slider heading is present at the top of the gauntlet page"
+              "reasoning": "whether the Slide Into the Green heading is present and visible in the main page content"
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:15:59.664126+00:00",
+          "start_timestamp": "2026-11-17T15:36:36.145695+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -2432,18 +2432,18 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
           "title": "",
           "used_variables": [],
-          "reasoning": "whether the The Slider heading is present at the top of the gauntlet page"
+          "reasoning": "whether the Slide Into the Green heading is present and visible in the main page content"
         },
         {
-          "instruction_id": "5d945751-84ed-4dc1-b52e-52069d76f64e",
+          "instruction_id": "264321ba-e276-40b3-9e1c-991f40336d9e",
           "instruction_class": "non_driver_action",
           "module_id": "",
           "instruction": "Assertion check",
@@ -2459,32 +2459,32 @@
                 "assertion_tree": {
                   "sub_results": [
                     {
-                      "description": "the page shows The Slider",
+                      "description": "The page shows Slide Into the Green.",
                       "passed": true,
                       "operator": "equals",
                       "transforms": [],
                       "json_path": null,
                       "expected": "true",
-                      "extracted_value": "{{slider_page_shown}}",
-                      "store_key": "slider_page_shown",
+                      "extracted_value": "{{slide_into_the_green_visible}}",
+                      "store_key": "slide_into_the_green_visible",
                       "variable_refs": {
-                        "{{slider_page_shown}}": "true"
+                        "{{slide_into_the_green_visible}}": "true"
                       }
                     }
                   ],
                   "sub_checks": [
                     {
-                      "description": "the page shows The Slider",
-                      "store_key": "slider_page_shown",
+                      "description": "The page shows Slide Into the Green.",
+                      "store_key": "slide_into_the_green_visible",
                       "expected_value": "true",
-                      "extracted_value": "{{slider_page_shown}}",
+                      "extracted_value": "{{slide_into_the_green_visible}}",
                       "operator": "equals",
                       "transforms": []
                     }
                   ],
                   "composite_operator": "and",
                   "verification": "",
-                  "claim": "the page shows The Slider",
+                  "claim": "the page shows Slide Into the Green",
                   "operator": [],
                   "assertion_operands": [],
                   "left_operand": null,
@@ -2500,11 +2500,11 @@
           "classification_error": {},
           "operations": [
             {
-              "operation_id": "d14b9fba-48c7-4a78-a4fc-7b31a5e90604",
-              "instruction_id": "5d945751-84ed-4dc1-b52e-52069d76f64e",
+              "operation_id": "83ef4e35-ee3e-48d4-b63b-45efd41a6e9d",
+              "instruction_id": "264321ba-e276-40b3-9e1c-991f40336d9e",
               "instruction": "Assertion check",
               "intent": "Assertion check",
-              "operation_start": "2026-11-17T15:16:00.332535+00:00",
+              "operation_start": "2026-11-17T15:36:36.832829+00:00",
               "operation_end": "",
               "status": "success",
               "command": "ASSERTION",
@@ -2530,7 +2530,7 @@
               "update_time_stamp": "",
               "locator_variable": "",
               "locator_variable_name": "",
-              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/d14b9fba-48c7-4a78-a4fc-7b31a5e90604.webp",
+              "image_url": "https://prodauteurartefacts.blob.core.windows.net/test-screenshots/test_screenshots/untagged_screenshot/83ef4e35-ee3e-48d4-b63b-45efd41a6e9d.webp",
               "alternative_xpaths": [],
               "attribute": "",
               "value_description": "",
@@ -2596,49 +2596,49 @@
                 "operands": [],
                 "sub_results": [
                   {
-                    "description": "the page shows The Slider",
+                    "description": "The page shows Slide Into the Green.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{slider_page_shown}}",
-                    "store_key": "slider_page_shown",
+                    "extracted_value": "{{slide_into_the_green_visible}}",
+                    "store_key": "slide_into_the_green_visible",
                     "variable_refs": {
-                      "{{slider_page_shown}}": "true"
+                      "{{slide_into_the_green_visible}}": "true"
                     }
                   }
                 ],
                 "sub_checks": [
                   {
-                    "description": "the page shows The Slider",
-                    "store_key": "slider_page_shown",
+                    "description": "The page shows Slide Into the Green.",
+                    "store_key": "slide_into_the_green_visible",
                     "expected_value": "true",
-                    "extracted_value": "{{slider_page_shown}}",
+                    "extracted_value": "{{slide_into_the_green_visible}}",
                     "operator": "equals",
                     "transforms": []
                   }
                 ],
                 "composite_operator": "and",
-                "verification": "The page displays The Slider.",
-                "claim": "the page shows The Slider"
+                "verification": "The page displays Slide Into the Green.",
+                "claim": "the page shows Slide Into the Green"
               },
               "assertion_tree": {
                 "assertion_id": "assert_cp_2",
                 "status": "passed",
-                "description": "the page shows The Slider",
+                "description": "the page shows Slide Into the Green",
                 "sub_results": [
                   {
-                    "description": "the page shows The Slider",
+                    "description": "The page shows Slide Into the Green.",
                     "passed": true,
                     "operator": "equals",
                     "transforms": [],
                     "json_path": null,
                     "expected": "true",
-                    "extracted_value": "{{slider_page_shown}}",
-                    "store_key": "slider_page_shown",
+                    "extracted_value": "{{slide_into_the_green_visible}}",
+                    "store_key": "slide_into_the_green_visible",
                     "variable_refs": {
-                      "{{slider_page_shown}}": "true"
+                      "{{slide_into_the_green_visible}}": "true"
                     }
                   }
                 ],
@@ -2646,7 +2646,7 @@
                 "passed": true,
                 "step": 7,
                 "is_final": true,
-                "verification": "The page displays The Slider.",
+                "verification": "The page displays Slide Into the Green.",
                 "error_message": null,
                 "duration_ms": 0
               },
@@ -2688,7 +2688,7 @@
             }
           ],
           "status": "success",
-          "start_timestamp": "2026-11-17T15:16:00.332535+00:00",
+          "start_timestamp": "2026-11-17T15:36:36.832829+00:00",
           "end_timestamp": "",
           "type": "agent_generated",
           "tags": [],
@@ -2715,9 +2715,9 @@
           "network_assertion_content": {},
           "screenshot_command": "",
           "smartui_contents": {},
-          "generative_id": "86f1d0203f0c478eb185357d703ab30c",
+          "generative_id": "5bc38b52f1c04e0fa751e78d6604fd5a",
           "plan_id": "",
-          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows The Slider",
+          "generative_objective": "Go to http://localhost:3000/gauntlet and verify the page shows The Gauntlet and five cards named Slide Into the Green, Paperwork Hell, Doomscroll for Real, Don't Trust the Voices and Homework You Can't Skip, and the Start Step 1 button is visible, then click Start Step 1 and verify the page shows Slide Into the Green",
           "error_message": "",
           "error_code": "",
           "reason": "",
@@ -2731,9 +2731,9 @@
       "result_code": null,
       "bifurcation_context": [],
       "approach_reason": [
-        "You asked to start Step 1 of The Gauntlet.",
-        "The challenge list showed The Slider, Form Fill-Up, Scroll Hunt, Injection Trap, and Download Challenge, with the Start Step 1 button available.",
-        "Clicked Start Step 1 and reached the The Slider page."
+        "The requested action was to start Step 1 from The Gauntlet challenge list.",
+        "The Gauntlet page displayed all five challenge cards, including Slide Into the Green, along with the Start Step 1 button.",
+        "Clicked Start Step 1 and opened the Slide Into the Green page successfully."
       ],
       "one_liner": null
     }
@@ -2741,7 +2741,7 @@
   "modules": [],
   "uploaded_files": [],
   "test_params": [],
-  "test_level_variables": "[{\"name\":\"gauntlet_page_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"slider_card_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"form_fill_up_card_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"scroll_hunt_card_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"injection_trap_card_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"download_challenge_card_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"start_step_1_button_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"slider_page_shown\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"}]",
+  "test_level_variables": "[{\"name\":\"the_gauntlet_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"slide_into_the_green_card_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"paperwork_hell_card_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"doomscroll_for_real_card_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"dont_trust_the_voices_card_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"homework_you_cant_skip_card_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"start_step_1_button_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"},{\"name\":\"slide_into_the_green_visible\",\"value\":\"true\",\"value_type\":\"test_level\",\"variable_description\":\"ANALYZE result\"}]",
   "test_global_variables": [],
   "max_network_wait": 0,
   "wait_buffer": 0,

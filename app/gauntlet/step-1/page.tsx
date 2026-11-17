@@ -91,7 +91,7 @@ export default function StepOne() {
           STEP 1 OF 5 · THE GAUNTLET
         </p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-          The Slider
+          Slide Into the Green
         </h1>
         <p className="mx-auto mt-3 max-w-md text-base text-zinc-400">
           Set the slider inside the green zone. Steady hands, exact numbers.

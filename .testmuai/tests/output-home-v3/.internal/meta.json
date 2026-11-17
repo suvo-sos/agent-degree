@@ -5,5 +5,14 @@
   "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
   "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
   "org_id": "3433793",
-  "session_name": "home-v3"
+  "session_name": "home-v3",
+  "executions": [
+    {
+      "execution_id": "66c45728-960f-4b48-9415-e314e222acaa",
+      "run_kind": "replay",
+      "status": "passed",
+      "valid": true,
+      "at": "2026-11-17T16:14:07.134Z"
+    }
+  ]
 }

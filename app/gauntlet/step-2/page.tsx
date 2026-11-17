@@ -458,7 +458,7 @@ export default function StepTwo() {
         )}
 
         <div className="mt-12">
-          <StepPagination current={2} available={2} />
+          <StepPagination current={2} available={3} />
         </div>
       </div>
     </div>

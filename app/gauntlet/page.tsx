@@ -18,9 +18,9 @@ const STEPS = [
   },
   {
     n: 3,
-    title: "Doomscroll for Real",
+    title: "The Control Room",
     color: "bg-amber-500",
-    href: null,
+    href: "/gauntlet/step-3",
   },
   {
     n: 4,

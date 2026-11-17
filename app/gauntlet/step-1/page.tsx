@@ -400,7 +400,7 @@ export default function StepOne() {
         )}
 
         <div className="mt-12">
-          <StepPagination current={1} available={2} />
+          <StepPagination current={1} available={3} />
         </div>
       </div>
     </div>

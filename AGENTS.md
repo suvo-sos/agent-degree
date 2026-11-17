@@ -45,11 +45,17 @@ code, never by weakening the test.
   radio, dropdown and date, (4) fix two wrong pre-filled values by comparing
   with the record, (5) sign the form, tick the declaration and enter today's
   date. Kane-tested and passing (flow challenge-2-v1, 144s, ~33 credits).
-- Not built yet: Challenge 3 (scroll hunt), Challenge 4 (prompt-injection
-  trap), Challenge 5 (download the report and answer a question from it).
-  Leaderboard and certificates not built yet.
-- Kane credits: ~10,520 left (Nov 18 night, after the challenge-2-v1 run).
-  A short check costs ~6–11 credits; a full challenge run costs ~33–36.
+- Done: Challenge 3 as 10 component tests ("The Control Room"): menu Option 6,
+  progress bar to 75, colour picker #885566, switch on, Settings tab, Section 3
+  of the accordion, 4 stars, search banana and pick it, counter to 5, tick
+  Apple and Mango. Kane-tested and passing (flow challenge-3-v1, 227s,
+  ~53 credits — 10 tests cost more).
+- Not built yet: Challenge 4 (prompt-injection trap), Challenge 5 (download
+  the report and answer a question from it). Leaderboard and certificates not
+  built yet.
+- Kane credits: ~10,435 left (Nov 18 night, after the challenge-3-v1 run).
+  A short check costs ~6–11 credits; a full challenge run costs ~33–53
+  depending on test count.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
 that looks like a captcha. A run failed in 31 seconds just because the page

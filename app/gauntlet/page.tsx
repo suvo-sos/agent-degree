@@ -91,10 +91,13 @@ export default function Gauntlet() {
         <div className="mt-12 space-y-4">
           {STEPS.map((step) => {
             const isPassed = !!passed[`step${step.n}`];
+            const isSkipped = !!passed[`step${step.n}Skipped`];
             const prevPassed =
-              step.n === 1 || !!passed[`step${step.n - 1}`];
+              step.n === 1 ||
+              !!passed[`step${step.n - 1}`] ||
+              !!passed[`step${step.n - 1}Skipped`];
             const available = step.href !== null && prevPassed;
-            const locked = !isPassed && !available;
+            const locked = !isPassed && !isSkipped && !available;
 
             return (
               <div
@@ -122,6 +125,18 @@ export default function Gauntlet() {
                     <p className="text-sm font-semibold text-green-400">
                       Passed ✓
                     </p>
+                  ) : isSkipped ? (
+                    <div className="flex items-center gap-3">
+                      <p className="text-sm font-semibold text-amber-400">
+                        Skipped
+                      </p>
+                      <Link
+                        href={step.href as string}
+                        className="inline-flex h-11 items-center justify-center rounded-full border border-zinc-600 px-6 text-sm font-semibold text-zinc-200 transition-colors hover:border-zinc-400"
+                      >
+                        Retry Step {step.n} →
+                      </Link>
+                    </div>
                   ) : available ? (
                     <Link
                       href={step.href as string}

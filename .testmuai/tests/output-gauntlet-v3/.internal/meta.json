@@ -5,5 +5,14 @@
   "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
   "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
   "org_id": "3433793",
-  "session_name": "gauntlet-v3"
+  "session_name": "gauntlet-v3",
+  "executions": [
+    {
+      "execution_id": "ff73900d-dd74-462d-93c5-abb6c2f48bb7",
+      "run_kind": "replay",
+      "status": "passed",
+      "valid": true,
+      "at": "2026-11-17T15:53:02.958Z"
+    }
+  ]
 }

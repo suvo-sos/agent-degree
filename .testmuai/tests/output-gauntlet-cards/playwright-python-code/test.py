@@ -1,0 +1,60 @@
+import os
+import testmu
+from testmu import expect, var, set_var
+from playwright.async_api import Page
+
+testmu.configure(
+    build="870b39f0-f955-494b-aacb-bd1497b2a0ef",
+    name="Start The Slider Challenge",
+    tc_id="TC-12",
+    network=os.getenv("NETWORK", "false").lower() == "true",
+    variables={"gauntlet_title_check": "true", "slider_card_visible": "true", "form_fill_up_card_visible": "true", "scroll_hunt_card_visible": "true", "injection_trap_card_visible": "true", "download_challenge_card_visible": "true", "start_step_1_button_visible": "true", "slider_page_title_check": "true"},
+    auto_heal_version="AH2",
+    default_action_timeout_ms=60000,
+    default_navigation_timeout_ms=60000,
+    kane_run_v4=True,
+)
+
+@testmu.test
+async def test(page: Page):
+    async with testmu.step('Navigate to http://localhost:3000/gauntlet', instruction_id='f8efdc62-033a-4858-b908-98682e9e03da'):
+        await page.goto("http://localhost:3000/gauntlet")
+    
+    async with testmu.step('Checking whether the page title is present'):
+        set_var('gauntlet_title_check', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {1: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(1).textContent.trim() === 'The Gauntlet' && !!(el(1).offsetWidth || el(1).offsetHeight || el(1).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="The Gauntlet"i]'], query='whether the The Gauntlet heading at the top of the page is present', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='the page shows The Gauntlet'))
+    
+    async with testmu.step('Checking whether the The Slider card is present'):
+        set_var('slider_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {4: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(4).textContent.trim() === 'The Slider' && !!(el(4).offsetWidth || el(4).offsetHeight || el(4).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="The Slider"i]'], query='whether a card for The Slider is present in the challenge list', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='a card for The Slider is shown'))
+    
+    async with testmu.step('Checking whether the Form Fill-Up card is present'):
+        set_var('form_fill_up_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {7: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(7).textContent.trim() === 'Form Fill-Up' && !!(el(7).offsetWidth || el(7).offsetHeight || el(7).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="Form Fill-Up"i]'], query='whether a card for Form Fill-Up is present in the challenge list', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='a card for Form Fill-Up is shown'))
+    
+    async with testmu.step('Checking whether the Scroll Hunt card is present'):
+        set_var('scroll_hunt_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {10: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(10).textContent.trim() === 'Scroll Hunt' && !!(el(10).offsetWidth || el(10).offsetHeight || el(10).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="Scroll Hunt"i]'], query='whether a card for Scroll Hunt is present in the challenge list', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='a card for Scroll Hunt is shown'))
+    
+    async with testmu.step('Checking whether the Injection Trap card is present'):
+        set_var('injection_trap_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {13: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(13).textContent.trim() === 'Injection Trap' && !!(el(13).offsetWidth || el(13).offsetHeight || el(13).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="Injection Trap"i]'], query='whether a card for Injection Trap is present in the challenge list', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='a card for Injection Trap is shown'))
+    
+    async with testmu.step('Checking whether the Download Challenge card is present'):
+        set_var('download_challenge_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {16: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(16).textContent.trim() === 'Download Challenge' && !!(el(16).offsetWidth || el(16).offsetHeight || el(16).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="Download Challenge"i]'], query='whether a card for Download Challenge is present in the challenge list', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='a card for Download Challenge is shown'))
+    
+    async with testmu.step('Checking whether the Start Step 1 button is present'):
+        set_var('start_step_1_button_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {6: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(6).textContent.trim() === 'Start Step 1' && !!(el(6).offsetWidth || el(6).offsetHeight || el(6).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=link[name="Start Step"i]'], query='whether the Start Step 1 button in the The Slider card is present', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='the Start Step 1 button is visible'))
+    
+    async with testmu.step('Assertion check', instruction_id='5864a81e-61c6-48da-84d8-0ca7aff48608'):
+        await testmu.verify_assertion(page, 'Assertion check', {'operator': ['equals'], 'assertion_operands': [], 'left_operand': None, 'right_operand': None, 'operands': [], 'sub_results': [{'description': 'the page shows The Gauntlet', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{gauntlet_title_check}}', 'store_key': 'gauntlet_title_check', 'variable_refs': {'{{gauntlet_title_check}}': 'true'}}, {'description': 'a card for The Slider is shown', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{slider_card_visible}}', 'store_key': 'slider_card_visible', 'variable_refs': {'{{slider_card_visible}}': 'true'}}, {'description': 'a card for Form Fill-Up is shown', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{form_fill_up_card_visible}}', 'store_key': 'form_fill_up_card_visible', 'variable_refs': {'{{form_fill_up_card_visible}}': 'true'}}, {'description': 'a card for Scroll Hunt is shown', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{scroll_hunt_card_visible}}', 'store_key': 'scroll_hunt_card_visible', 'variable_refs': {'{{scroll_hunt_card_visible}}': 'true'}}, {'description': 'a card for Injection Trap is shown', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{injection_trap_card_visible}}', 'store_key': 'injection_trap_card_visible', 'variable_refs': {'{{injection_trap_card_visible}}': 'true'}}, {'description': 'a card for Download Challenge is shown', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{download_challenge_card_visible}}', 'store_key': 'download_challenge_card_visible', 'variable_refs': {'{{download_challenge_card_visible}}': 'true'}}, {'description': 'the Start Step 1 button is visible', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{start_step_1_button_visible}}', 'store_key': 'start_step_1_button_visible', 'variable_refs': {'{{start_step_1_button_visible}}': 'true'}}], 'sub_checks': [{'description': 'the page shows The Gauntlet', 'store_key': 'gauntlet_title_check', 'expected_value': 'true', 'extracted_value': '{{gauntlet_title_check}}', 'operator': 'equals', 'transforms': []}, {'description': 'a card for The Slider is shown', 'store_key': 'slider_card_visible', 'expected_value': 'true', 'extracted_value': '{{slider_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': 'a card for Form Fill-Up is shown', 'store_key': 'form_fill_up_card_visible', 'expected_value': 'true', 'extracted_value': '{{form_fill_up_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': 'a card for Scroll Hunt is shown', 'store_key': 'scroll_hunt_card_visible', 'expected_value': 'true', 'extracted_value': '{{scroll_hunt_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': 'a card for Injection Trap is shown', 'store_key': 'injection_trap_card_visible', 'expected_value': 'true', 'extracted_value': '{{injection_trap_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': 'a card for Download Challenge is shown', 'store_key': 'download_challenge_card_visible', 'expected_value': 'true', 'extracted_value': '{{download_challenge_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': 'the Start Step 1 button is visible', 'store_key': 'start_step_1_button_visible', 'expected_value': 'true', 'extracted_value': '{{start_step_1_button_visible}}', 'operator': 'equals', 'transforms': []}], 'composite_operator': 'and', 'claim': 'the page shows The Gauntlet and five cards for The Slider, Form Fill-Up, Scroll Hunt, Injection Trap and Download Challenge, and the Start Step 1 button is visible'})
+    
+    async with testmu.step('Clicking Start Step 1 in the Slider card', instruction_id='0a14a60d-f242-4e9a-97f7-c40295832176'):
+        _loc_1 = page.locator("internal:role=link[name=\"Start Step\"i]")
+        
+        await _loc_1.click()
+    
+    async with testmu.step('Checking whether the The Slider heading is present'):
+        set_var('slider_page_title_check', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {2: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(2).textContent.trim() === 'The Slider');\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="The Slider"i]'], query='whether the The Slider heading is present at the top of the page', expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition='the page shows The Slider'))
+    
+    async with testmu.step('Assertion check', instruction_id='b57f3ab0-dc49-4cef-ae57-896678f2e4f6'):
+        await testmu.verify_assertion(page, 'Assertion check', {'operator': ['equals'], 'assertion_operands': [], 'left_operand': None, 'right_operand': None, 'operands': [], 'sub_results': [{'description': 'the page shows The Slider', 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{slider_page_title_check}}', 'store_key': 'slider_page_title_check', 'variable_refs': {'{{slider_page_title_check}}': 'true'}}], 'sub_checks': [{'description': 'the page shows The Slider', 'store_key': 'slider_page_title_check', 'expected_value': 'true', 'extracted_value': '{{slider_page_title_check}}', 'operator': 'equals', 'transforms': []}], 'composite_operator': 'and', 'claim': 'the page shows The Slider'})
+
+
+if __name__ == "__main__":
+    testmu.run(test)

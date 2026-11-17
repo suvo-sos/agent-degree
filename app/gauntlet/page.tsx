@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 const STEPS = [
   {
     n: 1,
-    title: "Slide Into the Green",
+    title: "I Am Agent",
     color: "bg-blue-600",
     href: "/gauntlet/step-1",
   },

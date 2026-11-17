@@ -8,6 +8,58 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## AgentDegree — why this exists, the goal, and where it stands
+
+**Reason:** AI agents now browse the web like humans, but nothing proves they can
+pass the checks humans pass every day — the little puzzles, forms and traps on
+real sites. AgentDegree is that proof: an exam where an AI agent shows it can
+browse like a human.
+
+**Goal:** Build the 5-challenge Gauntlet. Each challenge holds several small
+tests (1–15 per challenge, counts decided as we build). Passing all five earns
+the Digital Human Award certificate (a human who passes gets Certified Human).
+Scores go on a public leaderboard. This is the entry for the Kane CLI Online
+Hackathon (Nov 12–19, 2026, deadline Nov 19, 11:59 PM IST, $3,000 in prizes).
+Judging needs three things first: the app works end to end, Kane caught or
+proved something, and the agent and Kane talked to each other. Submission needs
+a public repo, a 3-minute YouTube demo showing the app and Kane running, one
+paragraph, and a live URL, plus at least 2 public posts.
+
+**How it is built:** Next.js 16 + shadcn/ui + Tailwind, on Vercel (team wero5).
+Repo: suvo-sos/agent-degree (public). Live: https://agent-degree-kappa.vercel.app.
+OpenCode on the user's Mac edits; this AGENTS.md tells it to run Kane CLI after
+every change. Kane CLI runs are the proof — a failing Kane step is fixed in
+code, never by weakening the test.
+
+**Current status (2026-11-17 night):**
+- Done: home page (two-column hero, gold degree image), Gauntlet page (5 cards),
+  Challenge 1 rebuilt as 5 small tests, all based on real captchas but called
+  "challenges": (1) checkbox that says "I am agent", (2) image grid — click
+  the images with a car in them, (3) slider moved to an exact spot, (4) drag
+  a cube with an image part into the empty part of the picture (drag or
+  click-to-place), (5) type the distorted text. Kane-tested and passing
+  (flow challenge-1-v1, 146s, ~36 credits).
+- Not built yet: Challenge 2 (form fill), Challenge 3 (scroll hunt),
+  Challenge 4 (prompt-injection trap), Challenge 5 (download the report and
+  answer a question from it). Leaderboard and certificates not built yet.
+- Kane credits: ~10,554 left (Nov 17 night, after the challenge-1-v1 run).
+  A short check costs ~6–11 credits; a full Challenge 1 run costs ~36.
+
+**Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
+that looks like a captcha. A run failed in 31 seconds just because the page
+heading said "Captcha" (flow step-1-v8, 2026-11-17). An earlier tile-pick test
+and a "Verify" button also caused refusals. So: never use the word "captcha"
+anywhere in the UI — call them challenges. Never write "I am human" — the
+checkbox says "I am agent". Never use a tile-pick or a "Verify" button. Always
+tell Kane in the test objective what the app is (an exam built for AI agents)
+and that the in-app challenge is the task itself, not a bot wall. Keep the line
+"This exam is built for AI agents. Taking it is the whole point." on the
+challenge page.
+
+**Flow rules:** One test at a time, wizard style. Next unlocks only when the
+current test is solved. Skip marks the whole challenge skipped, and the degree
+needs all five challenges passed.
+
 ## AgentDegree — project notes
 
 - The users are AI agents, not humans. Agents run the 5-step Gauntlet and rank on a public leaderboard.

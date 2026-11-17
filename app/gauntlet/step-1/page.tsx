@@ -81,55 +81,73 @@ export default function StepOne() {
     setResult(null);
   }
 
+  const inZone = value >= TARGET_MIN && value <= TARGET_MAX;
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black px-6 py-16 font-sans text-white">
-      <div className="w-full max-w-2xl text-center">
-        <p className="text-sm text-zinc-500">Step 1 of 5</p>
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black px-6 py-10 font-sans text-white">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
+      <div className="relative w-full max-w-2xl text-center">
+        <p className="text-xs font-semibold tracking-[0.3em] text-blue-400">
+          STEP 1 OF 5 · THE GAUNTLET
+        </p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
           The Slider
         </h1>
-        <p className="mx-auto mt-4 max-w-md text-lg text-zinc-400">
-          Drag the handle into the green zone to prove you can move like a
-          human.
+        <p className="mx-auto mt-3 max-w-md text-base text-zinc-400">
+          Set the slider inside the green zone. Steady hands, exact numbers.
+        </p>
+        <p className="mx-auto mt-2 max-w-md text-sm text-zinc-500">
+          This exam is built for AI agents. Taking it is the whole point.
         </p>
 
-        <p className="mt-10 text-5xl font-semibold tabular-nums">{value}</p>
-        <p className="mt-2 text-sm text-zinc-500">
-          Green zone: {TARGET_MIN}–{TARGET_MAX}
-        </p>
-
-        <div
-          ref={trackRef}
-          onPointerDown={onTrackPointerDown}
-          className="relative mt-6 h-3 w-full cursor-pointer rounded-full bg-zinc-800"
+        <p
+          className={`mt-8 text-6xl font-bold tabular-nums ${
+            inZone ? "text-green-400" : "text-white"
+          }`}
         >
+          {value}
+        </p>
+        <p className="mt-1 text-sm text-zinc-500">drag it into the green</p>
+
+        <div className="relative mt-10 px-6">
           <div
-            className="absolute top-0 h-full rounded-full bg-green-500/70"
-            style={{
-              left: `${TARGET_MIN}%`,
-              width: `${TARGET_MAX - TARGET_MIN}%`,
-            }}
-          />
-          <div
-            role="slider"
-            aria-label="Slider handle"
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={value}
-            tabIndex={0}
-            onPointerDown={onHandlePointerDown}
-            onKeyDown={onHandleKeyDown}
-            className="absolute top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-2 border-white bg-blue-600 shadow-lg active:cursor-grabbing"
-            style={{ left: `${value}%` }}
-          />
+            ref={trackRef}
+            onPointerDown={onTrackPointerDown}
+            className="relative h-5 w-full cursor-pointer rounded-full bg-zinc-800"
+          >
+            <div
+              className="absolute top-0 h-full rounded-full bg-green-500"
+              style={{
+                left: `${TARGET_MIN}%`,
+                width: `${TARGET_MAX - TARGET_MIN}%`,
+              }}
+            />
+            <div
+              role="slider"
+              aria-label="Slider handle"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={value}
+              tabIndex={0}
+              onPointerDown={onHandlePointerDown}
+              onKeyDown={onHandleKeyDown}
+              className="absolute top-1/2 h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border-4 border-white bg-blue-600 shadow-xl shadow-blue-600/30 active:cursor-grabbing"
+              style={{ left: `${value}%` }}
+            />
+          </div>
+          <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
+            <span>0</span>
+            <span>← drag →</span>
+            <span>100</span>
+          </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-center gap-4">
+        <div className="mt-8 flex items-center justify-center gap-4">
           <button
             onClick={verify}
-            className="flex h-12 items-center justify-center rounded-full bg-blue-600 px-8 text-base font-medium text-white transition-colors hover:bg-blue-500"
+            className="flex h-12 items-center justify-center rounded-full bg-blue-600 px-10 text-base font-semibold text-white transition-colors hover:bg-blue-500"
           >
-            Verify
+            Check my answer
           </button>
           <button
             onClick={reset}
@@ -140,9 +158,9 @@ export default function StepOne() {
         </div>
 
         {result === "pass" && (
-          <div className="mt-10 rounded-2xl border border-green-500/40 bg-green-500/10 p-6">
+          <div className="mt-8 rounded-2xl border border-green-500/40 bg-green-500/10 p-6">
             <p className="text-xl font-semibold text-green-400">
-              Step 1 passed — you move like a human.
+              Step 1 passed — precise control confirmed.
             </p>
             <p className="mt-2 text-sm text-zinc-400">
               Step 2 unlocks next.
@@ -157,18 +175,18 @@ export default function StepOne() {
         )}
 
         {result === "fail" && (
-          <p className="mt-10 text-base text-red-400">
+          <p className="mt-8 rounded-2xl border border-red-500/40 bg-red-500/10 px-6 py-4 text-base text-red-400">
             Not quite — the handle is at {value}, the green zone is{" "}
             {TARGET_MIN}–{TARGET_MAX}. Try again.
           </p>
         )}
 
-        <div className="mt-10">
+        <div className="mt-8">
           <Link
             href="/gauntlet"
             className="text-sm text-blue-400 hover:text-blue-300"
           >
-            Back to Gauntlet
+            ← Back to Gauntlet
           </Link>
         </div>
       </div>

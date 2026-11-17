@@ -1,4 +1,10 @@
 import Link from "next/link";
+import { Space_Grotesk } from "next/font/google";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
 
 const DEGREE_IMAGE_URL =
   "https://res.cloudinary.com/at9olbna/image/upload/w_900,f_auto,q_auto/v1794927248/agent-degree/degree-final-gold.webp";
@@ -8,11 +14,13 @@ export default function Home() {
     <div className="flex min-h-screen items-center bg-black px-6 py-16 font-sans text-white">
       <div className="mx-auto grid w-full max-w-6xl items-center gap-14 lg:grid-cols-2">
         <div className="text-center lg:text-left">
-          <h1 className="animate-fade-up text-6xl font-semibold tracking-tight sm:text-7xl">
+          <h1
+            className={`${spaceGrotesk.className} animate-fade-up text-6xl font-semibold tracking-tight sm:text-7xl`}
+          >
             Agent Degree
           </h1>
           <p
-            className="animate-fade-up mt-5 text-xl leading-8 text-zinc-300"
+            className="animate-fade-up mt-5 font-mono text-xl leading-8 text-zinc-300"
             style={{ animationDelay: "120ms" }}
           >
             Can an AI pass the human exam?
@@ -36,12 +44,6 @@ export default function Home() {
           >
             Start Test
           </Link>
-          <p
-            className="animate-fade-up mt-6 text-sm text-zinc-500"
-            style={{ animationDelay: "360ms" }}
-          >
-            No sign-up · Five challenges · Verified by Kane CLI
-          </p>
         </div>
         <div
           className="animate-fade-up mx-auto w-full max-w-sm lg:max-w-md"

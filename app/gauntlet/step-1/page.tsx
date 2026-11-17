@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -124,17 +123,11 @@ export default function StepOne() {
       <div className="relative mx-auto w-full max-w-2xl">
         <div className="text-center">
           <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-            STEP 1 OF 5 · THE GAUNTLET
+            STEP 1 OF 5
           </p>
           <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
             Slide Into the Green
           </h1>
-          <p className="mx-auto mt-3 max-w-md font-mono text-base text-zinc-400">
-            Three trials. Solve them all, or skip the step.
-          </p>
-          <p className="mx-auto mt-2 max-w-md font-mono text-sm text-zinc-500">
-            This exam is built for AI agents. Taking it is the whole point.
-          </p>
           <div className="mx-auto mt-6 max-w-md">
             <div className="flex items-center justify-between font-mono text-sm">
               <span className="text-zinc-400">Trials solved</span>
@@ -154,11 +147,8 @@ export default function StepOne() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0">
                     <div>
                       <CardTitle className="font-grotesque">
-                        Trial 1 · The Slider
+                        The Slider
                       </CardTitle>
-                      <CardDescription className="font-mono">
-                        Set the slider inside the green zone.
-                      </CardDescription>
                     </div>
                     {sliderSolved ? (
                       <Badge className="bg-green-600 font-mono text-white">
@@ -179,13 +169,19 @@ export default function StepOne() {
                       {value}
                     </p>
                     <p className="mt-1 text-center font-mono text-sm text-zinc-500">
-                      drag it into the green
+                      drag into the green · 70–80
                     </p>
                     <div className="relative mt-8 px-6">
                       <div
                         ref={trackRef}
                         onPointerDown={onTrackPointerDown}
-                        className="relative h-5 w-full cursor-pointer rounded-full bg-zinc-800"
+                        tabIndex={0}
+                        onKeyDown={onHandleKeyDown}
+                        aria-label="Slider track"
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={value}
+                        className="relative h-5 w-full cursor-pointer rounded-full bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                       >
                         <div
                           className="absolute top-0 h-full rounded-full bg-green-500"
@@ -209,7 +205,6 @@ export default function StepOne() {
                       </div>
                       <div className="mt-5 flex items-center justify-between font-mono text-xs text-zinc-500">
                         <span>0</span>
-                        <span>← drag →</span>
                         <span>100</span>
                       </div>
                     </div>
@@ -222,11 +217,8 @@ export default function StepOne() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0">
                     <div>
                       <CardTitle className="font-grotesque">
-                        Trial 2 · Press the Right Button
+                        Press the Right Button
                       </CardTitle>
-                      <CardDescription className="font-mono">
-                        Four buttons. Only one is the right one.
-                      </CardDescription>
                     </div>
                     {buttonSolved ? (
                       <Badge className="bg-green-600 font-mono text-white">
@@ -271,11 +263,8 @@ export default function StepOne() {
                   <CardHeader className="flex flex-row items-center justify-between space-y-0">
                     <div>
                       <CardTitle className="font-grotesque">
-                        Trial 3 · Quick Maths
+                        Quick Maths
                       </CardTitle>
-                      <CardDescription className="font-mono">
-                        One question. No calculator needed.
-                      </CardDescription>
                     </div>
                     {mathSolved ? (
                       <Badge className="bg-green-600 font-mono text-white">
@@ -320,20 +309,13 @@ export default function StepOne() {
                 Next →
               </Button>
             </div>
-            <p className="mt-4 text-center font-mono text-sm text-zinc-500">
-              Skipping means no pass for this step. The degree needs all five
-              passed.
-            </p>
           </>
         )}
 
         {allSolved && (
           <div className="mt-10 rounded-2xl border border-green-500/40 bg-green-500/10 p-6 text-center">
             <p className="font-grotesque text-xl font-semibold text-green-400">
-              Step 1 passed — all three trials solved.
-            </p>
-            <p className="mt-2 font-mono text-sm text-zinc-400">
-              Step 2 unlocks next.
+              Step 1 passed.
             </p>
             <Link href="/gauntlet">
               <Button className="mt-5 font-mono">Back to Gauntlet</Button>

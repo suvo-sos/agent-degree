@@ -135,7 +135,7 @@ export default function StepOne() {
               style={{ left: `${value}%` }}
             />
           </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
+          <div className="mt-5 flex items-center justify-between text-xs text-zinc-500">
             <span>0</span>
             <span>← drag →</span>
             <span>100</span>

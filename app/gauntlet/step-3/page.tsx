@@ -62,6 +62,7 @@ function TestCard({
 export default function StepThree() {
   const router = useRouter();
   const [step, setStep] = useState(0);
+  const [skipped, setSkipped] = useState<number[]>([]);
 
   // 1. Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -117,6 +118,7 @@ export default function StepThree() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 10;
   const currentSolved = solved[step];
+  const done = step === 9 && (currentSolved || skipped.includes(step));
 
   function pickColour(i: number) {
     if (COLOURS[i] === TARGET_COLOUR) {
@@ -158,18 +160,24 @@ export default function StepThree() {
     }
   }
 
-  function skip() {
-    saveProgress({ step3Skipped: true });
-    router.push("/gauntlet");
+  function skipTest() {
+    if (!currentSolved) {
+      setSkipped((prev) => [...prev, step]);
+    }
+    if (step < 9) setStep(step + 1);
   }
 
-  // Save the pass once, when all ten tests are solved.
+  // Save the result once, when the run ends.
   useEffect(() => {
-    if (allSolved) {
-      saveProgress({ step3: true, step3Skipped: false });
+    if (done) {
+      if (allSolved) {
+        saveProgress({ step3: true, step3Skipped: false });
+      } else {
+        saveProgress({ step3Skipped: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allSolved]);
+  }, [done]);
 
   const filteredFruits = FRUITS.filter((f) =>
     f.toLowerCase().includes(query.trim().toLowerCase()),
@@ -210,7 +218,7 @@ export default function StepThree() {
           </div>
         </div>
 
-        {!allSolved && (
+        {!done && (
           <>
             <div className="mt-10">
               {step === 0 && (
@@ -545,8 +553,8 @@ export default function StepThree() {
             </div>
 
             <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skip} className="font-mono">
-                Skip this challenge →
+              <Button variant="outline" onClick={skipTest} className="font-mono">
+                Skip this test →
               </Button>
               <Button
                 onClick={next}
@@ -570,8 +578,23 @@ export default function StepThree() {
           </div>
         )}
 
+        {done && !allSolved && (
+          <div className="mt-10 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-6 text-center">
+            <p className="font-grotesque text-xl font-semibold text-amber-400">
+              Challenge 3 finished — {skipped.length} test
+              {skipped.length > 1 ? "s" : ""} skipped.
+            </p>
+            <p className="mt-2 font-mono text-sm text-zinc-400">
+              Solve every test to pass. Retry from the Gauntlet.
+            </p>
+            <Link href="/gauntlet">
+              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+            </Link>
+          </div>
+        )}
+
         <div className="mt-12">
-          <StepPagination current={3} available={3} />
+          <StepPagination current={3} available={4} />
         </div>
       </div>
     </div>

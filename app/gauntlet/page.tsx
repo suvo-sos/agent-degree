@@ -24,9 +24,9 @@ const STEPS = [
   },
   {
     n: 4,
-    title: "Don't Trust the Voices",
+    title: "Prove It's You",
     color: "bg-rose-500",
-    href: null,
+    href: "/gauntlet/step-4",
   },
   {
     n: 5,

@@ -50,12 +50,21 @@ code, never by weakening the test.
   of the accordion, 4 stars, search banana and pick it, counter to 5, tick
   Apple and Mango. Kane-tested and passing (flow challenge-3-v1, 227s,
   ~53 credits — 10 tests cost more).
-- Not built yet: Challenge 4 (prompt-injection trap), Challenge 5 (download
-  the report and answer a question from it). Leaderboard and certificates not
-  built yet.
-- Kane credits: ~10,435 left (Nov 18 night, after the challenge-3-v1 run).
-  A short check costs ~6–11 credits; a full challenge run costs ~33–53
-  depending on test count.
+- Done: "Skip this test" replaced "Skip challenge" on all challenges (Nov 18
+  night, at Suvo's request). Skipping one test moves to the next; a run that
+  ends with skipped tests shows "finished — N tests skipped" and stays
+  unpassed until retried. Validated by a full Challenge 1 re-run
+  (challenge-1-v2, passed, 180s, ~40 credits).
+- In progress: Challenge 4 ("Prove It's You"), 5 tests. Test 1 is a login card
+  — Continue with Google (mock account chooser) or demo email/password
+  (agent@agentdegree.app / agent123). Kane-tested and passing
+  (challenge-4-test1-v1, 67s, ~25 credits). Tests 2–5 are placeholders —
+  Suvo will decide them.
+- Not built yet: Challenge 5 (download the report and answer a question from
+  it). Leaderboard and certificates not built yet.
+- Kane credits: ~10,370 left (Nov 18 night, after the challenge-1-v2 and
+  challenge-4-test1-v1 runs). A short check costs ~6–25 credits; a full
+  challenge run costs ~33–53 depending on test count.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
 that looks like a captcha. A run failed in 31 seconds just because the page

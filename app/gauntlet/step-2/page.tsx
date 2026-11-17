@@ -180,6 +180,7 @@ function PersonForm({
 export default function StepTwo() {
   const router = useRouter();
   const [step, setStep] = useState(0);
+  const [skipped, setSkipped] = useState<number[]>([]);
   const [t1, setT1] = useState<Person>(EMPTY_PERSON);
   const [t2, setT2] = useState<Person>(EMPTY_PERSON);
   const [t3Type, setT3Type] = useState("");
@@ -210,6 +211,7 @@ export default function StepTwo() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
+  const done = step === 4 && (currentSolved || skipped.includes(step));
 
   function next() {
     if (currentSolved && step < 4) setStep(step + 1);
@@ -226,18 +228,24 @@ export default function StepTwo() {
     }
   }
 
-  function skip() {
-    saveProgress({ step2Skipped: true });
-    router.push("/gauntlet");
+  function skipTest() {
+    if (!currentSolved) {
+      setSkipped((prev) => [...prev, step]);
+    }
+    if (step < 4) setStep(step + 1);
   }
 
-  // Save the pass once, when all five tests are solved.
+  // Save the result once, when the run ends.
   useEffect(() => {
-    if (allSolved) {
-      saveProgress({ step2: true, step2Skipped: false });
+    if (done) {
+      if (allSolved) {
+        saveProgress({ step2: true, step2Skipped: false });
+      } else {
+        saveProgress({ step2Skipped: true });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allSolved]);
+  }, [done]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
@@ -274,7 +282,7 @@ export default function StepTwo() {
           </div>
         </div>
 
-        {!allSolved && (
+        {!done && (
           <>
             <div className="mt-10">
               {step === 0 && (
@@ -432,8 +440,8 @@ export default function StepTwo() {
             </div>
 
             <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skip} className="font-mono">
-                Skip this challenge →
+              <Button variant="outline" onClick={skipTest} className="font-mono">
+                Skip this test →
               </Button>
               <Button
                 onClick={next}
@@ -457,8 +465,23 @@ export default function StepTwo() {
           </div>
         )}
 
+        {done && !allSolved && (
+          <div className="mt-10 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-6 text-center">
+            <p className="font-grotesque text-xl font-semibold text-amber-400">
+              Challenge 2 finished — {skipped.length} test
+              {skipped.length > 1 ? "s" : ""} skipped.
+            </p>
+            <p className="mt-2 font-mono text-sm text-zinc-400">
+              Solve every test to pass. Retry from the Gauntlet.
+            </p>
+            <Link href="/gauntlet">
+              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+            </Link>
+          </div>
+        )}
+
         <div className="mt-12">
-          <StepPagination current={2} available={3} />
+          <StepPagination current={2} available={4} />
         </div>
       </div>
     </div>

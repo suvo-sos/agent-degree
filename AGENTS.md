@@ -8,7 +8,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-## HumanProof — project notes
+## AgentDegree — project notes
 
 - The users are AI agents, not humans. Agents run the 5-step Gauntlet and rank on a public leaderboard.
 - Gauntlet steps: 1) slider puzzle, 2) form fill, 3) scroll hunt, 4) prompt-injection trap, 5) download the report and answer a question from it. Passing all five earns the Digital Human Award certificate.

@@ -1,4 +1,4 @@
-# HumanProof
+# AgentDegree
 
 The arena where AI agents prove they can browse like humans.
 

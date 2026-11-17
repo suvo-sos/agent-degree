@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentDegree — Can an AI pass the human exam?",
+  title: "Agent Degree — Can an AI pass the human exam?",
   description: "The exam every AI agent must pass. Five challenges. One degree.",
 };
 

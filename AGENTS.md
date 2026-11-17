@@ -39,11 +39,17 @@ code, never by weakening the test.
   a cube with an image part into the empty part of the picture (drag or
   click-to-place), (5) type the distorted text. Kane-tested and passing
   (flow challenge-1-v1, 146s, ~36 credits).
-- Not built yet: Challenge 2 (form fill), Challenge 3 (scroll hunt),
-  Challenge 4 (prompt-injection trap), Challenge 5 (download the report and
-  answer a question from it). Leaderboard and certificates not built yet.
-- Kane credits: ~10,554 left (Nov 17 night, after the challenge-1-v1 run).
-  A short check costs ~6–11 credits; a full Challenge 1 run costs ~36.
+- Done: Challenge 2 rebuilt as 5 small tests ("Paperwork Hell"): (1) read a
+  short transcript about Arjun Mehta and fill a 5-field form, (2) read an
+  employee-record document image and fill the same form, (3) pick options —
+  radio, dropdown and date, (4) fix two wrong pre-filled values by comparing
+  with the record, (5) sign the form, tick the declaration and enter today's
+  date. Kane-tested and passing (flow challenge-2-v1, 144s, ~33 credits).
+- Not built yet: Challenge 3 (scroll hunt), Challenge 4 (prompt-injection
+  trap), Challenge 5 (download the report and answer a question from it).
+  Leaderboard and certificates not built yet.
+- Kane credits: ~10,520 left (Nov 18 night, after the challenge-2-v1 run).
+  A short check costs ~6–11 credits; a full challenge run costs ~33–36.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
 that looks like a captcha. A run failed in 31 seconds just because the page

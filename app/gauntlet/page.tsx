@@ -14,7 +14,7 @@ const STEPS = [
     n: 2,
     title: "Paperwork Hell",
     color: "bg-violet-600",
-    href: null,
+    href: "/gauntlet/step-2",
   },
   {
     n: 3,

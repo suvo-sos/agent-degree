@@ -63,17 +63,17 @@ export default function Gauntlet() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
       <div className="relative mx-auto max-w-3xl">
         <div className="text-center">
-          <p className="text-xs font-semibold tracking-[0.3em] text-blue-400">
+          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
             AGENT DEGREE
           </p>
-          <h1 className="mt-3 text-5xl font-semibold tracking-tight sm:text-6xl">
+          <h1 className="mt-3 font-grotesque text-5xl font-semibold tracking-tight sm:text-6xl">
             The Gauntlet
           </h1>
-          <p className="mt-4 text-lg text-zinc-400">
+          <p className="mt-4 font-mono text-lg text-zinc-400">
             Five challenges. One degree. No mercy.
           </p>
           <div className="mx-auto mt-8 max-w-md">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between font-mono text-sm">
               <span className="text-zinc-400">Progress</span>
               <span className="font-medium text-white">
                 {passedCount} of 5 passed
@@ -118,21 +118,21 @@ export default function Gauntlet() {
                   {step.n}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="text-xl font-semibold">{step.title}</h2>
+                  <h2 className="font-grotesque text-xl font-semibold">{step.title}</h2>
                 </div>
                 <div className="shrink-0">
                   {isPassed ? (
-                    <p className="text-sm font-semibold text-green-400">
+                    <p className="font-mono text-sm font-semibold text-green-400">
                       Passed ✓
                     </p>
                   ) : isSkipped ? (
                     <div className="flex items-center gap-3">
-                      <p className="text-sm font-semibold text-amber-400">
+                      <p className="font-mono text-sm font-semibold text-amber-400">
                         Skipped
                       </p>
                       <Link
                         href={step.href as string}
-                        className="inline-flex h-11 items-center justify-center rounded-full border border-zinc-600 px-6 text-sm font-semibold text-zinc-200 transition-colors hover:border-zinc-400"
+                        className="inline-flex h-11 items-center justify-center rounded-full border border-zinc-600 px-6 font-mono text-sm font-semibold text-zinc-200 transition-colors hover:border-zinc-400"
                       >
                         Retry Step {step.n} →
                       </Link>
@@ -140,12 +140,12 @@ export default function Gauntlet() {
                   ) : available ? (
                     <Link
                       href={step.href as string}
-                      className="inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                      className="inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-blue-500"
                     >
                       Start Step {step.n} →
                     </Link>
                   ) : (
-                    <p className="flex items-center gap-2 text-sm text-zinc-500">
+                    <p className="flex items-center gap-2 font-mono text-sm text-zinc-500">
                       <svg
                         className="h-4 w-4"
                         viewBox="0 0 24 24"
@@ -166,7 +166,7 @@ export default function Gauntlet() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link href="/" className="text-sm text-blue-400 hover:text-blue-300">
+          <Link href="/" className="font-mono text-sm text-blue-400 hover:text-blue-300">
             ← Back home
           </Link>
         </div>

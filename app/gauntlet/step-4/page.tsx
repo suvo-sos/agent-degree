@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -82,8 +82,17 @@ export default function StepFour() {
   const [codeError, setCodeError] = useState<string | null>(null);
   const [emailVerified, setEmailVerified] = useState(false);
 
+  // 3. Listen and book
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [played, setPlayed] = useState(false);
+  const [bookDate, setBookDate] = useState("");
+  const [bookTime, setBookTime] = useState("");
+  const [bookError, setBookError] = useState<string | null>(null);
+  const [audioSolved, setAudioSolved] = useState(false);
+
   const loginSolved = loggedIn;
-  const solved = [loginSolved, emailVerified, false, false, false];
+  const solved = [loginSolved, emailVerified, audioSolved, false, false];
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
@@ -131,6 +140,38 @@ export default function StepFour() {
       setCodeError(null);
     } else {
       setCodeError("Wrong code. Open the email and try again.");
+    }
+  }
+
+  function tomorrowStr() {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${d.getFullYear()}-${m}-${day}`;
+  }
+
+  function togglePlay() {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) {
+      // The press counts as listening; headless autoplay policy may
+      // block actual sound, which is not the agent's fault.
+      setPlayed(true);
+      void a.play().catch(() => {
+        // ignore: the press still counts
+      });
+    } else {
+      a.pause();
+    }
+  }
+
+  function tryBook() {
+    if (bookDate === tomorrowStr() && bookTime === "16:00") {
+      setAudioSolved(true);
+      setBookError(null);
+    } else {
+      setBookError("That's not when they're coming. Listen again.");
     }
   }
 
@@ -413,7 +454,80 @@ export default function StepFour() {
                   )}
                 </TestCard>
               )}
-              {step === 2 && <ComingSoon n={3} />}
+              {step === 2 && (
+                <TestCard title="Listen and Book" solved={audioSolved}>
+                  <p className="text-center font-mono text-lg font-medium">
+                    Play the voicemail, listen to when they&apos;re
+                    coming, then set the calendar.
+                  </p>
+                  <div className="mx-auto mt-5 max-w-md space-y-4">
+                    <audio
+                      ref={audioRef}
+                      src="/challenge-4/voicemail.mp3"
+                      preload="auto"
+                      onPlay={() => setPlaying(true)}
+                      onPause={() => setPlaying(false)}
+                      onEnded={() => setPlaying(false)}
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={togglePlay}
+                      aria-label={
+                        playing ? "Pause voicemail" : "Play voicemail"
+                      }
+                      className="w-full font-mono"
+                    >
+                      {playing ? "❚❚ Pause voicemail" : "▶ Play voicemail"}
+                    </Button>
+                    {!played && (
+                      <p className="text-center font-mono text-sm text-zinc-500">
+                        Play the voicemail first.
+                      </p>
+                    )}
+                    <div>
+                      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        Date
+                      </label>
+                      <Input
+                        type="date"
+                        value={bookDate}
+                        onChange={(e) => setBookDate(e.target.value)}
+                        aria-label="Date"
+                        className="font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        Time
+                      </label>
+                      <Input
+                        type="time"
+                        value={bookTime}
+                        onChange={(e) => setBookTime(e.target.value)}
+                        aria-label="Time"
+                        className="font-mono"
+                      />
+                    </div>
+                    {bookError && (
+                      <p className="text-center font-mono text-sm text-red-400">
+                        {bookError}
+                      </p>
+                    )}
+                    <Button
+                      onClick={tryBook}
+                      disabled={!played}
+                      className="w-full font-mono"
+                    >
+                      Book it
+                    </Button>
+                  </div>
+                  {audioSolved && (
+                    <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
+                      Booked ✓
+                    </p>
+                  )}
+                </TestCard>
+              )}
               {step === 3 && <ComingSoon n={4} />}
               {step === 4 && <ComingSoon n={5} />}
             </div>

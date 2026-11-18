@@ -143,6 +143,19 @@ code, never by weakening the test.
   locally with seeded results (21/27, 78%, B) via Playwright +
   screenshots; the certificate PNG download works (1200x850). Not
   Kane-tested end to end (a full 5-challenge run is too long for one run).
+- Done: Gauntlet timer (Suvo's request, Nov 18 ~16:00 IST — show how long
+  it took to complete). The clock starts when the exam is first opened
+  (Gauntlet page or any step — the GauntletTimer component starts it on
+  mount) and stops when all 5 challenges are done. A live ticking timer
+  ("Time 12s") shows under the progress bar on the Gauntlet page and every
+  challenge page. The results page shows "Completed in Xm Ys" in the Marks
+  card, and the certificate carries the time too ("Grade A+ • Score 27/27 •
+  100% • 12s • 2026"). Stored in localStorage `agent-degree-timer`
+  ({start, end}); helpers in lib/results.ts (ensureTimerStart, finishTimer,
+  getTimer, timerElapsedMs, formatDuration). Verified end to end on
+  localhost: full 27-test run finished in 12s, results showed
+  "Completed in 12s". Committed 4014d62, live verified ("Time 3s" on the
+  live step-1 page).
 - Not built yet: Leaderboard and certificates.
 - Kane credits: ~9,747 left (Nov 18 ~14:15 IST, after the test-3 runs). A short check costs ~6–25 credits; a full challenge run costs ~33–61 depending on test count.
 

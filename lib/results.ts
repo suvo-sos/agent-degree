@@ -1,4 +1,4 @@
-// Per-test results for the Gauntlet review, marks, grade and certificate.
+// Per-test results for the Final Exam review, marks, grade and certificate.
 // Stored in localStorage as the agent finishes each challenge.
 
 export type TestStatus = "solved" | "skipped" | "unsolved";
@@ -14,18 +14,18 @@ export const RESULTS_KEY = "agent-degree-results";
 export const PROGRESS_KEY = "agent-degree-progress";
 export const TIMER_KEY = "agent-degree-timer";
 
-export interface GauntletTimer {
-  start: number; // ms since epoch, set when the Gauntlet is first opened
+export interface FinalExamTimer {
+  start: number; // ms since epoch, set when the Final Exam is first opened
   end: number | null; // ms since epoch, set when all 5 challenges are done
 }
 
-// Start the Gauntlet clock on first open; never restart it.
+// Start the Final Exam clock on first open; never restart it.
 export function ensureTimerStart() {
   try {
     if (!localStorage.getItem(TIMER_KEY)) {
       localStorage.setItem(
         TIMER_KEY,
-        JSON.stringify({ start: Date.now(), end: null } as GauntletTimer),
+        JSON.stringify({ start: Date.now(), end: null } as FinalExamTimer),
       );
     }
   } catch {
@@ -33,12 +33,12 @@ export function ensureTimerStart() {
   }
 }
 
-// Stop the clock when the Gauntlet is complete; no-op if already stopped.
+// Stop the clock when the Final Exam is complete; no-op if already stopped.
 export function finishTimer() {
   try {
     const raw = localStorage.getItem(TIMER_KEY);
     if (!raw) return;
-    const t = JSON.parse(raw) as GauntletTimer;
+    const t = JSON.parse(raw) as FinalExamTimer;
     if (t.end === null) {
       localStorage.setItem(
         TIMER_KEY,
@@ -50,17 +50,17 @@ export function finishTimer() {
   }
 }
 
-export function getTimer(): GauntletTimer | null {
+export function getTimer(): FinalExamTimer | null {
   try {
     const raw = localStorage.getItem(TIMER_KEY);
-    return raw ? (JSON.parse(raw) as GauntletTimer) : null;
+    return raw ? (JSON.parse(raw) as FinalExamTimer) : null;
   } catch {
     return null;
   }
 }
 
 // Elapsed ms: end - start once finished, otherwise now - start.
-export function timerElapsedMs(t: GauntletTimer | null): number | null {
+export function timerElapsedMs(t: FinalExamTimer | null): number | null {
   if (!t) return null;
   const end = t.end ?? Date.now();
   return Math.max(0, end - t.start);
@@ -199,7 +199,7 @@ export function finishedChallenges(): number[] {
   }
 }
 
-export function isGauntletComplete(): boolean {
+export function isFinalExamComplete(): boolean {
   return finishedChallenges().length === 5;
 }
 

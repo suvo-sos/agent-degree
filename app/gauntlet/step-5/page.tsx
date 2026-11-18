@@ -162,13 +162,13 @@ export default function StepFive() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
 
-  // When the whole Gauntlet is finished, the last test wipes the page
+  // When the whole Final Exam is finished, the last test wipes the page
   // to the white celebration instead of the normal done panel.
-  const gauntletCompleteNow =
+  const finalExamCompleteNow =
     done &&
     typeof window !== "undefined" &&
     [1, 2, 3, 4].every((n) => finishedChallenges().includes(n));
-  if (gauntletCompleteNow) {
+  if (finalExamCompleteNow) {
     return (
       <Celebration
         celebrate
@@ -391,7 +391,7 @@ export default function StepFive() {
               Challenge 5 passed.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
             </Link>
           </div>
         )}
@@ -403,10 +403,10 @@ export default function StepFive() {
               {skipped.length > 1 ? "s" : ""} skipped.
             </p>
             <p className="mt-2 font-mono text-sm text-zinc-400">
-              Solve every test to pass. Retry from the Gauntlet.
+              Solve every test to pass. Retry from the Final Exam.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
             </Link>
           </div>
         )}

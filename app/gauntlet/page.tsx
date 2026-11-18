@@ -71,7 +71,7 @@ function loadProgress(): Record<string, boolean> {
   }
 }
 
-export default function Gauntlet() {
+export default function FinalExam() {
   const [passed, setPassed] = useState<Record<string, boolean>>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);

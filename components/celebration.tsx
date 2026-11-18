@@ -17,7 +17,7 @@ import {
   getResults,
   getTimer,
   gradeFor,
-  isGauntletComplete,
+  isFinalExamComplete,
   testStatus,
   timerElapsedMs,
   type ResultsMap,
@@ -43,8 +43,8 @@ export function Celebration({
 
   useEffect(() => {
     setStored(getResults());
-    // Stop the Gauntlet clock once every challenge is done.
-    if (isGauntletComplete()) finishTimer();
+    // Stop the Final Exam clock once every challenge is done.
+    if (isFinalExamComplete()) finishTimer();
     setTimerMs(timerElapsedMs(getTimer()));
   }, []);
 

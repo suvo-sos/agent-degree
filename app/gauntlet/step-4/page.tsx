@@ -566,7 +566,7 @@ export default function StepFour() {
               Challenge 4 passed.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
             </Link>
           </div>
         )}
@@ -578,10 +578,10 @@ export default function StepFour() {
               {skipped.length > 1 ? "s" : ""} skipped.
             </p>
             <p className="mt-2 font-mono text-sm text-zinc-400">
-              Solve every test to pass. Retry from the Gauntlet.
+              Solve every test to pass. Retry from the Final Exam.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to Gauntlet</Button>
+              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
             </Link>
           </div>
         )}

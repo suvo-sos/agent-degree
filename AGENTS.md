@@ -15,7 +15,7 @@ pass the checks humans pass every day — the little puzzles, forms and traps on
 real sites. AgentDegree is that proof: an exam where an AI agent shows it can
 browse like a human.
 
-**Goal:** Build the 5-challenge Gauntlet. Each challenge holds several small
+**Goal:** Build the 5-challenge Final Exam. Each challenge holds several small
 tests (1–15 per challenge, counts decided as we build). Passing all five earns
 the Digital Human Award certificate (a human who passes gets Certified Human).
 Scores go on a public leaderboard. This is the entry for the Kane CLI Online
@@ -32,7 +32,7 @@ every change. Kane CLI runs are the proof — a failing Kane step is fixed in
 code, never by weakening the test.
 
 **Current status (2026-11-18 morning):**
-- Done: home page (two-column hero, gold degree image), Gauntlet page (5 cards),
+- Done: home page (two-column hero, gold degree image), Final Exam page (5 cards),
   Challenge 1 rebuilt as 5 small tests, all based on real captchas but called
   "challenges": (1) checkbox that says "I am agent", (2) image grid — click
   the images with a car in them, (3) slider moved to an exact spot, (4) drag
@@ -129,7 +129,7 @@ code, never by weakening the test.
   ~/workspace/agent-degree-ad/out/agent-degree-ad.mp4). Mux CLI 4.0.0
   logged in (env default). Mux token lives only in the CLI login on this
   PC (the vault can't hold its two secrets).
-- Done: the Gauntlet finish — results, marks, grade and certificate
+- Done: the Final Exam finish — results, marks, grade and certificate
   (Suvo's idea, Nov 18 afternoon). When the agent finishes the last test
   and all 5 challenges are done, the page wipes to white, confetti runs
   for 3 seconds (canvas-confetti) with "Congratulations", then shows the
@@ -139,15 +139,15 @@ code, never by weakening the test.
   "Kane — AI Agent", grade + score + year) with a Download button.
   Per-test results are saved to localStorage (lib/results.ts) when each
   challenge finishes; /results shows the same review without the confetti
-  intro, and the Gauntlet page links to it when all 5 are done. Verified
+  intro, and the Final Exam page links to it when all 5 are done. Verified
   locally with seeded results (21/27, 78%, B) via Playwright +
   screenshots; the certificate PNG download works (1200x850). Not
   Kane-tested end to end (a full 5-challenge run is too long for one run).
-- Done: Gauntlet timer (Suvo's request, Nov 18 ~16:00 IST — show how long
+- Done: Final Exam timer (Suvo's request, Nov 18 ~16:00 IST — show how long
   it took to complete). The clock starts when the exam is first opened
-  (Gauntlet page or any step — the GauntletTimer component starts it on
+  (Final Exam page or any step — the FinalExamTimer component starts it on
   mount) and stops when all 5 challenges are done. A live ticking timer
-  ("Time 12s") shows under the progress bar on the Gauntlet page and every
+  ("Time 12s") shows under the progress bar on the Final Exam page and every
   challenge page. The results page shows "Completed in Xm Ys" in the Marks
   card. Stored in localStorage `agent-degree-timer`
   ({start, end}); helpers in lib/results.ts (ensureTimerStart, finishTimer,
@@ -188,8 +188,8 @@ needs all five challenges passed.
 
 ## AgentDegree — project notes
 
-- The users are AI agents, not humans. Agents run the 5-step Gauntlet and rank on a public leaderboard.
-- Gauntlet steps: 1) I Am Agent, 2) Paperwork Hell, 3) The Control Room,
+- The users are AI agents, not humans. Agents run the 5-challenge Final Exam and rank on a public leaderboard.
+- Final Exam steps: 1) I Am Agent, 2) Paperwork Hell, 3) The Control Room,
   4) Prove It's You (5 tests: login, email verify, audio voicemail, video
   watch-and-answer, TBD), 5) Homework You Can't Skip (3 security tests:
   booking confirm, 40GB download, visual prompt injection — all done).

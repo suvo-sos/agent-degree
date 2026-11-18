@@ -6,14 +6,14 @@ import {
   formatDuration,
   getTimer,
   timerElapsedMs,
-  type GauntletTimer,
+  type FinalExamTimer,
 } from "@/lib/results";
 
-// Live Gauntlet clock. Ticks every second while the exam is running,
-// freezes on the final time once the Gauntlet is complete.
+// Live Final Exam clock. Ticks every second while the exam is running,
+// freezes on the final time once the Final Exam is complete.
 // Mounting this anywhere in the exam also starts the clock (first open).
-export function GauntletTimer({ className = "" }: { className?: string }) {
-  const [timer, setTimer] = useState<GauntletTimer | null>(null);
+export function FinalExamTimer({ className = "" }: { className?: string }) {
+  const [timer, setTimer] = useState<FinalExamTimer | null>(null);
 
   useEffect(() => {
     ensureTimerStart();

@@ -32,7 +32,7 @@ const STEPS = [
     n: 5,
     title: "Homework You Can't Skip",
     color: "bg-emerald-500",
-    href: null,
+    href: "/gauntlet/step-5",
   },
 ];
 

@@ -63,7 +63,14 @@ code, never by weakening the test.
   email in a mock inbox on the same page, reads the code and types it in.
   Kane-tested and passing (challenge-4-test2-v1, 97.5s, ~36 credits).
   Tests 3–5 are placeholders — proposed: connect MCP, approve-the-sign-in
-  popup, reset password. Awaiting Suvo's yes.
+  popup, reset password. Awaiting Suvo's yes. Test 3 is now decided
+  differently (Nov 18 morning): an audio test — the agent plays a voicemail
+  ("Hey, I'm coming tomorrow at 4 PM"), listens, and sets the calendar to
+  tomorrow 4 PM. Pure audio, nothing on the page gives the time away.
+  Kane v1 FAILED (audio cannot be transcribed — agents can't hear). Suvo's
+  call: no transcript (it would just be text), let Kane fail, tell it to
+  skip if it can't hear. Kane v2 PASSED with the skip instruction (played,
+  no audio audible, skipped, test 4 shown). Committed 8f5ef56, live.
 - PARKED 2026-11-18 ~07:35 IST: real Clerk login for test 1 was fully wired
   (@clerk/nextjs v7.10.2, ClerkProvider, /sso-callback, v7 Future API) and
   the build passed, but the dev instance has the Password strategy OFF, so
@@ -74,11 +81,20 @@ code, never by weakening the test.
   Do NOT use the production instance — it can't work on a *.vercel.app
   domain (Clerk needs DNS records only possible on an owned domain). The
   app stays on dev (test) keys, including live.
-- Not built yet: Challenge 5 (download the report and answer a question from
-  it). Leaderboard and certificates not built yet.
-- Kane credits: ~10,370 left (Nov 18 night, after the challenge-1-v2 and
-  challenge-4-test1-v1 runs). A short check costs ~6–25 credits; a full
-  challenge run costs ~33–53 depending on test count.
+- Done: Challenge 5 ("Homework You Can't Skip"), 1 test: watch the Agent
+  Degree promo ad (30s, hosted on Mux via @mux/mux-player-react, autoplay
+  muted loop) and answer one question about it — the name of the third
+  challenge in the video ("The Control Room"). Kane v1 FAILED (could not
+  read the small award text in the frames), v2 FAILED (waits/seeks drifted
+  past the 7s list scene, never saw it); fixed with a wider player, the
+  big-text list question, and an objective that seeks to ~7s. Kane v3
+  PASSED (145.4s, ~61 credits). Mux CLI 4.0.0 logged in (env default);
+  ad asset 7I2ApyK02SSXG1J2NPtwveW2LJy00wSCN6KnbJE9Rxc8s, playback ID
+  XgLHUqEkVu3jls2D6p1NA5i3l7fa8nPnAVbsaKz00ysE, video file in
+  ~/workspace/agent-degree-ad/out/agent-degree-ad.mp4. Mux token lives only
+  in the CLI login on this PC (the vault can't hold its two secrets).
+- Not built yet: Leaderboard and certificates.
+- Kane credits: ~9,966 left (Nov 18 morning, after the challenge-5-v3 run). A short check costs ~6–25 credits; a full challenge run costs ~33–61 depending on test count.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
 that looks like a captcha. A run failed in 31 seconds just because the page

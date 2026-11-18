@@ -358,27 +358,27 @@ export default function StepOne() {
         )}
 
         {allSolved && (
-          <div className="mt-10 rounded-2xl border border-green-500/40 bg-green-500/10 p-6 text-center">
-            <p className="font-grotesque text-xl font-semibold text-green-400">
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 1 passed.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}
 
         {done && !allSolved && (
-          <div className="mt-10 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-6 text-center">
-            <p className="font-grotesque text-xl font-semibold text-amber-400">
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <p className="font-grotesque text-3xl font-semibold text-amber-400">
               Challenge 1 finished — {skipped.length} test
               {skipped.length > 1 ? "s" : ""} skipped.
             </p>
-            <p className="mt-2 font-mono text-sm text-zinc-400">
+            <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Back to the Final Exam</Button>
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}

@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 
@@ -243,6 +244,7 @@ export default function StepTwo() {
       } else {
         saveProgress({ step2Skipped: true });
       }
+      saveChallengeResults(2, solved, skipped);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

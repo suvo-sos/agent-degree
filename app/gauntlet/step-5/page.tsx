@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { Celebration } from "@/components/celebration";
+import { finishedChallenges, saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 
@@ -154,9 +156,25 @@ export default function StepFive() {
       } else {
         saveProgress({ step5Skipped: true });
       }
+      saveChallengeResults(5, solved, skipped);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
+
+  // When the whole Gauntlet is finished, the last test wipes the page
+  // to the white celebration instead of the normal done panel.
+  const gauntletCompleteNow =
+    done &&
+    typeof window !== "undefined" &&
+    [1, 2, 3, 4].every((n) => finishedChallenges().includes(n));
+  if (gauntletCompleteNow) {
+    return (
+      <Celebration
+        celebrate
+        current={{ challenge: 5, solved, skipped }}
+      />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">

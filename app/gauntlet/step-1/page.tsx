@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { saveChallengeResults } from "@/lib/results";
 
 const TARGET_MIN = 70;
 const TARGET_MAX = 80;
@@ -137,6 +138,7 @@ export default function StepOne() {
       } else {
         saveProgress({ step1Skipped: true });
       }
+      saveChallengeResults(1, solved, skipped);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

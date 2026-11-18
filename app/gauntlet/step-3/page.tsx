@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 const TARGET_COLOUR = "#885566";
@@ -175,6 +176,7 @@ export default function StepThree() {
       } else {
         saveProgress({ step3Skipped: true });
       }
+      saveChallengeResults(3, solved, skipped);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

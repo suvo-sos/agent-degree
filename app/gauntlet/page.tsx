@@ -57,6 +57,9 @@ export default function Gauntlet() {
   }, []);
 
   const passedCount = STEPS.filter((s) => passed[`step${s.n}`]).length;
+  const allDone = STEPS.every(
+    (s) => passed[`step${s.n}`] || passed[`step${s.n}Skipped`],
+  );
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black px-6 py-16 font-sans text-white">
@@ -164,6 +167,17 @@ export default function Gauntlet() {
             );
           })}
         </div>
+
+        {allDone && (
+          <div className="mt-8 text-center">
+            <Link
+              href="/results"
+              className="inline-flex h-11 items-center justify-center rounded-full bg-green-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-green-500"
+            >
+              View results & certificate →
+            </Link>
+          </div>
+        )}
 
         <div className="mt-12 text-center">
           <Link href="/" className="font-mono text-sm text-blue-400 hover:text-blue-300">

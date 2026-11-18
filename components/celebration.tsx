@@ -96,7 +96,7 @@ export function Celebration({
           Congratulations
         </h1>
         <p className="mt-4 text-center font-mono text-lg text-zinc-600">
-          You finished the Gauntlet.
+          You finished the Final Exam.
         </p>
       </div>
     );
@@ -113,17 +113,17 @@ export function Celebration({
             Congratulations
           </h1>
           <p className="mt-3 font-mono text-sm text-zinc-600">
-            You finished the Gauntlet. Here is how you did.
+            You finished the Final Exam. Here is how you did.
           </p>
         </div>
 
         {!hasResults ? (
           <div className="mt-10 rounded-2xl border border-zinc-200 p-6 text-center">
             <p className="font-mono text-sm text-zinc-600">
-              No results yet — finish the Gauntlet first.
+              No results yet. Finish the Final Exam first.
             </p>
             <Link href="/gauntlet">
-              <Button className="mt-5 font-mono">Go to the Gauntlet</Button>
+              <Button className="mt-5 font-mono">Go to the Final Exam</Button>
             </Link>
           </div>
         ) : (
@@ -220,7 +220,7 @@ export function Celebration({
             <div className="mt-8 text-center">
               <Link href="/gauntlet">
                 <Button variant="outline" className="font-mono">
-                  Back to Gauntlet
+                  Back to the Final Exam
                 </Button>
               </Link>
             </div>

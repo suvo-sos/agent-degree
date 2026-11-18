@@ -1,0 +1,57 @@
+import os
+import testmu
+from testmu import expect, var, set_var
+from playwright.async_api import Page
+
+testmu.configure(
+    build="f5ca6512-7856-4463-b370-6dd052c4d68c",
+    name="Verify Exam Landing Page and Start First Challenge",
+    tc_id="TC-63",
+    network=os.getenv("NETWORK", "false").lower() == "true",
+    variables={"page_heading_check": "The Final Exam", "i_am_agent_card_visible": "true", "paperwork_hell_card_visible": "true", "the_control_room_card_visible": "true", "prove_its_you_card_visible": "true", "homework_you_cant_skip_card_visible": "true", "challenge_progress_visible": "true"},
+    auto_heal_version="AH2",
+    default_action_timeout_ms=60000,
+    default_navigation_timeout_ms=60000,
+    kane_run_v4=True,
+)
+
+@testmu.test
+async def test(page: Page):
+    async with testmu.step('Navigate to http://localhost:3000/gauntlet', instruction_id='f3f9f1c0-d490-47fc-90ca-8c110c81f394'):
+        await page.goto("http://localhost:3000/gauntlet")
+    
+    async with testmu.step('Reading the page heading'):
+        set_var('page_heading_check', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {2: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(2).textContent);\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:role=heading[name="The Final Exam"i]'], query='the page heading text at the top of the page', expected_value='The Final Exam', needs_unit_conversion=False, operator='equals', transforms=['strip'], condition="the page heading is 'The Final Exam'"))
+    
+    async with testmu.step('Checking whether the I Am Agent challenge card is present'):
+        set_var('i_am_agent_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {8: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(8).textContent.trim() === 'I Am Agent' && !!(el(8).offsetWidth || el(8).offsetHeight || el(8).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['div >> internal:has-text=/^I Am Agent$/ >> nth=0'], query="whether the challenge card named 'I Am Agent' is present in the challenge list", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the challenge card named 'I Am Agent' is shown"))
+    
+    async with testmu.step('Checking whether the Paperwork Hell challenge card is present'):
+        set_var('paperwork_hell_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {12: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(12).textContent.trim() === 'Paperwork Hell' && !!(el(12).offsetWidth || el(12).offsetHeight || el(12).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['div >> internal:has-text=/^Paperwork Hell$/ >> nth=0'], query="whether the challenge card named 'Paperwork Hell' is present in the challenge list", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the challenge card named 'Paperwork Hell' is shown"))
+    
+    async with testmu.step('Checking whether The Control Room challenge card is present'):
+        set_var('the_control_room_card_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {15: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(15).textContent.trim() === 'The Control Room' && !!(el(15).offsetWidth || el(15).offsetHeight || el(15).getClientRects().length));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['div >> internal:has-text=/^The Control Room$/ >> nth=0'], query="whether the challenge card named 'The Control Room' is present in the challenge list", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the challenge card named 'The Control Room' is shown"))
+    
+    async with testmu.step("Checking whether the Prove It's You challenge card is present"):
+        set_var('prove_its_you_card_visible', await testmu.textual_analyzer(page, wrapped_js='(els) => {\n  const __m = {18: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(18).textContent.trim() === "Prove It\'s You" && !!(el(18).offsetWidth || el(18).offsetHeight || el(18).getClientRects().length));\n  return (typeof __v === \'boolean\' ? String(__v) : __v);\n}', locators=["div >> internal:has-text=/^Prove It\\'s You$/ >> nth=0"], query="whether the challenge card named 'Prove It's You' is present in the challenge list", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the challenge card named 'Prove It's You' is shown"))
+    
+    async with testmu.step("Checking whether the Homework You Can't Skip challenge card is present"):
+        set_var('homework_you_cant_skip_card_visible', await testmu.textual_analyzer(page, wrapped_js='(els) => {\n  const __m = {21: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(21).textContent.trim() === "Homework You Can\'t Skip" && !!(el(21).offsetWidth || el(21).offsetHeight || el(21).getClientRects().length));\n  return (typeof __v === \'boolean\' ? String(__v) : __v);\n}', locators=["div >> internal:has-text=/^Homework You Can\\'t Skip$/ >> nth=0"], query="whether the challenge card named 'Homework You Can't Skip' is present in the challenge list", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the challenge card named 'Homework You Can't Skip' is shown"))
+    
+    async with testmu.step('Assertion check', instruction_id='f97e6570-219e-4d96-ab22-74094b0dab9a'):
+        await testmu.verify_assertion(page, 'Assertion check', {'operator': ['equals'], 'assertion_operands': [], 'left_operand': None, 'right_operand': None, 'operands': [], 'sub_results': [{'description': "the page heading is 'The Final Exam'", 'passed': True, 'operator': 'equals', 'transforms': ['strip'], 'json_path': None, 'expected': 'The Final Exam', 'extracted_value': '{{page_heading_check}}', 'store_key': 'page_heading_check', 'variable_refs': {'{{page_heading_check}}': 'The Final Exam'}}, {'description': "the challenge card named 'I Am Agent' is shown", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{i_am_agent_card_visible}}', 'store_key': 'i_am_agent_card_visible', 'variable_refs': {'{{i_am_agent_card_visible}}': 'true'}}, {'description': "the challenge card named 'Paperwork Hell' is shown", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{paperwork_hell_card_visible}}', 'store_key': 'paperwork_hell_card_visible', 'variable_refs': {'{{paperwork_hell_card_visible}}': 'true'}}, {'description': "the challenge card named 'The Control Room' is shown", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{the_control_room_card_visible}}', 'store_key': 'the_control_room_card_visible', 'variable_refs': {'{{the_control_room_card_visible}}': 'true'}}, {'description': "the challenge card named 'Prove It's You' is shown", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{prove_its_you_card_visible}}', 'store_key': 'prove_its_you_card_visible', 'variable_refs': {'{{prove_its_you_card_visible}}': 'true'}}, {'description': "the challenge card named 'Homework You Can't Skip' is shown", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{homework_you_cant_skip_card_visible}}', 'store_key': 'homework_you_cant_skip_card_visible', 'variable_refs': {'{{homework_you_cant_skip_card_visible}}': 'true'}}], 'sub_checks': [{'description': "the page heading is 'The Final Exam'", 'store_key': 'page_heading_check', 'expected_value': 'The Final Exam', 'extracted_value': '{{page_heading_check}}', 'operator': 'equals', 'transforms': ['strip']}, {'description': "the challenge card named 'I Am Agent' is shown", 'store_key': 'i_am_agent_card_visible', 'expected_value': 'true', 'extracted_value': '{{i_am_agent_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': "the challenge card named 'Paperwork Hell' is shown", 'store_key': 'paperwork_hell_card_visible', 'expected_value': 'true', 'extracted_value': '{{paperwork_hell_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': "the challenge card named 'The Control Room' is shown", 'store_key': 'the_control_room_card_visible', 'expected_value': 'true', 'extracted_value': '{{the_control_room_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': "the challenge card named 'Prove It's You' is shown", 'store_key': 'prove_its_you_card_visible', 'expected_value': 'true', 'extracted_value': '{{prove_its_you_card_visible}}', 'operator': 'equals', 'transforms': []}, {'description': "the challenge card named 'Homework You Can't Skip' is shown", 'store_key': 'homework_you_cant_skip_card_visible', 'expected_value': 'true', 'extracted_value': '{{homework_you_cant_skip_card_visible}}', 'operator': 'equals', 'transforms': []}], 'composite_operator': 'and', 'claim': "the page heading is 'The Final Exam' and it shows five challenge cards side by side named 'I Am Agent', 'Paperwork Hell', 'The Control Room', 'Prove It's You' and 'Homework You Can't Skip'"})
+    
+    async with testmu.step('Clicking the Start button on the first challenge card', instruction_id='e08f1de3-095d-4c9a-bafa-667c78b36a14'):
+        _loc_1 = page.locator("internal:role=link[name=\"Start →\"i]")
+        
+        await _loc_1.click()
+    
+    async with testmu.step('Checking whether the challenge progress text is present'):
+        set_var('challenge_progress_visible', await testmu.textual_analyzer(page, wrapped_js="(els) => {\n  const __m = {4: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(4).textContent.trim().toLowerCase() === 'challenge 1 of 5');\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}", locators=['internal:text="CHALLENGE 1 OF"i'], query="whether the page text 'Challenge 1 of 5' is present in the challenge progress paragraph", expected_value='true', needs_unit_conversion=False, operator='equals', transforms=[], condition="the page shows 'Challenge 1 of 5'"))
+    
+    async with testmu.step('Assertion check', instruction_id='a7b5da2a-a24b-40da-b81b-e6ba5b5814bd'):
+        await testmu.verify_assertion(page, 'Assertion check', {'operator': ['equals'], 'assertion_operands': [], 'left_operand': None, 'right_operand': None, 'operands': [], 'sub_results': [{'description': "the page shows 'Challenge 1 of 5'", 'passed': True, 'operator': 'equals', 'transforms': [], 'json_path': None, 'expected': 'true', 'extracted_value': '{{challenge_progress_visible}}', 'store_key': 'challenge_progress_visible', 'variable_refs': {'{{challenge_progress_visible}}': 'true'}}], 'sub_checks': [{'description': "the page shows 'Challenge 1 of 5'", 'store_key': 'challenge_progress_visible', 'expected_value': 'true', 'extracted_value': '{{challenge_progress_visible}}', 'operator': 'equals', 'transforms': []}], 'composite_operator': 'and', 'claim': "the page shows 'Challenge 1 of 5'"})
+
+
+if __name__ == "__main__":
+    testmu.run(test)

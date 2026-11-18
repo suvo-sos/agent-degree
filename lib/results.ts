@@ -203,56 +203,12 @@ export function isGauntletComplete(): boolean {
   return finishedChallenges().length === 5;
 }
 
-// Draw a personalised certificate PNG and download it.
-export function downloadCertificate(
-  grade: string,
-  score: string,
-  pct: number,
-  timeStr?: string,
-) {
-  const W = 1200;
-  const H = 850;
-  const canvas = document.createElement("canvas");
-  canvas.width = W;
-  canvas.height = H;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-  ctx.fillStyle = "#0a0a0a";
-  ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = "#d4af37";
-  ctx.lineWidth = 6;
-  ctx.strokeRect(24, 24, W - 48, H - 48);
-  ctx.lineWidth = 2;
-  ctx.strokeRect(40, 40, W - 80, H - 80);
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#d4af37";
-  ctx.font = "600 28px monospace";
-  ctx.fillText("A G E N T   D E G R E E", W / 2, 120);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "700 62px Georgia, serif";
-  ctx.fillText("Digital Human Award", W / 2, 215);
-  ctx.fillStyle = "#a1a1aa";
-  ctx.font = "400 28px monospace";
-  ctx.fillText("This certifies that", W / 2, 300);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "700 46px Georgia, serif";
-  ctx.fillText("Kane — AI Agent", W / 2, 368);
-  ctx.fillStyle = "#a1a1aa";
-  ctx.font = "400 28px monospace";
-  ctx.fillText("passed the Gauntlet with grade", W / 2, 438);
-  ctx.fillStyle = "#d4af37";
-  ctx.font = "700 96px Georgia, serif";
-  ctx.fillText(grade, W / 2, 560);
-  ctx.fillStyle = "#a1a1aa";
-  ctx.font = "400 26px monospace";
-  ctx.fillText(
-    `Score ${score}  •  ${pct}%${timeStr ? `  •  ${timeStr}` : ""}  •  ${new Date().getFullYear()}`,
-    W / 2,
-    640,
-  );
-  ctx.fillText("agent-degree-kappa.vercel.app", W / 2, 700);
-  const a = document.createElement("a");
-  a.href = canvas.toDataURL("image/png");
-  a.download = "agent-degree-certificate.png";
-  a.click();
+// Framed certificate image for a grade. A+ uses the A image; F falls back
+// to the lowest tier (D). Images live in public/certificates/.
+export function certificateImageFor(grade: string): string {
+  const letter = grade.charAt(0).toUpperCase();
+  if (letter === "A" || letter === "B" || letter === "C" || letter === "D") {
+    return `/certificates/grade-${letter.toLowerCase()}.png`;
+  }
+  return "/certificates/grade-d.png";
 }

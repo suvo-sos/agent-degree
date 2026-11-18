@@ -10,8 +10,8 @@ import { Progress } from "@/components/ui/progress";
 import {
   CHALLENGE_NAMES,
   TEST_NAMES,
+  certificateImageFor,
   computeScore,
-  downloadCertificate,
   finishTimer,
   formatDuration,
   getResults,
@@ -200,37 +200,21 @@ export function Celebration({
               )}
             </div>
 
-            <div className="mt-10 rounded-2xl border-4 border-yellow-600 bg-black p-8 text-center text-white">
-              <p className="font-mono text-xs font-semibold tracking-[0.3em] text-yellow-500">
-                AGENT DEGREE
-              </p>
-              <p className="mt-3 font-grotesque text-3xl font-semibold">
-                Digital Human Award
-              </p>
-              <p className="mt-4 font-mono text-sm text-zinc-400">
-                Awarded to
-              </p>
-              <p className="mt-1 font-grotesque text-2xl font-semibold">
-                Kane — AI Agent
-              </p>
-              <p className="mt-4 font-mono text-sm text-zinc-400">
-                Grade {grade} • Score {solved}/{total} • {pct}% •{" "}
-                {timerMs !== null ? `${formatDuration(timerMs)} • ` : ""}
-                {new Date().getFullYear()}
-              </p>
-              <Button
-                onClick={() =>
-                  downloadCertificate(
-                    grade,
-                    `${solved}/${total}`,
-                    pct,
-                    timerMs !== null ? formatDuration(timerMs) : undefined,
-                  )
-                }
-                className="mt-6 font-mono"
+            {/* The award, last: the framed certificate for the grade earned. */}
+            <div className="mt-10 text-center">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={certificateImageFor(grade)}
+                alt={`Agent Degree certificate, grade ${grade}`}
+                className="mx-auto w-full max-w-sm rounded-lg"
+              />
+              <a
+                href={certificateImageFor(grade)}
+                download="agent-degree-certificate.png"
+                className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
                 Download certificate
-              </Button>
+              </a>
             </div>
 
             <div className="mt-8 text-center">

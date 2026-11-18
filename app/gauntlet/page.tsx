@@ -146,7 +146,7 @@ export default function Gauntlet() {
                     >
                       <span
                         aria-hidden
-                        className="pointer-events-none absolute -top-8 -right-2 select-none font-grotesque text-[160px] leading-none font-bold text-white/[0.06]"
+                        className="pointer-events-none absolute -top-8 -right-2 select-none font-grotesque text-[240px] leading-none font-bold text-white/[0.06]"
                       >
                         {step.n}
                       </span>

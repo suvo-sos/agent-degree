@@ -149,14 +149,26 @@ code, never by weakening the test.
   mount) and stops when all 5 challenges are done. A live ticking timer
   ("Time 12s") shows under the progress bar on the Gauntlet page and every
   challenge page. The results page shows "Completed in Xm Ys" in the Marks
-  card, and the certificate carries the time too ("Grade A+ • Score 27/27 •
-  100% • 12s • 2026"). Stored in localStorage `agent-degree-timer`
+  card. Stored in localStorage `agent-degree-timer`
   ({start, end}); helpers in lib/results.ts (ensureTimerStart, finishTimer,
   getTimer, timerElapsedMs, formatDuration). Verified end to end on
   localhost: full 27-test run finished in 12s, results showed
   "Completed in 12s". Committed 4014d62, live verified ("Time 3s" on the
-  live step-1 page).
-- Not built yet: Leaderboard and certificates.
+  live step-1 page). (The certificate no longer carries the time — it is
+  now the framed image, see below.)
+- Done: certificate images per grade (Suvo's request, Nov 18 ~16:06 IST).
+  Four framed portrait certificates matching the hero degree (ornate gold
+  baroque frame, cream parchment, cap, AGENT DEGREE, Digital Human, Kane
+  AI Agent, Issued 2026), each with a large ornate gold grade letter
+  (A/B/C/D) in the center, minimal info — no score, no %, no URL.
+  public/certificates/grade-a.png … grade-d.png. The results page awards
+  the matching image as the LAST element, by grade (A+ and A -> A,
+  B -> B, C -> C, D and F -> D), via certificateImageFor() in
+  lib/results.ts; the Download button downloads the framed PNG directly.
+  The old canvas certificate (downloadCertificate) is removed. Verified
+  end to end on localhost (27/27 A+ shows the framed grade-A last) and
+  live. Commit b499361.
+- Not built yet: Leaderboard.
 - Kane credits: ~9,747 left (Nov 18 ~14:15 IST, after the test-3 runs). A short check costs ~6–25 credits; a full challenge run costs ~33–61 depending on test count.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything

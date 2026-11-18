@@ -518,8 +518,8 @@ export default function StepThree() {
             <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 3 passed.
             </p>
-            <Link href="/gauntlet">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+            <Link href="/gauntlet/step-4">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Prove It's You</Button>
             </Link>
           </div>
         )}
@@ -533,8 +533,8 @@ export default function StepThree() {
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
-            <Link href="/gauntlet">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+            <Link href="/gauntlet/step-4">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Prove It's You</Button>
             </Link>
           </div>
         )}

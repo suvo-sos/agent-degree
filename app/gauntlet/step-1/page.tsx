@@ -362,8 +362,8 @@ export default function StepOne() {
             <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 1 passed.
             </p>
-            <Link href="/gauntlet">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+            <Link href="/gauntlet/step-2">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Paperwork Hell</Button>
             </Link>
           </div>
         )}
@@ -377,8 +377,8 @@ export default function StepOne() {
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
-            <Link href="/gauntlet">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+            <Link href="/gauntlet/step-2">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Paperwork Hell</Button>
             </Link>
           </div>
         )}

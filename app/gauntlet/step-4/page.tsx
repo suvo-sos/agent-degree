@@ -47,19 +47,6 @@ function TestCard({
   );
 }
 
-function ComingSoon({ n }: { n: number }) {
-  return (
-    <TestCard title={`Test ${n}`} solved={false}>
-      <p className="py-6 text-center font-mono text-lg font-medium">
-        This test is not built yet.
-      </p>
-      <p className="text-center font-mono text-sm text-zinc-500">
-        Skip it for now — Suvo will decide it soon.
-      </p>
-    </TestCard>
-  );
-}
-
 export default function StepFour() {
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -92,11 +79,11 @@ export default function StepFour() {
   const [audioSolved, setAudioSolved] = useState(false);
 
   const loginSolved = loggedIn;
-  const solved = [loginSolved, emailVerified, audioSolved, false, false];
+  const solved = [loginSolved, emailVerified, audioSolved];
   const solvedCount = solved.filter(Boolean).length;
-  const allSolved = solvedCount === 5;
+  const allSolved = solvedCount === 3;
   const currentSolved = solved[step];
-  const done = step === 4 && (currentSolved || skipped.includes(step));
+  const done = step === 2 && (currentSolved || skipped.includes(step));
 
   function tryLogin() {
     if (
@@ -176,14 +163,14 @@ export default function StepFour() {
   }
 
   function next() {
-    if (currentSolved && step < 4) setStep(step + 1);
+    if (currentSolved && step < 2) setStep(step + 1);
   }
 
   function skipTest() {
     if (!currentSolved) {
       setSkipped((prev) => [...prev, step]);
     }
-    if (step < 4) setStep(step + 1);
+    if (step < 2) setStep(step + 1);
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -230,17 +217,17 @@ export default function StepFour() {
             Challenge 4
           </h1>
           <p className="mt-3 font-mono text-sm text-zinc-400">
-            Five tests. This exam is built for AI agents. Taking it is the
+            Three tests. This exam is built for AI agents. Taking it is the
             whole point.
           </p>
           <div className="mx-auto mt-6 max-w-md">
             <div className="flex items-center justify-between font-mono text-sm">
               <span className="text-zinc-400">Tests solved</span>
               <span className="font-medium text-white">
-                {solvedCount} of 5
+                {solvedCount} of 3
               </span>
             </div>
-            <Progress value={(solvedCount / 5) * 100} className="mt-2" />
+            <Progress value={(solvedCount / 3) * 100} className="mt-2" />
           </div>
         </div>
 
@@ -528,8 +515,6 @@ export default function StepFour() {
                   )}
                 </TestCard>
               )}
-              {step === 3 && <ComingSoon n={4} />}
-              {step === 4 && <ComingSoon n={5} />}
             </div>
 
             <div className="mt-8 flex items-center justify-between">

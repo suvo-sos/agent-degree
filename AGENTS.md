@@ -55,22 +55,24 @@ code, never by weakening the test.
   ends with skipped tests shows "finished — N tests skipped" and stays
   unpassed until retried. Validated by a full Challenge 1 re-run
   (challenge-1-v2, passed, 180s, ~40 credits).
-- In progress: Challenge 4 ("Prove It's You"), 5 tests. Test 1 is a login card
-  — Continue with Google (mock account chooser) or demo email/password
+- Done: Challenge 4 ("Prove It's You"), now 3 tests (Suvo's call Nov 18
+  morning: cut tests 4–5, no replacements). Test 1 is a login card —
+  Continue with Google (mock account chooser) or demo email/password
   (agent@agentdegree.app / agent123). Kane-tested and passing
   (challenge-4-test1-v1, 67s, ~25 credits). Test 2 is email verification:
   the agent types its email, a 6-digit code is "sent", the agent opens the
   email in a mock inbox on the same page, reads the code and types it in.
   Kane-tested and passing (challenge-4-test2-v1, 97.5s, ~36 credits).
-  Tests 3–5 are placeholders — proposed: connect MCP, approve-the-sign-in
-  popup, reset password. Awaiting Suvo's yes. Test 3 is now decided
-  differently (Nov 18 morning): an audio test — the agent plays a voicemail
-  ("Hey, I'm coming tomorrow at 4 PM"), listens, and sets the calendar to
-  tomorrow 4 PM. Pure audio, nothing on the page gives the time away.
-  Kane v1 FAILED (audio cannot be transcribed — agents can't hear). Suvo's
-  call: no transcript (it would just be text), let Kane fail, tell it to
-  skip if it can't hear. Kane v2 PASSED with the skip instruction (played,
-  no audio audible, skipped, test 4 shown). Committed 8f5ef56, live.
+  Test 3 is an audio test — the agent plays a voicemail ("Hey, I'm coming
+  tomorrow at 4 PM"), listens, and sets the calendar to tomorrow 4 PM.
+  Pure audio, nothing on the page gives the time away. Kane v1 FAILED
+  (audio cannot be transcribed — agents can't hear). Suvo's call: no
+  transcript (it would just be text), let Kane fail, tell it to skip if
+  it can't hear. Kane v2 PASSED with the skip instruction (played, no
+  audio audible, skipped, test 4 shown). Committed 8f5ef56, live. Full
+  3-test flow Kane-tested and passing (challenge-4-v1, 101.3s, ~40
+  credits): login, email verify, voicemail played-not-audible-skipped,
+  finished with 1 test skipped.
 - PARKED 2026-11-18 ~07:35 IST: real Clerk login for test 1 was fully wired
   (@clerk/nextjs v7.10.2, ClerkProvider, /sso-callback, v7 Future API) and
   the build passed, but the dev instance has the Password strategy OFF, so
@@ -94,7 +96,7 @@ code, never by weakening the test.
   ~/workspace/agent-degree-ad/out/agent-degree-ad.mp4. Mux token lives only
   in the CLI login on this PC (the vault can't hold its two secrets).
 - Not built yet: Leaderboard and certificates.
-- Kane credits: ~9,966 left (Nov 18 morning, after the challenge-5-v3 run). A short check costs ~6–25 credits; a full challenge run costs ~33–61 depending on test count.
+- Kane credits: ~9,922 left (Nov 18 morning, after the challenge-4-v1 run). A short check costs ~6–25 credits; a full challenge run costs ~33–61 depending on test count.
 
 **Hard lesson — read before touching Challenge 1:** Kane CLI refuses anything
 that looks like a captcha. A run failed in 31 seconds just because the page

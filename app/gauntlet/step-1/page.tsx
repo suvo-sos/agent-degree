@@ -9,12 +9,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { StepPagination } from "@/components/step-pagination";
-import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const TARGET_MIN = 70;
@@ -37,26 +33,28 @@ function TestCard({
   solved,
   children,
 }: {
-  title: string;
+  title?: React.ReactNode;
   solved: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <div>
-          <CardTitle className="font-grotesque">{title}</CardTitle>
-        </div>
-        {solved ? (
-          <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-        ) : (
-          <Badge variant="secondary" className="font-mono">
-            Pending
-          </Badge>
+    <div>
+      {title ? (
+        <h2 className="mb-4 text-center font-grotesque text-2xl font-semibold tracking-tight">
+          {title}
+        </h2>
+      ) : null}
+      <Card className="flex min-h-[520px] flex-col">
+        {solved && (
+          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
+            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
+          </CardHeader>
         )}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+        <CardContent className="flex flex-1 flex-col justify-center">
+          {children}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -147,10 +145,10 @@ export default function StepOne() {
   const inZone = sliderSolved;
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-2xl">
-        <div className="flex justify-start">
+      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col">
+        <div className="flex items-center justify-between">
           <Button
             variant="outline"
             onClick={() => router.push("/gauntlet")}
@@ -158,35 +156,15 @@ export default function StepOne() {
           >
             ← Back
           </Button>
-        </div>
-        <div className="mt-10 text-center">
-          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-            CHALLENGE 1 OF 5
-          </p>
-          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
-            Challenge 1
-          </h1>
-          <p className="mt-3 font-mono text-sm text-zinc-400">
-            Five tests. This exam is built for AI agents. Taking it is the
-            whole point.
-          </p>
-          <div className="mx-auto mt-6 max-w-md">
-            <div className="flex items-center justify-between font-mono text-sm">
-              <span className="text-zinc-400">Tests solved</span>
-              <span className="font-medium text-white">
-                {solvedCount} of 5
-              </span>
-            </div>
-            <Progress value={(solvedCount / 5) * 100} className="mt-2" />
-            <GauntletTimer className="mt-3 text-center" />
-          </div>
+          <span className="font-mono text-sm text-zinc-400">Challenge 1/5</span>
         </div>
 
+        <div className="flex flex-1 flex-col justify-center py-8">
         {!done && (
           <>
-            <div className="mt-10">
+            <div>
               {step === 0 && (
-                <TestCard title="I Am Agent" solved={checkboxSolved}>
+                <TestCard title="check the box to continue the exam" solved={checkboxSolved}>
                   <label className="flex cursor-pointer items-center justify-center gap-4 py-6">
                     <input
                       type="checkbox"
@@ -199,17 +177,13 @@ export default function StepOne() {
                       I am agent
                     </span>
                   </label>
-                  <p className="text-center font-mono text-sm text-zinc-500">
-                    check the box to continue the exam
-                  </p>
+                  
                 </TestCard>
               )}
 
               {step === 1 && (
-                <TestCard title="Pick the Cars" solved={gridSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Select every image with a car in it.
-                  </p>
+                <TestCard title="Select every image with a car in it." solved={gridSolved}>
+                  
                   <div className="mx-auto mt-5 grid max-w-md grid-cols-3 gap-2">
                     {Array.from({ length: 9 }, (_, i) => (
                       <button
@@ -248,7 +222,7 @@ export default function StepOne() {
               )}
 
               {step === 2 && (
-                <TestCard title="The Slider" solved={sliderSolved}>
+                <TestCard solved={sliderSolved}>
                   <p
                     className={`text-center font-mono text-5xl font-bold tabular-nums ${
                       inZone ? "text-green-400" : "text-white"
@@ -288,11 +262,8 @@ export default function StepOne() {
               )}
 
               {step === 3 && (
-                <TestCard title="Complete the Picture" solved={jigsawSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Drag the cube into the empty part of the picture — or click
-                    the cube, then click the empty part.
-                  </p>
+                <TestCard title="Drag the cube into the empty part of the picture — or click the cube, then click the empty part." solved={jigsawSolved}>
+                  
                   <div className="relative mx-auto mt-5 w-full max-w-[600px]">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -351,10 +322,8 @@ export default function StepOne() {
               )}
 
               {step === 4 && (
-                <TestCard title="Type the Text" solved={textSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Type the characters you see.
-                  </p>
+                <TestCard title="Type the characters you see." solved={textSolved}>
+                  
                   <div
                     className="relative mx-auto flex items-end justify-center gap-1 py-8"
                     aria-label="Distorted text to type"
@@ -385,18 +354,6 @@ export default function StepOne() {
               )}
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skipTest} className="font-mono">
-                Skip this test →
-              </Button>
-              <Button
-                onClick={next}
-                disabled={!currentSolved}
-                className="font-mono"
-              >
-                Next →
-              </Button>
-            </div>
           </>
         )}
 
@@ -425,11 +382,25 @@ export default function StepOne() {
             </Link>
           </div>
         )}
-
-        <div className="mt-12">
-          <StepPagination current={1} available={4} />
         </div>
+
       </div>
+      {!done && (
+        <div className="absolute inset-x-0 bottom-6">
+          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6">
+            <Button variant="outline" onClick={skipTest} className="font-mono">
+              Skip
+            </Button>
+            <Button
+              onClick={next}
+              disabled={!currentSolved}
+              className="font-mono"
+            >
+              Next →
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

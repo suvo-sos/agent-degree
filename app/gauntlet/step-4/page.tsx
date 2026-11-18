@@ -10,12 +10,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { StepPagination } from "@/components/step-pagination";
-import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
@@ -28,26 +24,28 @@ function TestCard({
   solved,
   children,
 }: {
-  title: string;
+  title?: React.ReactNode;
   solved: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <div>
-          <CardTitle className="font-grotesque">{title}</CardTitle>
-        </div>
-        {solved ? (
-          <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-        ) : (
-          <Badge variant="secondary" className="font-mono">
-            Pending
-          </Badge>
+    <div>
+      {title ? (
+        <h2 className="mb-4 text-center font-grotesque text-2xl font-semibold tracking-tight">
+          {title}
+        </h2>
+      ) : null}
+      <Card className="flex min-h-[520px] flex-col">
+        {solved && (
+          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
+            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
+          </CardHeader>
         )}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+        <CardContent className="flex flex-1 flex-col justify-center">
+          {children}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -217,10 +215,10 @@ export default function StepFour() {
   }, [done]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-4xl">
-        <div className="flex justify-start">
+      <div className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col">
+        <div className="flex items-center justify-between">
           <Button
             variant="outline"
             onClick={() => router.push("/gauntlet")}
@@ -228,39 +226,16 @@ export default function StepFour() {
           >
             ← Back
           </Button>
-        </div>
-        <div className="mt-10 text-center">
-          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-            CHALLENGE 4 OF 5
-          </p>
-          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
-            Challenge 4
-          </h1>
-          <p className="mt-3 font-mono text-sm text-zinc-400">
-            Four tests. This exam is built for AI agents. Taking it is the
-            whole point.
-          </p>
-          <div className="mx-auto mt-6 max-w-md">
-            <div className="flex items-center justify-between font-mono text-sm">
-              <span className="text-zinc-400">Tests solved</span>
-              <span className="font-medium text-white">
-                {solvedCount} of 4
-              </span>
-            </div>
-            <Progress value={(solvedCount / 4) * 100} className="mt-2" />
-            <GauntletTimer className="mt-3 text-center" />
-          </div>
+          <span className="font-mono text-sm text-zinc-400">Challenge 4/5</span>
         </div>
 
+        <div className="flex flex-1 flex-col justify-center py-8">
         {!done && (
           <>
-            <div className="mt-10">
+            <div>
               {step === 0 && (
-                <TestCard title="Log In" solved={loginSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Log in to continue. Use the demo account, or continue
-                    with Google.
-                  </p>
+                <TestCard title="Log in to continue. Use the demo account, or continue with Google." solved={loginSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md rounded-lg bg-zinc-900/70 p-4 font-mono text-sm text-zinc-300">
                     <p className="font-semibold text-white">Demo account</p>
                     <p className="mt-1">Email: {DEMO_EMAIL}</p>
@@ -354,11 +329,8 @@ export default function StepFour() {
               )}
 
               {step === 1 && (
-                <TestCard title="Verify Your Email" solved={emailVerified}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Type your email. We will send a code — open the email
-                    and type the code here.
-                  </p>
+                <TestCard title="Type your email. We will send a code — open the email and type the code here." solved={emailVerified}>
+                  
                   {!codeSent && (
                     <div className="mx-auto mt-5 max-w-md space-y-4">
                       <div>
@@ -463,11 +435,8 @@ export default function StepFour() {
                 </TestCard>
               )}
               {step === 2 && (
-                <TestCard title="Listen and Book" solved={audioSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Play the voicemail, listen to when they&apos;re
-                    coming, then set the calendar.
-                  </p>
+                <TestCard title="Play the voicemail, listen to when they&apos;re coming, then set the calendar." solved={audioSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md space-y-4">
                     <audio
                       ref={audioRef}
@@ -537,10 +506,8 @@ export default function StepFour() {
                 </TestCard>
               )}
               {step === 3 && (
-                <TestCard title="Watch and Answer" solved={videoSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Watch the video, then answer one question about it.
-                  </p>
+                <TestCard title="Watch the video, then answer one question about it." solved={videoSolved}>
+                  
                   <div className="mt-5 overflow-hidden rounded-lg">
                     <MuxPlayer
                       playbackId={PLAYBACK_ID}
@@ -590,18 +557,6 @@ export default function StepFour() {
               )}
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skipTest} className="font-mono">
-                Skip this test →
-              </Button>
-              <Button
-                onClick={next}
-                disabled={!currentSolved}
-                className="font-mono"
-              >
-                Next →
-              </Button>
-            </div>
           </>
         )}
 
@@ -630,11 +585,25 @@ export default function StepFour() {
             </Link>
           </div>
         )}
-
-        <div className="mt-12">
-          <StepPagination current={4} available={4} />
         </div>
+
       </div>
+      {!done && (
+        <div className="absolute inset-x-0 bottom-6">
+          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6">
+            <Button variant="outline" onClick={skipTest} className="font-mono">
+              Skip
+            </Button>
+            <Button
+              onClick={next}
+              disabled={!currentSolved}
+              className="font-mono"
+            >
+              Next →
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

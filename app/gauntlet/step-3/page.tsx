@@ -9,12 +9,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { StepPagination } from "@/components/step-pagination";
-import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
@@ -38,26 +34,28 @@ function TestCard({
   solved,
   children,
 }: {
-  title: string;
+  title?: React.ReactNode;
   solved: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <div>
-          <CardTitle className="font-grotesque">{title}</CardTitle>
-        </div>
-        {solved ? (
-          <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-        ) : (
-          <Badge variant="secondary" className="font-mono">
-            Pending
-          </Badge>
+    <div>
+      {title ? (
+        <h2 className="mb-4 text-center font-grotesque text-2xl font-semibold tracking-tight">
+          {title}
+        </h2>
+      ) : null}
+      <Card className="flex min-h-[520px] flex-col">
+        {solved && (
+          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
+            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
+          </CardHeader>
         )}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+        <CardContent className="flex flex-1 flex-col justify-center">
+          {children}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -187,10 +185,10 @@ export default function StepThree() {
   );
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-2xl">
-        <div className="flex justify-start">
+      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col">
+        <div className="flex items-center justify-between">
           <Button
             variant="outline"
             onClick={() => router.push("/gauntlet")}
@@ -198,38 +196,16 @@ export default function StepThree() {
           >
             ← Back
           </Button>
-        </div>
-        <div className="mt-10 text-center">
-          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-            CHALLENGE 3 OF 5
-          </p>
-          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
-            Challenge 3
-          </h1>
-          <p className="mt-3 font-mono text-sm text-zinc-400">
-            Ten tests. This exam is built for AI agents. Taking it is the
-            whole point.
-          </p>
-          <div className="mx-auto mt-6 max-w-md">
-            <div className="flex items-center justify-between font-mono text-sm">
-              <span className="text-zinc-400">Tests solved</span>
-              <span className="font-medium text-white">
-                {solvedCount} of 10
-              </span>
-            </div>
-            <Progress value={(solvedCount / 10) * 100} className="mt-2" />
-            <GauntletTimer className="mt-3 text-center" />
-          </div>
+          <span className="font-mono text-sm text-zinc-400">Challenge 3/5</span>
         </div>
 
+        <div className="flex flex-1 flex-col justify-center py-8">
         {!done && (
           <>
-            <div className="mt-10">
+            <div>
               {step === 0 && (
-                <TestCard title="Open the Menu" solved={menuSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Open the menu and click Option 6.
-                  </p>
+                <TestCard title="Open the menu and click Option 6." solved={menuSolved}>
+                  
                   <div className="relative mx-auto mt-5 max-w-xs">
                     <Button
                       onClick={() => setMenuOpen((v) => !v)}
@@ -270,10 +246,8 @@ export default function StepThree() {
               )}
 
               {step === 1 && (
-                <TestCard title="Set the Progress" solved={progressSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Set the progress bar to 75.
-                  </p>
+                <TestCard title="Set the progress bar to 75." solved={progressSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md">
                     <div className="h-4 w-full overflow-hidden rounded-full bg-zinc-800">
                       <div
@@ -304,14 +278,8 @@ export default function StepThree() {
               )}
 
               {step === 2 && (
-                <TestCard title="Pick the Colour" solved={colourSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Pick the colour{" "}
-                    <span className="font-bold text-white">
-                      {TARGET_COLOUR}
-                    </span>{" "}
-                    from the colour picker.
-                  </p>
+                <TestCard title={<>Pick the colour{" "} <span className="font-bold text-white"> {TARGET_COLOUR} </span>{" "} from the colour picker.</>} solved={colourSolved}>
+                  
                   <div className="mx-auto mt-5 grid max-w-xs grid-cols-3 gap-3">
                     {COLOURS.map((hex, i) => (
                       <button
@@ -337,10 +305,8 @@ export default function StepThree() {
               )}
 
               {step === 3 && (
-                <TestCard title="Flip the Switch" solved={switchSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Turn the switch on.
-                  </p>
+                <TestCard title="Turn the switch on." solved={switchSolved}>
+                  
                   <div className="mt-6 flex items-center justify-center gap-4">
                     <span className="font-mono text-sm text-zinc-400">
                       Notifications
@@ -369,10 +335,8 @@ export default function StepThree() {
               )}
 
               {step === 4 && (
-                <TestCard title="Find the Tab" solved={tabsSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Open the Settings tab.
-                  </p>
+                <TestCard title="Open the Settings tab." solved={tabsSolved}>
+                  
                   <div
                     role="tablist"
                     className="mt-5 flex justify-center gap-1 rounded-lg bg-zinc-900 p-1"
@@ -404,10 +368,8 @@ export default function StepThree() {
               )}
 
               {step === 5 && (
-                <TestCard title="Open the Section" solved={accordionSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Open Section 3.
-                  </p>
+                <TestCard title="Open Section 3." solved={accordionSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md space-y-2">
                     {[1, 2, 3].map((n) => (
                       <div
@@ -437,10 +399,8 @@ export default function StepThree() {
               )}
 
               {step === 6 && (
-                <TestCard title="Rate It" solved={starsSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Give 4 stars.
-                  </p>
+                <TestCard title="Give 4 stars." solved={starsSolved}>
+                  
                   <div className="mt-5 flex justify-center gap-1">
                     {[1, 2, 3, 4, 5].map((n) => (
                       <button
@@ -465,10 +425,8 @@ export default function StepThree() {
               )}
 
               {step === 7 && (
-                <TestCard title="Search and Pick" solved={searchSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Search for banana, then click Banana.
-                  </p>
+                <TestCard title="Search for banana, then click Banana." solved={searchSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md">
                     <Input
                       value={query}
@@ -503,10 +461,8 @@ export default function StepThree() {
               )}
 
               {step === 8 && (
-                <TestCard title="Count to Five" solved={counterSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Click the plus button until the counter shows 5.
-                  </p>
+                <TestCard title="Click the plus button until the counter shows 5." solved={counterSolved}>
+                  
                   <p className="mt-6 text-center font-mono text-6xl font-bold tabular-nums">
                     {count}
                   </p>
@@ -531,10 +487,8 @@ export default function StepThree() {
               )}
 
               {step === 9 && (
-                <TestCard title="Tick the Boxes" solved={boxesSolved}>
-                  <p className="text-center font-mono text-lg font-medium">
-                    Tick the boxes for Apple and Mango.
-                  </p>
+                <TestCard title="Tick the boxes for Apple and Mango." solved={boxesSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-xs space-y-3">
                     {["Apple", "Banana", "Cherry", "Mango"].map((f) => (
                       <label
@@ -556,18 +510,6 @@ export default function StepThree() {
               )}
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skipTest} className="font-mono">
-                Skip this test →
-              </Button>
-              <Button
-                onClick={next}
-                disabled={!currentSolved}
-                className="font-mono"
-              >
-                Next →
-              </Button>
-            </div>
           </>
         )}
 
@@ -596,11 +538,25 @@ export default function StepThree() {
             </Link>
           </div>
         )}
-
-        <div className="mt-12">
-          <StepPagination current={3} available={4} />
         </div>
+
       </div>
+      {!done && (
+        <div className="absolute inset-x-0 bottom-6">
+          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6">
+            <Button variant="outline" onClick={skipTest} className="font-mono">
+              Skip
+            </Button>
+            <Button
+              onClick={next}
+              disabled={!currentSolved}
+              className="font-mono"
+            >
+              Next →
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

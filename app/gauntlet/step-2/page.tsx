@@ -9,12 +9,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { StepPagination } from "@/components/step-pagination";
-import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
@@ -83,26 +79,28 @@ function TestCard({
   solved,
   children,
 }: {
-  title: string;
+  title?: React.ReactNode;
   solved: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <div>
-          <CardTitle className="font-grotesque">{title}</CardTitle>
-        </div>
-        {solved ? (
-          <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-        ) : (
-          <Badge variant="secondary" className="font-mono">
-            Pending
-          </Badge>
+    <div>
+      {title ? (
+        <h2 className="mb-4 text-center font-grotesque text-2xl font-semibold tracking-tight">
+          {title}
+        </h2>
+      ) : null}
+      <Card className="flex min-h-[520px] flex-col">
+        {solved && (
+          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
+            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
+          </CardHeader>
         )}
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
+        <CardContent className="flex flex-1 flex-col justify-center">
+          {children}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
@@ -251,10 +249,10 @@ export default function StepTwo() {
   }, [done]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-2xl">
-        <div className="flex justify-start">
+      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col">
+        <div className="flex items-center justify-between">
           <Button
             variant="outline"
             onClick={() => router.push("/gauntlet")}
@@ -262,38 +260,16 @@ export default function StepTwo() {
           >
             ← Back
           </Button>
-        </div>
-        <div className="mt-10 text-center">
-          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-            CHALLENGE 2 OF 5
-          </p>
-          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
-            Challenge 2
-          </h1>
-          <p className="mt-3 font-mono text-sm text-zinc-400">
-            Five tests. This exam is built for AI agents. Taking it is the
-            whole point.
-          </p>
-          <div className="mx-auto mt-6 max-w-md">
-            <div className="flex items-center justify-between font-mono text-sm">
-              <span className="text-zinc-400">Tests solved</span>
-              <span className="font-medium text-white">
-                {solvedCount} of 5
-              </span>
-            </div>
-            <Progress value={(solvedCount / 5) * 100} className="mt-2" />
-            <GauntletTimer className="mt-3 text-center" />
-          </div>
+          <span className="font-mono text-sm text-zinc-400">Challenge 2/5</span>
         </div>
 
+        <div className="flex flex-1 flex-col justify-center py-8">
         {!done && (
           <>
-            <div className="mt-10">
+            <div>
               {step === 0 && (
-                <TestCard title="The Transcript" solved={transcriptSolved}>
-                  <p className="font-mono text-lg font-medium">
-                    Read what he says, then fill in the form.
-                  </p>
+                <TestCard title="Read what he says, then fill in the form." solved={transcriptSolved}>
+                  
                   <blockquote className="mt-4 rounded-lg border-l-4 border-blue-500 bg-zinc-900/70 p-4 font-mono text-sm leading-relaxed text-zinc-200">
                     {TRANSCRIPT}
                   </blockquote>
@@ -302,10 +278,8 @@ export default function StepTwo() {
               )}
 
               {step === 1 && (
-                <TestCard title="The Document" solved={documentSolved}>
-                  <p className="font-mono text-lg font-medium">
-                    Read the document, then fill in the form.
-                  </p>
+                <TestCard title="Read the document, then fill in the form." solved={documentSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-md">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -319,11 +293,8 @@ export default function StepTwo() {
               )}
 
               {step === 2 && (
-                <TestCard title="Pick the Options" solved={optionsSolved}>
-                  <p className="font-mono text-lg font-medium">
-                    Arjun joins Brightlane as a full-time designer in the
-                    Design team. His first day is 10 March 2025.
-                  </p>
+                <TestCard title="Arjun joins Brightlane as a full-time designer in the Design team. His first day is 10 March 2025." solved={optionsSolved}>
+                  
                   <div className="mt-5 space-y-5">
                     <div>
                       <p className="mb-2 font-mono text-sm font-medium text-zinc-300">
@@ -381,11 +352,8 @@ export default function StepTwo() {
               )}
 
               {step === 3 && (
-                <TestCard title="Fix the Mistakes" solved={fixSolved}>
-                  <p className="font-mono text-lg font-medium">
-                    This form was filled from Priya&apos;s record. Two values
-                    are wrong — compare with her record below and fix them.
-                  </p>
+                <TestCard title="This form was filled from Priya&apos;s record. Two values are wrong — compare with her record below and fix them." solved={fixSolved}>
+                  
                   <div className="mx-auto mt-5 max-w-sm">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
@@ -399,12 +367,8 @@ export default function StepTwo() {
               )}
 
               {step === 4 && (
-                <TestCard title="Sign and Submit" solved={signSolved}>
-                  <p className="font-mono text-lg font-medium">
-                    Arjun is signing this form. Type his full name as the
-                    signature, tick the declaration, and enter today&apos;s
-                    date.
-                  </p>
+                <TestCard title="Arjun is signing this form. Type his full name as the signature, tick the declaration, and enter today&apos;s date." solved={signSolved}>
+                  
                   <div className="mt-5 space-y-4">
                     <Field
                       label="Signature"
@@ -443,18 +407,6 @@ export default function StepTwo() {
               )}
             </div>
 
-            <div className="mt-8 flex items-center justify-between">
-              <Button variant="outline" onClick={skipTest} className="font-mono">
-                Skip this test →
-              </Button>
-              <Button
-                onClick={next}
-                disabled={!currentSolved}
-                className="font-mono"
-              >
-                Next →
-              </Button>
-            </div>
           </>
         )}
 
@@ -483,11 +435,25 @@ export default function StepTwo() {
             </Link>
           </div>
         )}
-
-        <div className="mt-12">
-          <StepPagination current={2} available={4} />
         </div>
+
       </div>
+      {!done && (
+        <div className="absolute inset-x-0 bottom-6">
+          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6">
+            <Button variant="outline" onClick={skipTest} className="font-mono">
+              Skip
+            </Button>
+            <Button
+              onClick={next}
+              disabled={!currentSolved}
+              className="font-mono"
+            >
+              Next →
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

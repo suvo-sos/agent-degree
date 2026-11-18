@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import {
   BotIcon,
@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
+import { AnimatedBeam } from "@/components/ui/animated-beam";
 import { ensureTimerStart } from "@/lib/results";
 
 type Step = {
@@ -72,6 +73,14 @@ function loadProgress(): Record<string, boolean> {
 
 export default function Gauntlet() {
   const [passed, setPassed] = useState<Record<string, boolean>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const cardRef1 = useRef<HTMLDivElement>(null);
+  const cardRef2 = useRef<HTMLDivElement>(null);
+  const cardRef3 = useRef<HTMLDivElement>(null);
+  const cardRef4 = useRef<HTMLDivElement>(null);
+  const cardRef5 = useRef<HTMLDivElement>(null);
+  const cardRefs = [cardRef1, cardRef2, cardRef3, cardRef4, cardRef5];
 
   useEffect(() => {
     setPassed(loadProgress());
@@ -83,7 +92,10 @@ export default function Gauntlet() {
   );
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-black px-6 py-16 font-sans text-white">
+    <div
+      ref={containerRef}
+      className="relative flex min-h-screen flex-col bg-black px-6 py-16 font-sans text-white"
+    >
       <Link
         href="/"
         className="absolute top-6 left-6 font-mono text-sm text-blue-400 hover:text-blue-300"
@@ -91,13 +103,16 @@ export default function Gauntlet() {
         ← Back home
       </Link>
       <div className="mx-auto w-full max-w-7xl text-center">
-        <h1 className="font-grotesque text-5xl font-semibold tracking-tight sm:text-6xl">
+        <h1
+          ref={titleRef}
+          className="font-grotesque text-5xl font-semibold tracking-tight sm:text-6xl"
+        >
           The Final Exam
         </h1>
       </div>
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center">
         <div className="mt-16 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          {STEPS.map((step) => {
+          {STEPS.map((step, idx) => {
             const isPassed = !!passed[`step${step.n}`];
             const isSkipped = !!passed[`step${step.n}Skipped`];
             const prevPassed =
@@ -108,8 +123,11 @@ export default function Gauntlet() {
             const locked = !isPassed && !isSkipped && !available;
 
             return (
-              <div key={step.n} className="flex flex-col items-center">
-                <GlareHover
+              <div
+                key={step.n}
+                ref={cardRefs[idx]}
+                className="flex flex-col items-center"
+              >                <GlareHover
                   color="#505050"
                   duration={700}
                   width="100%"
@@ -122,7 +140,7 @@ export default function Gauntlet() {
                     className="h-full w-full"
                   >
                     <Card
-                      className={`group relative h-full min-h-[300px] w-full overflow-hidden border-zinc-800 bg-zinc-950 text-white ring-0 ${
+                      className={`group relative h-full min-h-[400px] w-full overflow-hidden border-zinc-800 bg-zinc-950 text-white ring-0 ${
                         locked ? "opacity-70" : ""
                       }`}
                     >
@@ -202,6 +220,24 @@ export default function Gauntlet() {
         )}
 
       </div>
+
+      {STEPS.map((step, idx) => (
+        <AnimatedBeam
+          key={step.n}
+          containerRef={containerRef}
+          fromRef={titleRef}
+          toRef={cardRefs[idx]}
+          curvature={-50}
+          startYOffset={30}
+          endYOffset={-234}
+          pathColor="#9c40ff"
+          pathOpacity={0.15}
+          gradientStartColor="#ffaa40"
+          gradientStopColor="#9c40ff"
+          delay={idx * 0.8}
+          className="opacity-60"
+        />
+      ))}
     </div>
   );
 }

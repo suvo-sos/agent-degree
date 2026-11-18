@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
@@ -247,6 +248,7 @@ export default function StepFour() {
               </span>
             </div>
             <Progress value={(solvedCount / 4) * 100} className="mt-2" />
+            <GauntletTimer className="mt-3 text-center" />
           </div>
         </div>
 

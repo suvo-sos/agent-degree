@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { GauntletTimer } from "@/components/gauntlet-timer";
 import { saveChallengeResults } from "@/lib/results";
 
 const TARGET_MIN = 70;
@@ -177,6 +178,7 @@ export default function StepOne() {
               </span>
             </div>
             <Progress value={(solvedCount / 5) * 100} className="mt-2" />
+            <GauntletTimer className="mt-3 text-center" />
           </div>
         </div>
 

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { StepPagination } from "@/components/step-pagination";
+import { GauntletTimer } from "@/components/gauntlet-timer";
 import { Celebration } from "@/components/celebration";
 import { finishedChallenges, saveChallengeResults } from "@/lib/results";
 
@@ -208,6 +209,7 @@ export default function StepFive() {
               </span>
             </div>
             <Progress value={(solvedCount / 3) * 100} className="mt-2" />
+            <GauntletTimer className="mt-3 text-center" />
           </div>
         </div>
 

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GauntletTimer } from "@/components/gauntlet-timer";
+import { ensureTimerStart } from "@/lib/results";
 
 const STEPS = [
   {
@@ -54,6 +56,7 @@ export default function Gauntlet() {
 
   useEffect(() => {
     setPassed(loadProgress());
+    ensureTimerStart();
   }, []);
 
   const passedCount = STEPS.filter((s) => passed[`step${s.n}`]).length;
@@ -88,6 +91,7 @@ export default function Gauntlet() {
                 style={{ width: `${(passedCount / 5) * 100}%` }}
               />
             </div>
+            <GauntletTimer className="mt-3 text-center" />
           </div>
         </div>
 

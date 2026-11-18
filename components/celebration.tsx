@@ -12,9 +12,14 @@ import {
   TEST_NAMES,
   computeScore,
   downloadCertificate,
+  finishTimer,
+  formatDuration,
   getResults,
+  getTimer,
   gradeFor,
+  isGauntletComplete,
   testStatus,
+  timerElapsedMs,
   type ResultsMap,
 } from "@/lib/results";
 
@@ -34,9 +39,13 @@ export function Celebration({
     celebrate ? "confetti" : "results",
   );
   const [stored, setStored] = useState<ResultsMap>({});
+  const [timerMs, setTimerMs] = useState<number | null>(null);
 
   useEffect(() => {
     setStored(getResults());
+    // Stop the Gauntlet clock once every challenge is done.
+    if (isGauntletComplete()) finishTimer();
+    setTimerMs(timerElapsedMs(getTimer()));
   }, []);
 
   useEffect(() => {
@@ -184,6 +193,11 @@ export function Celebration({
                 {grade}
               </p>
               <p className="mt-1 font-mono text-sm text-zinc-600">{label}</p>
+              {timerMs !== null && (
+                <p className="mt-4 font-mono text-sm text-zinc-600">
+                  Completed in {formatDuration(timerMs)}
+                </p>
+              )}
             </div>
 
             <div className="mt-10 rounded-2xl border-4 border-yellow-600 bg-black p-8 text-center text-white">
@@ -201,11 +215,17 @@ export function Celebration({
               </p>
               <p className="mt-4 font-mono text-sm text-zinc-400">
                 Grade {grade} • Score {solved}/{total} • {pct}% •{" "}
+                {timerMs !== null ? `${formatDuration(timerMs)} • ` : ""}
                 {new Date().getFullYear()}
               </p>
               <Button
                 onClick={() =>
-                  downloadCertificate(grade, `${solved}/${total}`, pct)
+                  downloadCertificate(
+                    grade,
+                    `${solved}/${total}`,
+                    pct,
+                    timerMs !== null ? formatDuration(timerMs) : undefined,
+                  )
                 }
                 className="mt-6 font-mono"
               >

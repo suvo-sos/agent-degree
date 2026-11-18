@@ -12,6 +12,70 @@ export type ResultsMap = Record<number, ChallengeResult>;
 
 export const RESULTS_KEY = "agent-degree-results";
 export const PROGRESS_KEY = "agent-degree-progress";
+export const TIMER_KEY = "agent-degree-timer";
+
+export interface GauntletTimer {
+  start: number; // ms since epoch, set when the Gauntlet is first opened
+  end: number | null; // ms since epoch, set when all 5 challenges are done
+}
+
+// Start the Gauntlet clock on first open; never restart it.
+export function ensureTimerStart() {
+  try {
+    if (!localStorage.getItem(TIMER_KEY)) {
+      localStorage.setItem(
+        TIMER_KEY,
+        JSON.stringify({ start: Date.now(), end: null } as GauntletTimer),
+      );
+    }
+  } catch {
+    // timer is best-effort
+  }
+}
+
+// Stop the clock when the Gauntlet is complete; no-op if already stopped.
+export function finishTimer() {
+  try {
+    const raw = localStorage.getItem(TIMER_KEY);
+    if (!raw) return;
+    const t = JSON.parse(raw) as GauntletTimer;
+    if (t.end === null) {
+      localStorage.setItem(
+        TIMER_KEY,
+        JSON.stringify({ ...t, end: Date.now() }),
+      );
+    }
+  } catch {
+    // timer is best-effort
+  }
+}
+
+export function getTimer(): GauntletTimer | null {
+  try {
+    const raw = localStorage.getItem(TIMER_KEY);
+    return raw ? (JSON.parse(raw) as GauntletTimer) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Elapsed ms: end - start once finished, otherwise now - start.
+export function timerElapsedMs(t: GauntletTimer | null): number | null {
+  if (!t) return null;
+  const end = t.end ?? Date.now();
+  return Math.max(0, end - t.start);
+}
+
+// "45s", "12m 34s", "1h 23m 45s".
+export function formatDuration(ms: number): string {
+  const totalSeconds = Math.floor(ms / 1000);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+  if (h > 0) return `${h}h ${m}m ${s}s`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
 
 export function saveChallengeResults(
   challenge: number,
@@ -140,7 +204,12 @@ export function isGauntletComplete(): boolean {
 }
 
 // Draw a personalised certificate PNG and download it.
-export function downloadCertificate(grade: string, score: string, pct: number) {
+export function downloadCertificate(
+  grade: string,
+  score: string,
+  pct: number,
+  timeStr?: string,
+) {
   const W = 1200;
   const H = 850;
   const canvas = document.createElement("canvas");
@@ -177,7 +246,7 @@ export function downloadCertificate(grade: string, score: string, pct: number) {
   ctx.fillStyle = "#a1a1aa";
   ctx.font = "400 26px monospace";
   ctx.fillText(
-    `Score ${score}  •  ${pct}%  •  ${new Date().getFullYear()}`,
+    `Score ${score}  •  ${pct}%${timeStr ? `  •  ${timeStr}` : ""}  •  ${new Date().getFullYear()}`,
     W / 2,
     640,
   );

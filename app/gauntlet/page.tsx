@@ -7,7 +7,7 @@ import {
   BotIcon,
   FileTextIcon,
   FingerPrintIcon,
-  LockIcon,
+  LockKeyholeIcon,
   ShieldAlertIcon,
   SlidersHorizontalIcon,
 } from "@hugeicons/core-free-icons";
@@ -21,7 +21,6 @@ type Step = {
   n: number;
   title: string;
   icon: IconSvgElement;
-  glow: string;
   href: string;
 };
 
@@ -30,35 +29,30 @@ const STEPS: Step[] = [
     n: 1,
     title: "I Am Agent",
     icon: BotIcon,
-    glow: "#2563eb",
     href: "/gauntlet/step-1",
   },
   {
     n: 2,
     title: "Paperwork Hell",
     icon: FileTextIcon,
-    glow: "#7c3aed",
     href: "/gauntlet/step-2",
   },
   {
     n: 3,
     title: "The Control Room",
     icon: SlidersHorizontalIcon,
-    glow: "#f59e0b",
     href: "/gauntlet/step-3",
   },
   {
     n: 4,
     title: "Prove It's You",
     icon: FingerPrintIcon,
-    glow: "#f43f5e",
     href: "/gauntlet/step-4",
   },
   {
     n: 5,
     title: "Homework You Can't Skip",
     icon: ShieldAlertIcon,
-    glow: "#10b981",
     href: "/gauntlet/step-5",
   },
 ];
@@ -96,14 +90,13 @@ export default function Gauntlet() {
       >
         ← Back home
       </Link>
+      <div className="mx-auto w-full max-w-7xl text-center">
+        <h1 className="font-grotesque text-5xl font-semibold tracking-tight sm:text-6xl">
+          The Final Exam
+        </h1>
+      </div>
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center">
-        <div className="text-center">
-          <h1 className="font-grotesque text-5xl font-semibold tracking-tight sm:text-6xl">
-            The Final Exam
-          </h1>
-        </div>
-
-        <div className="mt-20 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-16 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {STEPS.map((step) => {
             const isPassed = !!passed[`step${step.n}`];
             const isSkipped = !!passed[`step${step.n}Skipped`];
@@ -124,7 +117,7 @@ export default function Gauntlet() {
                   className="w-full rounded-xl"
                 >
                   <MagicCard
-                    gradientColor={step.glow}
+                    gradientColor="#262626"
                     gradientOpacity={0.5}
                     className="h-full w-full"
                   >
@@ -139,23 +132,23 @@ export default function Gauntlet() {
                       >
                         {step.n}
                       </span>
-                      <CardHeader className="relative">
+                      <CardHeader className="relative z-10">
                         <CardTitle className="font-grotesque text-2xl text-white">
                           {step.title}
                         </CardTitle>
                       </CardHeader>
-                      <div className="absolute bottom-5 left-1/2 -translate-x-1/2">
+                      <div className="absolute bottom-6 left-1/2 z-0 -translate-x-1/2">
                         <HugeiconsIcon
                           icon={step.icon}
-                          size={72}
-                          strokeWidth={2.5}
-                          style={{ color: step.glow }}
+                          size={140}
+                          strokeWidth={0.5}
+                          style={{ color: "#0070f3" }}
                         />
                       </div>
                       {locked && (
                         <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                           <HugeiconsIcon
-                            icon={LockIcon}
+                            icon={LockKeyholeIcon}
                             size={56}
                             strokeWidth={2.5}
                             className="text-white"

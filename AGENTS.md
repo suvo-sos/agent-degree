@@ -58,8 +58,22 @@ code, never by weakening the test.
 - In progress: Challenge 4 ("Prove It's You"), 5 tests. Test 1 is a login card
   — Continue with Google (mock account chooser) or demo email/password
   (agent@agentdegree.app / agent123). Kane-tested and passing
-  (challenge-4-test1-v1, 67s, ~25 credits). Tests 2–5 are placeholders —
-  Suvo will decide them.
+  (challenge-4-test1-v1, 67s, ~25 credits). Test 2 is email verification:
+  the agent types its email, a 6-digit code is "sent", the agent opens the
+  email in a mock inbox on the same page, reads the code and types it in.
+  Kane-tested and passing (challenge-4-test2-v1, 97.5s, ~36 credits).
+  Tests 3–5 are placeholders — proposed: connect MCP, approve-the-sign-in
+  popup, reset password. Awaiting Suvo's yes.
+- PARKED 2026-11-18 ~07:35 IST: real Clerk login for test 1 was fully wired
+  (@clerk/nextjs v7.10.2, ClerkProvider, /sso-callback, v7 Future API) and
+  the build passed, but the dev instance has the Password strategy OFF, so
+  Kane can't test the email path yet. The work is stashed, not lost:
+  `git stash list` shows "clerk-real-login: restore after Password toggle
+  is on (dev instance)". To bring it back: turn on Password in the Clerk
+  dashboard (dev instance), then `git stash pop`, Kane-test test 1, commit.
+  Do NOT use the production instance — it can't work on a *.vercel.app
+  domain (Clerk needs DNS records only possible on an owned domain). The
+  app stays on dev (test) keys, including live.
 - Not built yet: Challenge 5 (download the report and answer a question from
   it). Leaderboard and certificates not built yet.
 - Kane credits: ~10,370 left (Nov 18 night, after the challenge-1-v2 and

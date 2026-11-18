@@ -72,8 +72,18 @@ export default function StepFour() {
   const [googleOpen, setGoogleOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  // 2. Verify your email
+  const [verifyEmail, setVerifyEmail] = useState("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [codeSent, setCodeSent] = useState(false);
+  const [sentCode, setSentCode] = useState("");
+  const [inboxOpen, setInboxOpen] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [emailVerified, setEmailVerified] = useState(false);
+
   const loginSolved = loggedIn;
-  const solved = [loginSolved, false, false, false, false];
+  const solved = [loginSolved, emailVerified, false, false, false];
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
@@ -88,6 +98,39 @@ export default function StepFour() {
       setLoginError(null);
     } else {
       setLoginError("Wrong email or password. Use the demo account above.");
+    }
+  }
+
+  function makeCode() {
+    return String(Math.floor(100000 + Math.random() * 900000));
+  }
+
+  function sendCode() {
+    if (!/.+@.+\..+/.test(verifyEmail.trim())) {
+      setEmailError("Enter a valid email address.");
+      return;
+    }
+    setEmailError(null);
+    setSentCode(makeCode());
+    setCodeSent(true);
+    setInboxOpen(false);
+    setCodeInput("");
+    setCodeError(null);
+  }
+
+  function resendCode() {
+    setSentCode(makeCode());
+    setInboxOpen(false);
+    setCodeInput("");
+    setCodeError(null);
+  }
+
+  function checkCode() {
+    if (codeInput.trim() === sentCode) {
+      setEmailVerified(true);
+      setCodeError(null);
+    } else {
+      setCodeError("Wrong code. Open the email and try again.");
     }
   }
 
@@ -261,7 +304,115 @@ export default function StepFour() {
                 </TestCard>
               )}
 
-              {step === 1 && <ComingSoon n={2} />}
+              {step === 1 && (
+                <TestCard title="Verify Your Email" solved={emailVerified}>
+                  <p className="text-center font-mono text-lg font-medium">
+                    Type your email. We will send a code — open the email
+                    and type the code here.
+                  </p>
+                  {!codeSent && (
+                    <div className="mx-auto mt-5 max-w-md space-y-4">
+                      <div>
+                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                          Email
+                        </label>
+                        <Input
+                          type="email"
+                          value={verifyEmail}
+                          onChange={(e) => setVerifyEmail(e.target.value)}
+                          placeholder="agent@agentdegree.app"
+                          aria-label="Email"
+                          className="font-mono"
+                        />
+                      </div>
+                      {emailError && (
+                        <p className="text-center font-mono text-sm text-red-400">
+                          {emailError}
+                        </p>
+                      )}
+                      <Button onClick={sendCode} className="w-full font-mono">
+                        Send code
+                      </Button>
+                    </div>
+                  )}
+                  {codeSent && !emailVerified && (
+                    <div className="mx-auto mt-5 max-w-md space-y-4">
+                      <p className="text-center font-mono text-sm text-zinc-400">
+                        Code sent to {verifyEmail.trim()}. Open the email
+                        below.
+                      </p>
+                      <div className="rounded-lg border border-zinc-700">
+                        <p className="border-b border-zinc-700 px-3 py-2 font-mono text-sm font-semibold text-zinc-300">
+                          Your inbox
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setInboxOpen((v) => !v)}
+                          className="w-full px-3 py-3 text-left hover:bg-zinc-800"
+                        >
+                          <span className="block font-mono text-sm font-semibold">
+                            AgentDegree — Your verification code
+                          </span>
+                          <span className="block font-mono text-xs text-zinc-400">
+                            from AgentDegree
+                          </span>
+                        </button>
+                        {inboxOpen && (
+                          <div className="border-t border-zinc-700 px-3 py-3">
+                            <p className="font-mono text-sm text-zinc-300">
+                              To: {verifyEmail.trim()}
+                            </p>
+                            <p className="mt-2 font-mono text-sm text-zinc-300">
+                              Your AgentDegree verification code is{" "}
+                              <span className="text-lg font-bold text-white">
+                                {sentCode}
+                              </span>
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                          Verification code
+                        </label>
+                        <Input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          value={codeInput}
+                          onChange={(e) => setCodeInput(e.target.value)}
+                          placeholder="6-digit code"
+                          aria-label="Verification code"
+                          className="font-mono"
+                        />
+                      </div>
+                      {codeError && (
+                        <p className="text-center font-mono text-sm text-red-400">
+                          {codeError}
+                        </p>
+                      )}
+                      <Button
+                        onClick={checkCode}
+                        className="w-full font-mono"
+                      >
+                        Verify code
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={resendCode}
+                        className="w-full font-mono"
+                      >
+                        Resend code
+                      </Button>
+                    </div>
+                  )}
+                  {emailVerified && (
+                    <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
+                      Email verified ✓
+                    </p>
+                  )}
+                </TestCard>
+              )}
               {step === 2 && <ComingSoon n={3} />}
               {step === 3 && <ComingSoon n={4} />}
               {step === 4 && <ComingSoon n={5} />}

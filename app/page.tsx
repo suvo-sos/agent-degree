@@ -47,7 +47,7 @@ export default function Home() {
             className="animate-fade-up mt-10"
             style={{ animationDelay: "280ms" }}
           >
-            <RainbowButton asChild size="lg" className="font-mono text-base">
+            <RainbowButton asChild size="lg" className="px-16 font-mono text-base">
               <Link href="/gauntlet">Start Test</Link>
             </RainbowButton>
           </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import MuxPlayer from "@mux/mux-player-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import { saveChallengeResults } from "@/lib/results";
 const STORAGE_KEY = "agent-degree-progress";
 const DEMO_EMAIL = "agent@agentdegree.app";
 const DEMO_PASSWORD = "agent123";
+const PLAYBACK_ID = "XgLHUqEkVu3jls2D6p1NA5i3l7fa8nPnAVbsaKz00ysE";
 
 function TestCard({
   title,
@@ -79,12 +81,17 @@ export default function StepFour() {
   const [bookError, setBookError] = useState<string | null>(null);
   const [audioSolved, setAudioSolved] = useState(false);
 
+  // 4. Watch and answer
+  const [answer, setAnswer] = useState("");
+  const [answerError, setAnswerError] = useState<string | null>(null);
+  const [videoSolved, setVideoSolved] = useState(false);
+
   const loginSolved = loggedIn;
-  const solved = [loginSolved, emailVerified, audioSolved];
+  const solved = [loginSolved, emailVerified, audioSolved, videoSolved];
   const solvedCount = solved.filter(Boolean).length;
-  const allSolved = solvedCount === 3;
+  const allSolved = solvedCount === 4;
   const currentSolved = solved[step];
-  const done = step === 2 && (currentSolved || skipped.includes(step));
+  const done = step === 3 && (currentSolved || skipped.includes(step));
 
   function tryLogin() {
     if (
@@ -163,15 +170,25 @@ export default function StepFour() {
     }
   }
 
+  function checkAnswer() {
+    const norm = answer.trim().toLowerCase().replace(/\s+/g, " ");
+    if (norm.includes("control room")) {
+      setVideoSolved(true);
+      setAnswerError(null);
+    } else {
+      setAnswerError("Not quite. Watch the video again.");
+    }
+  }
+
   function next() {
-    if (currentSolved && step < 2) setStep(step + 1);
+    if (currentSolved && step < 3) setStep(step + 1);
   }
 
   function skipTest() {
     if (!currentSolved) {
       setSkipped((prev) => [...prev, step]);
     }
-    if (step < 2) setStep(step + 1);
+    if (step < 3) setStep(step + 1);
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -201,7 +218,7 @@ export default function StepFour() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-black px-6 py-12 font-sans text-white">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto w-full max-w-2xl">
+      <div className="relative mx-auto w-full max-w-4xl">
         <div className="flex justify-start">
           <Button
             variant="outline"
@@ -219,17 +236,17 @@ export default function StepFour() {
             Challenge 4
           </h1>
           <p className="mt-3 font-mono text-sm text-zinc-400">
-            Three tests. This exam is built for AI agents. Taking it is the
+            Four tests. This exam is built for AI agents. Taking it is the
             whole point.
           </p>
           <div className="mx-auto mt-6 max-w-md">
             <div className="flex items-center justify-between font-mono text-sm">
               <span className="text-zinc-400">Tests solved</span>
               <span className="font-medium text-white">
-                {solvedCount} of 3
+                {solvedCount} of 4
               </span>
             </div>
-            <Progress value={(solvedCount / 3) * 100} className="mt-2" />
+            <Progress value={(solvedCount / 4) * 100} className="mt-2" />
           </div>
         </div>
 
@@ -513,6 +530,58 @@ export default function StepFour() {
                   {audioSolved && (
                     <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
                       Booked ✓
+                    </p>
+                  )}
+                </TestCard>
+              )}
+              {step === 3 && (
+                <TestCard title="Watch and Answer" solved={videoSolved}>
+                  <p className="text-center font-mono text-lg font-medium">
+                    Watch the video, then answer one question about it.
+                  </p>
+                  <div className="mt-5 overflow-hidden rounded-lg">
+                    <MuxPlayer
+                      playbackId={PLAYBACK_ID}
+                      streamType="on-demand"
+                      autoPlay="muted"
+                      loop
+                    />
+                  </div>
+                  {!videoSolved && (
+                    <div className="mx-auto mt-5 max-w-md space-y-4">
+                      <div>
+                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                          What is the name of the third challenge shown in
+                          the video?
+                        </label>
+                        <Input
+                          type="text"
+                          value={answer}
+                          onChange={(e) => setAnswer(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") checkAnswer();
+                          }}
+                          placeholder="Type the challenge name"
+                          aria-label="Challenge name"
+                          className="font-mono"
+                        />
+                      </div>
+                      {answerError && (
+                        <p className="text-center font-mono text-sm text-red-400">
+                          {answerError}
+                        </p>
+                      )}
+                      <Button
+                        onClick={checkAnswer}
+                        className="w-full font-mono"
+                      >
+                        Check answer
+                      </Button>
+                    </div>
+                  )}
+                  {videoSolved && (
+                    <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
+                      Correct — The Control Room ✓
                     </p>
                   )}
                 </TestCard>

@@ -55,8 +55,7 @@ code, never by weakening the test.
   ends with skipped tests shows "finished — N tests skipped" and stays
   unpassed until retried. Validated by a full Challenge 1 re-run
   (challenge-1-v2, passed, 180s, ~40 credits).
-- Done: Challenge 4 ("Prove It's You"), now 3 tests (Suvo's call Nov 18
-  morning: cut tests 4–5, no replacements). Test 1 is a login card —
+- Done: Challenge 4 ("Prove It's You"), now 4 tests. Test 1 is a login card —
   Continue with Google (mock account chooser) or demo email/password
   (agent@agentdegree.app / agent123). Kane-tested and passing
   (challenge-4-test1-v1, 67s, ~25 credits). Test 2 is email verification:
@@ -69,15 +68,17 @@ code, never by weakening the test.
   (audio cannot be transcribed — agents can't hear). Suvo's call: no
   transcript (it would just be text), let Kane fail, tell it to skip if
   it can't hear. Kane v2 PASSED with the skip instruction (played, no
-  audio audible, skipped, test 4 shown). Committed 8f5ef56, live. Full
-  3-test flow Kane-tested and passing (challenge-4-v1, 101.3s, ~40
-  credits): login, email verify, voicemail played-not-audible-skipped,
-  finished with 1 test skipped.
-- Restructure (uncommitted, Nov 18 ~09:36 IST): Suvo's call — Challenge 4
-  is 5 tests, Challenge 5 is 3. The video test moved into Challenge 4 as
-  test 4 (built, build passes, not yet Kane-tested); Challenge 4 test 5 is
-  TBD (authenticator-code proposal, not decided). The 3-test version above
-  is what is live.
+  audio audible, skipped, test 4 shown). Committed 8f5ef56, live. Test 4
+  is the video test (moved in from Challenge 5, Suvo's call Nov 18
+  ~09:36 IST): watch the Mux ad, name the third challenge ("The Control
+  Room"). The page is wider (max-w-4xl) for the player. Full 4-test flow
+  Kane-tested: the main run completed all four tests (login, email verify,
+  voicemail skip, video answer) and reached "Challenge 4 finished — 1 test
+  skipped." The run's overall status was failed only because Kane split it
+  into a second flow that started on the already-completed page (a
+  bifurcation quirk, not a product fault). Committed ad6a221, live
+  ("Four tests" in live HTML). Test 5 is TBD (authenticator-code proposal,
+  not decided).
 - PARKED 2026-11-18 ~07:35 IST: real Clerk login for test 1 was fully wired
   (@clerk/nextjs v7.10.2, ClerkProvider, /sso-callback, v7 Future API) and
   the build passed, but the dev instance has the Password strategy OFF, so

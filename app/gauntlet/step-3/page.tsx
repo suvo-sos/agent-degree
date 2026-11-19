@@ -11,7 +11,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { saveChallengeResults } from "@/lib/results";
+import {
+  loadChallengeProgress,
+  saveChallengeProgress,
+  saveChallengeResults,
+} from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 const TARGET_COLOUR = "#885566";
@@ -61,8 +65,13 @@ function TestCard({
 
 export default function StepThree() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [step, setStep] = useState(() => loadChallengeProgress(3, 10).step);
+  const [skipped, setSkipped] = useState<number[]>(() =>
+    loadChallengeProgress(3, 10).skipped,
+  );
+  const [savedSolved] = useState<boolean[]>(() =>
+    loadChallengeProgress(3, 10).solved,
+  );
 
   // 1. Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -103,7 +112,7 @@ export default function StepThree() {
     checked.includes("Mango") &&
     checked.length === 2;
 
-  const solved = [
+  const liveSolved = [
     menuSolved,
     progressSolved,
     colourSolved,
@@ -115,10 +124,16 @@ export default function StepThree() {
     counterSolved,
     boxesSolved,
   ];
+  const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 10;
   const currentSolved = solved[step];
   const done = step === 9 && (currentSolved || skipped.includes(step));
+
+  // Persist in-progress state so a reload resumes where you left off.
+  useEffect(() => {
+    saveChallengeProgress(3, { step, solved, skipped });
+  }, [step, solved, skipped]);
 
   function pickColour(i: number) {
     if (COLOURS[i] === TARGET_COLOUR) {

@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
-import { ensureTimerStart } from "@/lib/results";
+import { clearChallengeProgress, ensureTimerStart } from "@/lib/results";
 
 type Step = {
   n: number;
@@ -189,6 +189,7 @@ export default function FinalExam() {
                       <Button
                         variant="outline"
                         render={<Link href={step.href} />}
+                        onClick={() => clearChallengeProgress(step.n)}
                         className="h-12 px-8 font-mono text-base font-semibold"
                       >
                         Retry →

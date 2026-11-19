@@ -14,6 +14,64 @@ export const RESULTS_KEY = "agent-degree-results";
 export const PROGRESS_KEY = "agent-degree-progress";
 export const TIMER_KEY = "agent-degree-timer";
 
+// In-progress state for one challenge, so a reload mid-challenge resumes
+// where the user left off instead of starting from test 1.
+export interface ChallengeProgress {
+  step: number; // current test index (0-based)
+  solved: boolean[]; // per test, in order
+  skipped: number[]; // indices of skipped tests
+}
+
+export function progressKey(n: number): string {
+  return `agent-degree-step-${n}`;
+}
+
+export function loadChallengeProgress(
+  n: number,
+  total: number,
+): ChallengeProgress {
+  const empty: ChallengeProgress = {
+    step: 0,
+    solved: Array(total).fill(false),
+    skipped: [],
+  };
+  try {
+    const raw = localStorage.getItem(progressKey(n));
+    if (!raw) return empty;
+    const p = JSON.parse(raw) as Partial<ChallengeProgress>;
+    const solved = Array.isArray(p.solved) ? p.solved.slice(0, total) : [];
+    while (solved.length < total) solved.push(false);
+    return {
+      step:
+        typeof p.step === "number"
+          ? Math.min(Math.max(p.step, 0), total - 1)
+          : 0,
+      solved: solved.map(Boolean),
+      skipped: (Array.isArray(p.skipped) ? p.skipped : []).filter(
+        (i) => typeof i === "number" && i >= 0 && i < total,
+      ),
+    };
+  } catch {
+    return empty;
+  }
+}
+
+export function saveChallengeProgress(n: number, p: ChallengeProgress) {
+  try {
+    localStorage.setItem(progressKey(n), JSON.stringify(p));
+  } catch {
+    // progress is best-effort
+  }
+}
+
+export function clearChallengeProgress(n: number) {
+  try {
+    localStorage.removeItem(progressKey(n));
+  } catch {
+    // progress is best-effort
+  }
+}
+
 export interface FinalExamTimer {
   start: number; // ms since epoch, set when the Final Exam is first opened
   end: number | null; // ms since epoch, set when all 5 challenges are done

@@ -11,7 +11,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { saveChallengeResults } from "@/lib/results";
+import {
+  loadChallengeProgress,
+  saveChallengeProgress,
+  saveChallengeResults,
+} from "@/lib/results";
 
 const TARGET_MIN = 70;
 const TARGET_MAX = 80;
@@ -60,8 +64,13 @@ function TestCard({
 
 export default function StepOne() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [step, setStep] = useState(() => loadChallengeProgress(1, 5).step);
+  const [skipped, setSkipped] = useState<number[]>(() =>
+    loadChallengeProgress(1, 5).skipped,
+  );
+  const [savedSolved] = useState<boolean[]>(() =>
+    loadChallengeProgress(1, 5).solved,
+  );
   const [value, setValue] = useState(0);
   const [agentChecked, setAgentChecked] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
@@ -76,17 +85,23 @@ export default function StepOne() {
   const sliderSolved = value >= TARGET_MIN && value <= TARGET_MAX;
   const jigsawSolved = cubePlaced;
   const textSolved = typed.trim().toUpperCase() === TEXT_ANSWER;
-  const solved = [
+  const liveSolved = [
     checkboxSolved,
     gridSolved,
     sliderSolved,
     jigsawSolved,
     textSolved,
   ];
+  const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
   const done = step === 4 && (currentSolved || skipped.includes(step));
+
+  // Persist in-progress state so a reload resumes where you left off.
+  useEffect(() => {
+    saveChallengeProgress(1, { step, solved, skipped });
+  }, [step, solved, skipped]);
 
   function pickTile(i: number) {
     if (CAR_TILES.includes(i)) {

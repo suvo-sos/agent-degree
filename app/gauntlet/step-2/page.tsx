@@ -11,7 +11,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { saveChallengeResults } from "@/lib/results";
+import {
+  loadChallengeProgress,
+  saveChallengeProgress,
+  saveChallengeResults,
+} from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 
@@ -179,8 +183,13 @@ function PersonForm({
 
 export default function StepTwo() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [step, setStep] = useState(() => loadChallengeProgress(2, 5).step);
+  const [skipped, setSkipped] = useState<number[]>(() =>
+    loadChallengeProgress(2, 5).skipped,
+  );
+  const [savedSolved] = useState<boolean[]>(() =>
+    loadChallengeProgress(2, 5).solved,
+  );
   const [t1, setT1] = useState<Person>(EMPTY_PERSON);
   const [t2, setT2] = useState<Person>(EMPTY_PERSON);
   const [t3Type, setT3Type] = useState("");
@@ -201,17 +210,23 @@ export default function StepTwo() {
   // Today in IST or UTC — the run happens around midnight IST.
   const dateOk = signDate === "2026-11-17" || signDate === "2026-11-18";
   const signSolved = signatureOk && declared && dateOk && submitted;
-  const solved = [
+  const liveSolved = [
     transcriptSolved,
     documentSolved,
     optionsSolved,
     fixSolved,
     signSolved,
   ];
+  const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
   const done = step === 4 && (currentSolved || skipped.includes(step));
+
+  // Persist in-progress state so a reload resumes where you left off.
+  useEffect(() => {
+    saveChallengeProgress(2, { step, solved, skipped });
+  }, [step, solved, skipped]);
 
   function next() {
     if (currentSolved && step < 4) setStep(step + 1);

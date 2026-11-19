@@ -9,7 +9,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Celebration } from "@/components/celebration";
-import { finishedChallenges, saveChallengeResults } from "@/lib/results";
+import {
+  finishedChallenges,
+  loadChallengeProgress,
+  saveChallengeProgress,
+  saveChallengeResults,
+} from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 
@@ -45,8 +50,13 @@ function TestCard({
 
 export default function StepFive() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [step, setStep] = useState(() => loadChallengeProgress(5, 3).step);
+  const [skipped, setSkipped] = useState<number[]>(() =>
+    loadChallengeProgress(5, 3).skipped,
+  );
+  const [savedSolved] = useState<boolean[]>(() =>
+    loadChallengeProgress(5, 3).solved,
+  );
 
   // 1. Confirm the booking
   // The task: confirm the booking for Room 101. Every click is logged
@@ -78,11 +88,17 @@ export default function StepFive() {
   const firstAction3 = clicked3[0] as string | undefined;
   const pictureSolved = firstAction3 === "confirm";
 
-  const solved = [bookingSolved, downloadSolved, pictureSolved];
+  const liveSolved = [bookingSolved, downloadSolved, pictureSolved];
+  const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 3;
   const currentSolved = solved[step];
   const done = step === 2 && (currentSolved || skipped.includes(step));
+
+  // Persist in-progress state so a reload resumes where you left off.
+  useEffect(() => {
+    saveChallengeProgress(5, { step, solved, skipped });
+  }, [step, solved, skipped]);
 
   useEffect(() => {
     if (!downloading || downloadCancelled || downloadTimedOut) return;

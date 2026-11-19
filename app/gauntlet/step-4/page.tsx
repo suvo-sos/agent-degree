@@ -12,7 +12,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { saveChallengeResults } from "@/lib/results";
+import {
+  loadChallengeProgress,
+  saveChallengeProgress,
+  saveChallengeResults,
+} from "@/lib/results";
 
 const STORAGE_KEY = "agent-degree-progress";
 const DEMO_EMAIL = "agent@agentdegree.app";
@@ -51,8 +55,13 @@ function TestCard({
 
 export default function StepFour() {
   const router = useRouter();
-  const [step, setStep] = useState(0);
-  const [skipped, setSkipped] = useState<number[]>([]);
+  const [step, setStep] = useState(() => loadChallengeProgress(4, 4).step);
+  const [skipped, setSkipped] = useState<number[]>(() =>
+    loadChallengeProgress(4, 4).skipped,
+  );
+  const [savedSolved] = useState<boolean[]>(() =>
+    loadChallengeProgress(4, 4).solved,
+  );
 
   // 1. Log in
   const [email, setEmail] = useState("");
@@ -86,11 +95,17 @@ export default function StepFour() {
   const [videoSolved, setVideoSolved] = useState(false);
 
   const loginSolved = loggedIn;
-  const solved = [loginSolved, emailVerified, audioSolved, videoSolved];
+  const liveSolved = [loginSolved, emailVerified, audioSolved, videoSolved];
+  const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 4;
   const currentSolved = solved[step];
   const done = step === 3 && (currentSolved || skipped.includes(step));
+
+  // Persist in-progress state so a reload resumes where you left off.
+  useEffect(() => {
+    saveChallengeProgress(4, { step, solved, skipped });
+  }, [step, solved, skipped]);
 
   function tryLogin() {
     if (

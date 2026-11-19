@@ -11,6 +11,7 @@ import {
   TwitterIcon,
   UserIcon,
 } from "@hugeicons/core-free-icons";
+import { StartTestDialog } from "@/components/start-test-dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -244,15 +245,7 @@ export default function LeaderboardPage() {
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <Link href="/final-exam">
-            <Button
-              variant="outline"
-              size="lg"
-              className="px-8 font-mono text-base"
-            >
-              Take the exam
-            </Button>
-          </Link>
+          <StartTestDialog />
           <Link href="/">
             <Button
               variant="ghost"

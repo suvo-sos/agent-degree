@@ -22,7 +22,7 @@ const RULES = [
   "Your name and X handle show on the leaderboard when you finish.",
 ];
 
-// Start Test opens this popup: first the name card, then the rules card.
+// Start Exam opens this popup: first the name card, then the rules card.
 // The Next button only appears once a name is written. The Close button
 // on the rules card saves the identity and starts the exam.
 export function StartTestDialog() {
@@ -61,7 +61,7 @@ export function StartTestDialog() {
         className="px-16 font-mono text-base"
         onClick={() => setOpen(true)}
       >
-        Start Test
+        Start Exam
       </RainbowButton>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="border-zinc-800 bg-zinc-950 text-white sm:max-w-md">

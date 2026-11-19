@@ -24,7 +24,7 @@ import {
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
-import { ensureTimerStart, getResults } from "@/lib/results";
+import { ensureTimerStart } from "@/lib/results";
 
 type Step = {
   n: number;
@@ -81,7 +81,6 @@ function loadProgress(): Record<string, boolean> {
 
 export default function FinalExam() {
   const [passed, setPassed] = useState<Record<string, boolean>>({});
-  const [marks, setMarks] = useState<Record<number, string>>({});
   const [rulesOpen, setRulesOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -95,16 +94,6 @@ export default function FinalExam() {
   useEffect(() => {
     setPassed(loadProgress());
     ensureTimerStart();
-    // Marks per completed challenge, from the saved results.
-    const res = getResults();
-    const m: Record<number, string> = {};
-    for (const [key, r] of Object.entries(res)) {
-      const n = Number(key);
-      const solved = r.solved.filter(Boolean).length;
-      const score = Math.max(0, solved - (r.wrong ?? 0));
-      m[n] = `${score}/${r.solved.length}`;
-    }
-    setMarks(m);
     // Rules show only on the very first visit to this page. After that
     // (e.g. coming back after finishing a challenge) they stay hidden.
     try {
@@ -133,11 +122,6 @@ export default function FinalExam() {
       !!passed[`step${s.n - 1}Skipped`];
     return prevCompleted && !isCompleted;
   })?.n;
-
-  // Marks for a completed-but-not-passed challenge, e.g. "3/5".
-  function challengeMarks(n: number): string {
-    return marks[n] ?? "Completed";
-  }
 
   return (
     <div
@@ -234,11 +218,7 @@ export default function FinalExam() {
                     <p className="font-mono text-sm font-semibold text-green-400">
                       Passed ✓
                     </p>
-                  ) : isCompleted ? (
-                    <p className="font-mono text-sm font-semibold text-amber-400">
-                      {challengeMarks(step.n)}
-                    </p>
-                  ) : available ? (
+                  ) : isCompleted ? null : available ? (
                     <Button
                       render={<Link href={step.href} />}
                       className="h-12 px-8 font-mono text-base font-semibold"

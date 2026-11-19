@@ -418,28 +418,28 @@ export default function StepFive() {
         )}
 
         {allSolved && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="font-grotesque text-3xl font-semibold text-green-400">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="font-instrument-serif text-5xl text-white">
               Challenge 5 passed.
             </p>
             <Link href="/final-exam">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+              <Button className="mt-10 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}
 
         {done && !allSolved && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="font-grotesque text-3xl font-semibold text-amber-400">
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <p className="font-instrument-serif text-5xl text-white">
               Challenge 5 finished — {Math.max(0, solvedCount - wrong)}/
               {solved.length}.
             </p>
-            <p className="mt-3 font-mono text-base text-zinc-400">
+            <p className="mt-5 font-mono text-lg text-zinc-300">
               Every unsolved test cost −1. Back to the Final Exam to
               continue.
             </p>
             <Link href="/final-exam">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
+              <Button className="mt-10 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}

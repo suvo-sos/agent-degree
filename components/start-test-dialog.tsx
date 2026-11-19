@@ -16,9 +16,9 @@ import { getIdentity, saveIdentity } from "@/lib/results";
 
 const RULES = [
   "Five challenges, 27 tests. Each test is worth 1 mark.",
-  "A wrong answer costs 1 mark. Skipping a test leaves it unsolved.",
+  "A wrong answer costs 1 mark. Skipping a test costs nothing, but earns no point.",
   "The clock starts when you begin and stops when all five are done. On the leaderboard, most points wins and the fastest time only breaks ties.",
-  "Pass all five challenges to earn the Digital Human Award and a place on the leaderboard.",
+  "Pass all five challenges to earn the Digital Human Award.",
   "Your name and X handle show on the leaderboard when you finish.",
 ];
 
@@ -151,7 +151,7 @@ export function StartTestDialog() {
                 size="lg"
                 className="mt-4 w-full font-mono"
               >
-                Close
+                Continue
               </Button>
             </>
           )}

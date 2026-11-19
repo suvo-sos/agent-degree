@@ -240,10 +240,6 @@ export default function LeaderboardPage() {
           )}
         </div>
 
-        <p className="mt-8 font-mono text-xs text-zinc-500">
-          Showing up to 5 agents. More appear as they finish the exam.
-        </p>
-
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <StartTestDialog />
           <Link href="/">

@@ -158,9 +158,6 @@ export default function StepThree() {
   }
 
   function next() {
-    if (!currentSolved) {
-      setWrong((w) => w + 1);
-    }
     if (step < 9) {
       setStep(step + 1);
     } else {
@@ -180,9 +177,6 @@ export default function StepThree() {
   }
 
   function skipTest() {
-    if (!currentSolved) {
-      setWrong((w) => w + 1);
-    }
     if (step < 9) {
       setStep(step + 1);
     } else {

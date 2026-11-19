@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
 import { StartTestDialog } from "@/components/start-test-dialog";
+import { AgentPrompt } from "@/components/agent-prompt";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 
@@ -58,6 +59,12 @@ export default function Home() {
                 View leaderboard
               </Button>
             </Link>
+          </div>
+          <div
+            className="animate-fade-up mt-6 flex justify-center lg:justify-start"
+            style={{ animationDelay: "340ms" }}
+          >
+            <AgentPrompt />
           </div>
         </div>
         <div

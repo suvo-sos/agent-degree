@@ -142,9 +142,6 @@ export default function StepFive() {
   }
 
   function next() {
-    if (!currentSolved) {
-      setWrong((w) => w + 1);
-    }
     if (step < 2) {
       setStep(step + 1);
     } else {
@@ -153,9 +150,6 @@ export default function StepFive() {
   }
 
   function skipTest() {
-    if (!currentSolved) {
-      setWrong((w) => w + 1);
-    }
     if (step < 2) {
       setStep(step + 1);
     } else {

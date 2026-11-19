@@ -250,9 +250,9 @@ export const TEST_NAMES: Record<number, string[]> = {
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
 };
 
-// Each solved test is 1 mark. An unsolved test costs -1, same as a
-// wrong attempt. There is no "skipped": moving past a test without
-// solving it counts as wrong. Score is solved minus wrong (floored at 0).
+// Each solved test is 1 mark. A wrong attempt costs -1. Skipping a test
+// costs nothing and earns no point: it is simply not solved. Score is
+// solved minus wrong (floored at 0).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;

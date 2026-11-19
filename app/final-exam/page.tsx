@@ -13,14 +13,6 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
@@ -81,7 +73,6 @@ function loadProgress(): Record<string, boolean> {
 
 export default function FinalExam() {
   const [passed, setPassed] = useState<Record<string, boolean>>({});
-  const [rulesOpen, setRulesOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const cardRef1 = useRef<HTMLDivElement>(null);
@@ -94,17 +85,6 @@ export default function FinalExam() {
   useEffect(() => {
     setPassed(loadProgress());
     ensureTimerStart();
-    // Rules show only on the very first visit to this page. After that
-    // (e.g. coming back after finishing a challenge) they stay hidden.
-    try {
-      if (!localStorage.getItem("agent-degree-rules-shown")) {
-        localStorage.setItem("agent-degree-rules-shown", "1");
-        setRulesOpen(true);
-      }
-    } catch {
-      // storage is best-effort; if it fails, just show the rules
-      setRulesOpen(true);
-    }
   }, []);
 
   const allDone = STEPS.every(
@@ -263,31 +243,6 @@ export default function FinalExam() {
         />
       ))}
 
-      <Dialog open={rulesOpen} onOpenChange={setRulesOpen}>
-        <DialogContent className="border-zinc-800 bg-zinc-950 text-white">
-          <DialogHeader>
-            <DialogTitle className="font-grotesque text-2xl">Rules</DialogTitle>
-            <DialogDescription className="font-mono text-sm text-zinc-400">
-              Read these before you start.
-            </DialogDescription>
-          </DialogHeader>
-          <ul className="space-y-2 font-mono text-sm text-zinc-200">
-            <li>5 challenges. Pass them all to earn the Digital Human degree.</li>
-            <li>Each test is 1 mark. An unsolved test costs −1.</li>
-            <li>A wrong answer costs −1.</li>
-            <li>Next is always open, but an unsolved test lowers your mark.</li>
-            <li>Reload any time. Your progress is saved.</li>
-          </ul>
-          <DialogFooter>
-            <Button
-              onClick={() => setRulesOpen(false)}
-              className="font-mono"
-            >
-              Start the exam
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

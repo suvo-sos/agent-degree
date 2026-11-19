@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getTopEntries, upsertEntry, type LeaderboardRow } from "@/lib/db";
 
+// Always read the live table on every request, so new finishes show up
+// without a redeploy.
+export const dynamic = "force-dynamic";
+
 // Seed shown when the database is not configured yet, so the page still
 // renders. Once DATABASE_URL is set, the live table is the source.
 const SEED: LeaderboardRow[] = [

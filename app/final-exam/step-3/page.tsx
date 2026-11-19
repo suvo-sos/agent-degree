@@ -59,8 +59,11 @@ function TestCard({
 export default function StepThree() {
   const router = useRouter();
   const [step, setStep] = useState(() => loadChallengeProgress(3, 10).step);
-  const [skipped, setSkipped] = useState<number[]>(() =>
-    loadChallengeProgress(3, 10).skipped,
+  const [wrong, setWrong] = useState<number>(() =>
+    loadChallengeProgress(3, 10).wrong ?? 0,
+  );
+  const [finished, setFinished] = useState<boolean>(() =>
+    loadChallengeProgress(3, 10).finished === true,
   );
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(3, 10).solved,
@@ -121,12 +124,12 @@ export default function StepThree() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 10;
   const currentSolved = solved[step];
-  const done = step === 9 && (currentSolved || skipped.includes(step));
+  const done = finished || (step === 9 && currentSolved);
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(3, { step, solved, skipped });
-  }, [step, solved, skipped]);
+    saveChallengeProgress(3, { step, solved, wrong, finished });
+  }, [step, solved, wrong, finished]);
 
   function pickColour(i: number) {
     if (COLOURS[i] === TARGET_COLOUR) {
@@ -155,9 +158,13 @@ export default function StepThree() {
 
   function next() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      setWrong((w) => w + 1);
     }
-    if (step < 9) setStep(step + 1);
+    if (step < 9) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -173,20 +180,23 @@ export default function StepThree() {
 
   function skipTest() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      setWrong((w) => w + 1);
     }
-    if (step < 9) setStep(step + 1);
+    if (step < 9) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   // Save the result once, when the run ends.
   useEffect(() => {
     if (done) {
+      saveProgress({ step3: true });
       if (allSolved) {
-        saveProgress({ step3: true, step3Skipped: false });
-      } else {
-        saveProgress({ step3Skipped: true });
+        saveProgress({ step3Passed: true });
       }
-      saveChallengeResults(3, solved, skipped);
+      saveChallengeResults(3, solved, wrong);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
@@ -543,11 +553,12 @@ export default function StepThree() {
         {done && !allSolved && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="font-grotesque text-3xl font-semibold text-amber-400">
-              Challenge 3 finished — {skipped.length} test
-              {skipped.length > 1 ? "s" : ""} skipped.
+              Challenge 3 finished — {Math.max(0, solvedCount - wrong)}/
+              {solved.length}.
             </p>
             <p className="mt-3 font-mono text-base text-zinc-400">
-              Solve every test to pass. Retry from the Final Exam.
+              Every unsolved test cost −1. Back to the Final Exam to
+              continue.
             </p>
             <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>

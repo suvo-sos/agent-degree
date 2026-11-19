@@ -234,14 +234,11 @@ function TestCard({
 export default function StepOne() {
   const router = useRouter();
   const [step, setStep] = useState(() => loadChallengeProgress(1, 5).step);
-  const [skipped, setSkipped] = useState<number[]>(() =>
-    loadChallengeProgress(1, 5).skipped,
+  const [finished, setFinished] = useState<boolean>(() =>
+    loadChallengeProgress(1, 5).finished === true,
   );
   const [wrong, setWrong] = useState<number>(() =>
     loadChallengeProgress(1, 5).wrong ?? 0,
-  );
-  const [lastAttempted, setLastAttempted] = useState<boolean>(() =>
-    loadChallengeProgress(1, 5).lastAttempted === true,
   );
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(1, 5).solved,
@@ -425,20 +422,12 @@ export default function StepOne() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
-  const done =
-    step === 4 &&
-    (currentSolved || skipped.includes(step) || lastAttempted);
+  const done = finished || (step === 4 && currentSolved);
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(1, {
-      step,
-      solved,
-      skipped,
-      wrong,
-      lastAttempted,
-    });
-  }, [step, solved, skipped, wrong, lastAttempted]);
+    saveChallengeProgress(1, { step, solved, wrong, finished });
+  }, [step, solved, wrong, finished]);
 
   function pickTile(i: number) {
     if (gridCarTiles.includes(i)) {
@@ -462,16 +451,13 @@ export default function StepOne() {
 
   function next() {
     if (!currentSolved) {
-      // On the last test, a typed answer that is wrong is a wrong
-      // attempt, not a skip. The user tried; they did not skip it.
-      if (step === 4 && typed.trim() !== "") {
-        setWrong((w) => w + 1);
-        setLastAttempted(true);
-      } else {
-        setSkipped((prev) => [...prev, step]);
-      }
+      setWrong((w) => w + 1);
     }
-    if (step < 4) setStep(step + 1);
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -487,20 +473,23 @@ export default function StepOne() {
 
   function skipTest() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      setWrong((w) => w + 1);
     }
-    if (step < 4) setStep(step + 1);
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   // Save the result once, when the run ends.
   useEffect(() => {
     if (done) {
+      saveProgress({ step1: true });
       if (allSolved) {
-        saveProgress({ step1: true, step1Skipped: false });
-      } else {
-        saveProgress({ step1Skipped: true });
+        saveProgress({ step1Passed: true });
       }
-      saveChallengeResults(1, solved, skipped, wrong);
+      saveChallengeResults(1, solved, wrong);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
@@ -770,12 +759,12 @@ export default function StepOne() {
         {done && !allSolved && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="font-grotesque text-3xl font-semibold text-amber-400">
-              {skipped.length > 0
-                ? `Challenge 1 finished — ${skipped.length} test${skipped.length > 1 ? "s" : ""} skipped.`
-                : `Challenge 1 finished — ${solved.length - solvedCount} test${solved.length - solvedCount > 1 ? "s" : ""} not solved.`}
+              Challenge 1 finished — {Math.max(0, solvedCount - wrong)}/
+              {solved.length}.
             </p>
             <p className="mt-3 font-mono text-base text-zinc-400">
-              Solve every test to pass. Retry from the Final Exam.
+              Every unsolved test cost −1. Back to the Final Exam to
+              continue.
             </p>
             <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>

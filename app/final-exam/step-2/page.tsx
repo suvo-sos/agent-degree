@@ -177,8 +177,11 @@ function PersonForm({
 export default function StepTwo() {
   const router = useRouter();
   const [step, setStep] = useState(() => loadChallengeProgress(2, 5).step);
-  const [skipped, setSkipped] = useState<number[]>(() =>
-    loadChallengeProgress(2, 5).skipped,
+  const [wrong, setWrong] = useState<number>(() =>
+    loadChallengeProgress(2, 5).wrong ?? 0,
+  );
+  const [finished, setFinished] = useState<boolean>(() =>
+    loadChallengeProgress(2, 5).finished === true,
   );
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(2, 5).solved,
@@ -214,18 +217,22 @@ export default function StepTwo() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
-  const done = step === 4 && (currentSolved || skipped.includes(step));
+  const done = finished || (step === 4 && currentSolved);
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(2, { step, solved, skipped });
-  }, [step, solved, skipped]);
+    saveChallengeProgress(2, { step, solved, wrong, finished });
+  }, [step, solved, wrong, finished]);
 
   function next() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      setWrong((w) => w + 1);
     }
-    if (step < 4) setStep(step + 1);
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -241,20 +248,23 @@ export default function StepTwo() {
 
   function skipTest() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      setWrong((w) => w + 1);
     }
-    if (step < 4) setStep(step + 1);
+    if (step < 4) {
+      setStep(step + 1);
+    } else {
+      setFinished(true);
+    }
   }
 
   // Save the result once, when the run ends.
   useEffect(() => {
     if (done) {
+      saveProgress({ step2: true });
       if (allSolved) {
-        saveProgress({ step2: true, step2Skipped: false });
-      } else {
-        saveProgress({ step2Skipped: true });
+        saveProgress({ step2Passed: true });
       }
-      saveChallengeResults(2, solved, skipped);
+      saveChallengeResults(2, solved, wrong);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
@@ -440,11 +450,12 @@ export default function StepTwo() {
         {done && !allSolved && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="font-grotesque text-3xl font-semibold text-amber-400">
-              Challenge 2 finished — {skipped.length} test
-              {skipped.length > 1 ? "s" : ""} skipped.
+              Challenge 2 finished — {Math.max(0, solvedCount - wrong)}/
+              {solved.length}.
             </p>
             <p className="mt-3 font-mono text-base text-zinc-400">
-              Solve every test to pass. Retry from the Final Exam.
+              Every unsolved test cost −1. Back to the Final Exam to
+              continue.
             </p>
             <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>

@@ -24,7 +24,7 @@ import {
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
-import { clearChallengeProgress, ensureTimerStart } from "@/lib/results";
+import { ensureTimerStart, getResults } from "@/lib/results";
 
 type Step = {
   n: number;
@@ -81,6 +81,7 @@ function loadProgress(): Record<string, boolean> {
 
 export default function FinalExam() {
   const [passed, setPassed] = useState<Record<string, boolean>>({});
+  const [marks, setMarks] = useState<Record<number, string>>({});
   const [rulesOpen, setRulesOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -94,6 +95,16 @@ export default function FinalExam() {
   useEffect(() => {
     setPassed(loadProgress());
     ensureTimerStart();
+    // Marks per completed challenge, from the saved results.
+    const res = getResults();
+    const m: Record<number, string> = {};
+    for (const [key, r] of Object.entries(res)) {
+      const n = Number(key);
+      const solved = r.solved.filter(Boolean).length;
+      const score = Math.max(0, solved - (r.wrong ?? 0));
+      m[n] = `${score}/${r.solved.length}`;
+    }
+    setMarks(m);
     // Rules show only on the very first visit to this page. After that
     // (e.g. coming back after finishing a challenge) they stay hidden.
     try {
@@ -110,6 +121,11 @@ export default function FinalExam() {
   const allDone = STEPS.every(
     (s) => passed[`step${s.n}`] || passed[`step${s.n}Skipped`],
   );
+
+  // Marks for a completed-but-not-passed challenge, e.g. "3/5".
+  function challengeMarks(n: number): string {
+    return marks[n] ?? "Completed";
+  }
 
   return (
     <div
@@ -133,14 +149,17 @@ export default function FinalExam() {
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center">
         <div className="mt-16 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {STEPS.map((step, idx) => {
-            const isPassed = !!passed[`step${step.n}`];
-            const isSkipped = !!passed[`step${step.n}Skipped`];
-            const prevPassed =
+            const isPassed = !!passed[`step${step.n}Passed`];
+            // Completed = all tests resolved (solved or not). Old saves
+            // used stepNSkipped for the same meaning.
+            const isCompleted =
+              !!passed[`step${step.n}`] || !!passed[`step${step.n}Skipped`];
+            const prevCompleted =
               step.n === 1 ||
               !!passed[`step${step.n - 1}`] ||
               !!passed[`step${step.n - 1}Skipped`];
-            const available = step.href !== null && prevPassed;
-            const locked = !isPassed && !isSkipped && !available;
+            const available = step.href !== null && prevCompleted;
+            const locked = !isCompleted && !available;
 
             return (
               <div
@@ -201,20 +220,10 @@ export default function FinalExam() {
                     <p className="font-mono text-sm font-semibold text-green-400">
                       Passed ✓
                     </p>
-                  ) : isSkipped ? (
-                    <div className="flex items-center gap-3">
-                      <p className="font-mono text-sm font-semibold text-amber-400">
-                        Skipped
-                      </p>
-                      <Button
-                        variant="outline"
-                        render={<Link href={step.href} />}
-                        onClick={() => clearChallengeProgress(step.n)}
-                        className="h-12 px-8 font-mono text-base font-semibold"
-                      >
-                        Retry →
-                      </Button>
-                    </div>
+                  ) : isCompleted ? (
+                    <p className="font-mono text-sm font-semibold text-amber-400">
+                      {challengeMarks(step.n)}
+                    </p>
                   ) : available ? (
                     <Button
                       render={<Link href={step.href} />}
@@ -270,7 +279,7 @@ export default function FinalExam() {
           </DialogHeader>
           <ul className="space-y-2 font-mono text-sm text-zinc-200">
             <li>5 challenges. Pass them all to earn the Digital Human degree.</li>
-            <li>Each test is 1 mark. A skipped test costs −1.</li>
+            <li>Each test is 1 mark. An unsolved test costs −1.</li>
             <li>A wrong answer costs −1.</li>
             <li>Next is always open, but an unsolved test lowers your mark.</li>
             <li>Reload any time. Your progress is saved.</li>

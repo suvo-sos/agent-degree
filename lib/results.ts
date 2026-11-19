@@ -1,11 +1,10 @@
 // Per-test results for the Final Exam review, marks, grade and certificate.
 // Stored in localStorage as the agent finishes each challenge.
 
-export type TestStatus = "solved" | "skipped" | "unsolved";
+export type TestStatus = "solved" | "unsolved";
 
 export interface ChallengeResult {
   solved: boolean[]; // per test, in order
-  skipped: number[]; // indices of skipped tests
   wrong?: number; // wrong attempts in this challenge, each costs -1
 }
 
@@ -20,9 +19,8 @@ export const TIMER_KEY = "agent-degree-timer";
 export interface ChallengeProgress {
   step: number; // current test index (0-based)
   solved: boolean[]; // per test, in order
-  skipped: number[]; // indices of skipped tests
   wrong?: number; // wrong attempts so far, each costs -1
-  lastAttempted?: boolean; // the last test was attempted (typed an answer) but wrong, so it is not a skip
+  finished?: boolean; // the challenge is done (all tests resolved, solved or not)
 }
 
 export function progressKey(n: number): string {
@@ -36,9 +34,8 @@ export function loadChallengeProgress(
   const empty: ChallengeProgress = {
     step: 0,
     solved: Array(total).fill(false),
-    skipped: [],
     wrong: 0,
-    lastAttempted: false,
+    finished: false,
   };
   try {
     const raw = localStorage.getItem(progressKey(n));
@@ -52,11 +49,8 @@ export function loadChallengeProgress(
           ? Math.min(Math.max(p.step, 0), total - 1)
           : 0,
       solved: solved.map(Boolean),
-      skipped: (Array.isArray(p.skipped) ? p.skipped : []).filter(
-        (i) => typeof i === "number" && i >= 0 && i < total,
-      ),
       wrong: typeof p.wrong === "number" ? Math.max(p.wrong, 0) : 0,
-      lastAttempted: p.lastAttempted === true,
+      finished: p.finished === true,
     };
   } catch {
     return empty;
@@ -145,7 +139,6 @@ export function formatDuration(ms: number): string {
 export function saveChallengeResults(
   challenge: number,
   solved: boolean[],
-  skipped: number[],
   wrong = 0,
 ) {
   try {
@@ -154,7 +147,7 @@ export function saveChallengeResults(
     ) as ResultsMap;
     localStorage.setItem(
       RESULTS_KEY,
-      JSON.stringify({ ...prev, [challenge]: { solved, skipped, wrong } }),
+      JSON.stringify({ ...prev, [challenge]: { solved, wrong } }),
     );
   } catch {
     // progress is best-effort
@@ -177,7 +170,6 @@ export function testStatus(
   const r = results[challenge];
   if (!r) return "unsolved";
   if (r.solved[index]) return "solved";
-  if (r.skipped.includes(index)) return "skipped";
   return "unsolved";
 }
 
@@ -227,23 +219,21 @@ export const TEST_NAMES: Record<number, string[]> = {
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
 };
 
-// Each solved test is 1 mark. A skipped test counts as wrong, so it
-// costs -1, same as a wrong attempt. Score is solved minus wrong
-// attempts minus skips (floored at 0).
+// Each solved test is 1 mark. An unsolved test costs -1, same as a
+// wrong attempt. There is no "skipped": moving past a test without
+// solving it counts as wrong. Score is solved minus wrong (floored at 0).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;
   let wrong = 0;
-  let skipped = 0;
   for (const r of Object.values(results)) {
     total += r.solved.length;
     solved += r.solved.filter(Boolean).length;
     wrong += r.wrong ?? 0;
-    skipped += r.skipped.length;
   }
-  const score = Math.max(0, solved - wrong - skipped);
+  const score = Math.max(0, solved - wrong);
   const pct = total === 0 ? 0 : Math.round((score / total) * 100);
-  return { total, solved, wrong, skipped, score, pct };
+  return { total, solved, wrong, score, pct };
 }
 
 // Grade bands: 90+ A+, 80-89 A, 70-79 B, 60-69 C, 50-59 D, below 50 F.
@@ -256,7 +246,7 @@ export function gradeFor(pct: number): { grade: string; label: string } {
   return { grade: "F", label: "Needs another run" };
 }
 
-// Which challenges are finished (passed or skipped), from the progress key.
+// Which challenges are finished, from the progress key.
 export function finishedChallenges(): number[] {
   try {
     const p = JSON.parse(
@@ -264,7 +254,7 @@ export function finishedChallenges(): number[] {
     ) as Record<string, boolean>;
     const done: number[] = [];
     for (let n = 1; n <= 5; n++) {
-      if (p[`step${n}`] === true || p[`step${n}Skipped`] === true) done.push(n);
+      if (p[`step${n}`] === true) done.push(n);
     }
     return done;
   } catch {

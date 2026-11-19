@@ -94,7 +94,17 @@ export default function FinalExam() {
   useEffect(() => {
     setPassed(loadProgress());
     ensureTimerStart();
-    setRulesOpen(true);
+    // Rules show only on the very first visit to this page. After that
+    // (e.g. coming back after finishing a challenge) they stay hidden.
+    try {
+      if (!localStorage.getItem("agent-degree-rules-shown")) {
+        localStorage.setItem("agent-degree-rules-shown", "1");
+        setRulesOpen(true);
+      }
+    } catch {
+      // storage is best-effort; if it fails, just show the rules
+      setRulesOpen(true);
+    }
   }, []);
 
   const allDone = STEPS.every(

@@ -763,12 +763,7 @@ export default function StepOne() {
         {done && !allSolved && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <p className="font-instrument-serif text-5xl text-white">
-              Challenge 1 finished — {Math.max(0, solvedCount - wrong)}/
-              {solved.length}.
-            </p>
-            <p className="mt-5 font-mono text-lg text-zinc-300">
-              Every unsolved test cost −1. Back to the Final Exam to
-              continue.
+              Challenge 1 finished.
             </p>
             <Link href="/final-exam">
               <Button className="mt-10 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>

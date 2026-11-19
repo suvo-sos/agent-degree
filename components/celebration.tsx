@@ -133,9 +133,6 @@ export function Celebration({
 
       {/* Header */}
       <div className="relative z-10 pt-8 text-center">
-        <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
-          AGENT DEGREE — RESULTS
-        </p>
         <h1 className="mt-2 font-instrument-serif text-5xl sm:text-6xl">
           Congratulations
         </h1>
@@ -217,7 +214,7 @@ export function Celebration({
               <a
                 href={certificateDownloadUrl(grade)}
                 download="agent-degree-certificate.png"
-                className="group relative mt-5 inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-8 font-instrument-serif text-lg font-semibold tracking-wide text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
+                className="group relative mt-10 inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-8 font-instrument-serif text-lg font-semibold tracking-wide text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
               >
                 <span className="absolute inset-0 -translate-x-full bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.55)_50%,transparent_60%)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
                 <span className="relative">Download certificate</span>

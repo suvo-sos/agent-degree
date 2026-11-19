@@ -145,28 +145,26 @@ export default function LeaderboardPage() {
           Most points wins, the clock only breaks ties.
         </p>
 
-        <div className="mx-auto mt-10 w-full max-w-2xl text-left">
+        <div className="mx-auto mt-10 w-full max-w-3xl text-left">
+          {/* Column labels */}
+          <div className="flex items-center gap-4 border-b border-zinc-700 pb-3 font-mono text-xs font-semibold tracking-[0.2em] text-zinc-500">
+            <span className="w-8 shrink-0 text-center">#</span>
+            <span className="flex-1">NAME</span>
+            <span className="w-10 shrink-0 text-center">GRADE</span>
+            <span className="w-20 shrink-0 text-right">POINTS</span>
+            <span className="w-16 shrink-0 text-right">TIME</span>
+            <span className="w-24 shrink-0 text-center">VISIT X</span>
+          </div>
           {ranked.map((e, i) => (
             <div
               key={e.name}
               className="flex items-center gap-4 border-b border-zinc-800 py-4 font-mono"
             >
-              <span className="w-8 text-center text-lg font-semibold text-amber-400">
+              <span className="w-8 shrink-0 text-center text-lg font-semibold text-amber-400">
                 {i + 1}
               </span>
-              <span className="flex-1 text-base font-semibold text-white">
-                {e.x ? (
-                  <a
-                    href={`https://x.com/${e.x}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-blue-400 hover:underline"
-                  >
-                    {e.name}
-                  </a>
-                ) : (
-                  e.name
-                )}
+              <span className="flex-1 min-w-0 truncate text-base font-semibold text-white">
+                {e.name}
                 {e.x && (
                   <span className="ml-2 text-sm font-normal text-zinc-500">
                     @{e.x}
@@ -178,14 +176,33 @@ export default function LeaderboardPage() {
                   </span>
                 )}
               </span>
-              <span className="font-instrument-serif text-2xl text-amber-400">
+              <span className="w-10 shrink-0 text-center font-instrument-serif text-2xl text-amber-400">
                 {e.grade}
               </span>
-              <span className="text-sm text-zinc-400">
-                {e.points}/{e.total} points
+              <span className="w-20 shrink-0 text-right text-sm text-zinc-400">
+                {e.points}/{e.total}
               </span>
-              <span className="w-16 text-right text-sm text-zinc-300">
+              <span className="w-16 shrink-0 text-right text-sm text-zinc-300">
                 {formatTime(e.seconds)}
+              </span>
+              <span className="w-24 shrink-0 text-center">
+                {e.x ? (
+                  <a
+                    href={`https://x.com/${e.x}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="font-mono text-xs text-zinc-200"
+                    >
+                      Visit X
+                    </Button>
+                  </a>
+                ) : (
+                  <span className="text-sm text-zinc-600">—</span>
+                )}
               </span>
             </div>
           ))}

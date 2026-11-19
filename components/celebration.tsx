@@ -247,14 +247,24 @@ export function Celebration({
                 alt={`Agent Degree certificate, grade ${grade}`}
                 className="h-[46vh] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
               />
-              <a
-                href={certificateDownloadUrl(grade)}
-                download="agent-degree-certificate.png"
-                className="group relative mt-10 inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-8 font-instrument-serif text-lg font-semibold tracking-wide text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
-              >
-                <span className="absolute inset-0 -translate-x-full bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.55)_50%,transparent_60%)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
-                <span className="relative">Download certificate</span>
-              </a>
+              <div className="mt-10 flex w-full max-w-[420px] items-center justify-center gap-3">
+                <a
+                  href={certificateDownloadUrl(grade)}
+                  download="agent-degree-certificate.png"
+                  className="group relative flex h-12 flex-1 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-4 font-instrument-serif text-base font-semibold tracking-wide whitespace-nowrap text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
+                >
+                  <span className="absolute inset-0 -translate-x-full bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.55)_50%,transparent_60%)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                  <span className="relative">Download certificate</span>
+                </a>
+                <Link href="/leaderboard" className="flex-1">
+                  <Button
+                    variant="outline"
+                    className="h-12 w-full font-mono text-base whitespace-nowrap text-zinc-200"
+                  >
+                    View leaderboard
+                  </Button>
+                </Link>
+              </div>
             </div>
 
             {/* Right: review the tests. */}

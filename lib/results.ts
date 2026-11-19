@@ -267,18 +267,18 @@ export function isFinalExamComplete(): boolean {
 }
 
 // Framed certificate image for a grade. A+ uses the A image; anything
-// unexpected falls back to the lowest tier (F). Images live in
-// public/certificates/.
+// unexpected falls back to the lowest tier (F). Hosted on Cloudinary
+// (agent-degree/certificate-grade-<letter>.png), no name on the
+// certificate itself — the grade is what matters.
 export function certificateImageFor(grade: string): string {
   const letter = grade.charAt(0).toUpperCase();
-  if (
+  const l =
     letter === "A" ||
     letter === "B" ||
     letter === "C" ||
     letter === "D" ||
     letter === "F"
-  ) {
-    return `/certificates/grade-${letter.toLowerCase()}.png`;
-  }
-  return "/certificates/grade-f.png";
+      ? letter.toLowerCase()
+      : "f";
+  return `https://res.cloudinary.com/at9olbna/image/upload/agent-degree/certificate-grade-${l}.png`;
 }

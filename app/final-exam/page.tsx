@@ -260,7 +260,7 @@ export default function FinalExam() {
           </DialogHeader>
           <ul className="space-y-2 font-mono text-sm text-zinc-200">
             <li>5 challenges. Pass them all to earn the Digital Human degree.</li>
-            <li>Each test is 1 mark. A skipped test scores 0.</li>
+            <li>Each test is 1 mark. A skipped test costs −1.</li>
             <li>A wrong answer costs −1.</li>
             <li>Next is always open, but an unsolved test lowers your mark.</li>
             <li>Reload any time. Your progress is saved.</li>

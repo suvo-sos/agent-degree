@@ -86,7 +86,7 @@ export function Celebration({
       }
     : stored;
 
-  const { total, solved, wrong, score, pct } = computeScore(results);
+  const { total, solved, wrong, skipped, score, pct } = computeScore(results);
   const { grade, label } = gradeFor(pct);
   const hasResults = total > 0;
 
@@ -189,6 +189,7 @@ export function Celebration({
               <p className="mt-1 font-mono text-sm text-zinc-600">
                 {solved} correct
                 {wrong > 0 ? ` · −${wrong} for wrong answers` : ""}
+                {skipped > 0 ? ` · −${skipped} for skips` : ""}
               </p>
               <p className="mt-1 font-mono text-sm text-zinc-600">
                 {pct}% correct

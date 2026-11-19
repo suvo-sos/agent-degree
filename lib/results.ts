@@ -224,20 +224,23 @@ export const TEST_NAMES: Record<number, string[]> = {
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
 };
 
-// Each solved test is 1 mark. Skipped or unsolved is 0. Each wrong
-// attempt costs -1, so the score is solved minus wrong (floored at 0).
+// Each solved test is 1 mark. A skipped test counts as wrong, so it
+// costs -1, same as a wrong attempt. Score is solved minus wrong
+// attempts minus skips (floored at 0).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;
   let wrong = 0;
+  let skipped = 0;
   for (const r of Object.values(results)) {
     total += r.solved.length;
     solved += r.solved.filter(Boolean).length;
     wrong += r.wrong ?? 0;
+    skipped += r.skipped.length;
   }
-  const score = Math.max(0, solved - wrong);
+  const score = Math.max(0, solved - wrong - skipped);
   const pct = total === 0 ? 0 : Math.round((score / total) * 100);
-  return { total, solved, wrong, score, pct };
+  return { total, solved, wrong, skipped, score, pct };
 }
 
 // Grade bands: 90+ A+, 80-89 A, 70-79 B, 60-69 C, 50-59 D, below 50 F.

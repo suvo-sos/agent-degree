@@ -76,6 +76,16 @@ export interface GlareHoverProps extends ComponentProps<"div"> {
    * ```
    */
   playOnce?: boolean
+  /**
+   * When `true`, the glare is always visible and sweeps across the card
+   * on its own, without needing a hover. Used to highlight the current
+   * challenge card.
+   * @example
+   * ```tsx
+   * <GlareHover alwaysOn>...</GlareHover>
+   * ```
+   */
+  alwaysOn?: boolean
 }
 
 type Color = `#${string}`
@@ -103,6 +113,7 @@ function GlareHover({
   size = 250,
   duration = 650,
   playOnce = false,
+  alwaysOn = false,
   className,
   style,
   width,
@@ -141,6 +152,8 @@ function GlareHover({
           "before:transition-none hover:before:transition-[background-position] hover:before:duration-[var(--gh-duration)]",
         // HOVER EFFECT
         "hover:before:[background-position:100%_100%,0_0]",
+        // ALWAYS-ON: the glare sweeps on its own, no hover needed.
+        alwaysOn && "glare-always-on",
         className
       )}
       style={cssVars}

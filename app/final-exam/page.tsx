@@ -122,6 +122,18 @@ export default function FinalExam() {
     (s) => passed[`step${s.n}`] || passed[`step${s.n}Skipped`],
   );
 
+  // The current challenge: the first one that is unlocked but not yet
+  // completed. Its card shows the glare effect without needing a hover.
+  const currentN = STEPS.find((s) => {
+    const isCompleted =
+      !!passed[`step${s.n}`] || !!passed[`step${s.n}Skipped`];
+    const prevCompleted =
+      s.n === 1 ||
+      !!passed[`step${s.n - 1}`] ||
+      !!passed[`step${s.n - 1}Skipped`];
+    return prevCompleted && !isCompleted;
+  })?.n;
+
   // Marks for a completed-but-not-passed challenge, e.g. "3/5".
   function challengeMarks(n: number): string {
     return marks[n] ?? "Completed";
@@ -167,10 +179,12 @@ export default function FinalExam() {
                 ref={cardRefs[idx]}
                 className="flex flex-col items-center"
               >                <GlareHover
-                  color="#505050"
+                  color={step.n === currentN ? "#ffffff" : "#505050"}
+                  opacity={step.n === currentN ? 0.6 : 0.5}
                   duration={700}
                   width="100%"
                   height="100%"
+                  alwaysOn={step.n === currentN}
                   className="w-full rounded-xl"
                 >
                   <MagicCard

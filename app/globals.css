@@ -111,6 +111,24 @@
   }
 }
 
+/* GlareHover always-on: the glare sweeps across the card on its own,
+   no hover needed. Used on the current challenge card. */
+@keyframes glare-sweep {
+  0% {
+    background-position: -100% -100%, 0 0;
+  }
+  50% {
+    background-position: 100% 100%, 0 0;
+  }
+  100% {
+    background-position: -100% -100%, 0 0;
+  }
+}
+
+.glare-always-on::before {
+  animation: glare-sweep 3.5s ease-in-out infinite;
+}
+
 .animate-fade-up {
   opacity: 0;
   animation: fade-up 0.7s ease-out forwards;

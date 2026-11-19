@@ -11,6 +11,7 @@ import {
   CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   loadChallengeProgress,
   saveChallengeProgress,
@@ -279,10 +280,11 @@ export default function StepFour() {
                           <p className="mb-2 text-center font-mono text-sm text-zinc-400">
                             Choose an account
                           </p>
-                          <button
+                          <Button
                             type="button"
+                            variant="ghost"
                             onClick={() => setLoggedIn(true)}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-zinc-800"
+                            className="flex h-auto w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-zinc-800"
                           >
                             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-mono text-lg font-bold text-white">
                               A
@@ -295,7 +297,7 @@ export default function StepFour() {
                                 {DEMO_EMAIL}
                               </span>
                             </span>
-                          </button>
+                          </Button>
                         </div>
                       )}
                       <div className="flex items-center gap-3">
@@ -306,9 +308,9 @@ export default function StepFour() {
                         <span className="h-px flex-1 bg-zinc-700" />
                       </div>
                       <div>
-                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                           Email
-                        </label>
+                        </Label>
                         <Input
                           type="email"
                           value={email}
@@ -319,9 +321,9 @@ export default function StepFour() {
                         />
                       </div>
                       <div>
-                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                           Password
-                        </label>
+                        </Label>
                         <Input
                           type="password"
                           value={password}
@@ -358,9 +360,9 @@ export default function StepFour() {
                   {!codeSent && (
                     <div className="mx-auto mt-5 max-w-md space-y-4">
                       <div>
-                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                           Email
-                        </label>
+                        </Label>
                         <Input
                           type="email"
                           value={verifyEmail}
@@ -390,18 +392,21 @@ export default function StepFour() {
                         <p className="border-b border-zinc-700 px-3 py-2 font-mono text-sm font-semibold text-zinc-300">
                           Your inbox
                         </p>
-                        <button
+                        <Button
                           type="button"
+                          variant="ghost"
                           onClick={() => setInboxOpen((v) => !v)}
-                          className="w-full px-3 py-3 text-left hover:bg-zinc-800"
+                          className="h-auto w-full justify-start px-3 py-3 text-left hover:bg-zinc-800"
                         >
-                          <span className="block font-mono text-sm font-semibold">
-                            AgentDegree — Your verification code
+                          <span className="block">
+                            <span className="block font-mono text-sm font-semibold">
+                              AgentDegree — Your verification code
+                            </span>
+                            <span className="block font-mono text-xs text-zinc-400">
+                              from AgentDegree
+                            </span>
                           </span>
-                          <span className="block font-mono text-xs text-zinc-400">
-                            from AgentDegree
-                          </span>
-                        </button>
+                        </Button>
                         {inboxOpen && (
                           <div className="border-t border-zinc-700 px-3 py-3">
                             <p className="font-mono text-sm text-zinc-300">
@@ -417,9 +422,9 @@ export default function StepFour() {
                         )}
                       </div>
                       <div>
-                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                           Verification code
-                        </label>
+                        </Label>
                         <Input
                           type="text"
                           inputMode="numeric"
@@ -486,9 +491,9 @@ export default function StepFour() {
                       </p>
                     )}
                     <div>
-                      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                      <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                         Date
-                      </label>
+                      </Label>
                       <Input
                         type="date"
                         value={bookDate}
@@ -498,9 +503,9 @@ export default function StepFour() {
                       />
                     </div>
                     <div>
-                      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                      <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                         Time
-                      </label>
+                      </Label>
                       <Input
                         type="time"
                         value={bookTime}
@@ -543,10 +548,10 @@ export default function StepFour() {
                   {!videoSolved && (
                     <div className="mx-auto mt-5 max-w-md space-y-4">
                       <div>
-                        <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
                           What is the name of the third challenge shown in
                           the video?
-                        </label>
+                        </Label>
                         <Input
                           type="text"
                           value={answer}

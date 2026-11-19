@@ -10,6 +10,16 @@ import {
   CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   loadChallengeProgress,
   saveChallengeProgress,
@@ -117,10 +127,14 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+      <Label
+        htmlFor={label}
+        className="mb-1.5 block font-mono text-sm font-medium text-zinc-300"
+      >
         {label}
-      </label>
+      </Label>
       <Input
+        id={label}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -204,8 +218,22 @@ export default function StepTwo() {
     t3Type === "full-time" && t3Dept === "Design" && t3Date === "2025-03-10";
   const fixSolved = matchesPerson(t4, PRIYA);
   const signatureOk = norm(signature) === norm(ARJUN.name);
-  // Today in IST or UTC — the run happens around midnight IST.
-  const dateOk = signDate === "2026-11-17" || signDate === "2026-11-18";
+  // Today in IST (and yesterday, for runs around midnight). Computed after
+  // mount so the date never goes stale as the days pass.
+  const [acceptedDates, setAcceptedDates] = useState<string[]>([]);
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    setAcceptedDates([
+      fmt.format(new Date()),
+      fmt.format(new Date(Date.now() - 24 * 60 * 60 * 1000)),
+    ]);
+  }, []);
+  const dateOk = acceptedDates.includes(signDate);
   const signSolved = signatureOk && declared && dateOk && submitted;
   const liveSolved = [
     transcriptSolved,
@@ -321,48 +349,64 @@ export default function StepTwo() {
                   
                   <div className="mt-5 space-y-5">
                     <div>
-                      <p className="mb-2 font-mono text-sm font-medium text-zinc-300">
+                      <Label className="mb-2 font-mono text-sm font-medium text-zinc-300">
                         Employment type
-                      </p>
-                      <div className="space-y-2">
+                      </Label>
+                      <RadioGroup
+                        value={t3Type}
+                        onValueChange={setT3Type}
+                        className="space-y-2"
+                      >
                         {["Full-time", "Part-time", "Internship"].map(
                           (opt) => (
-                            <label
+                            <div
                               key={opt}
-                              className="flex cursor-pointer items-center gap-3 font-mono text-sm"
+                              className="flex items-center gap-3"
                             >
-                              <input
-                                type="radio"
-                                name="employment-type"
+                              <RadioGroupItem
                                 value={opt.toLowerCase()}
-                                checked={t3Type === opt.toLowerCase()}
-                                onChange={() =>
-                                  setT3Type(opt.toLowerCase())
-                                }
-                                className="h-4 w-4 accent-blue-600"
+                                id={`employment-${opt.toLowerCase()}`}
                               />
-                              {opt}
-                            </label>
+                              <Label
+                                htmlFor={`employment-${opt.toLowerCase()}`}
+                                className="cursor-pointer font-mono text-sm font-normal text-zinc-200"
+                              >
+                                {opt}
+                              </Label>
+                            </div>
                           ),
                         )}
-                      </div>
+                      </RadioGroup>
                     </div>
                     <div>
-                      <label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
-                        Department
-                      </label>
-                      <select
-                        value={t3Dept}
-                        onChange={(e) => setT3Dept(e.target.value)}
-                        aria-label="Department"
-                        className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 font-mono text-sm text-white"
+                      <Label
+                        htmlFor="department"
+                        className="mb-1.5 block font-mono text-sm font-medium text-zinc-300"
                       >
-                        <option value="">Choose a department</option>
-                        <option>Engineering</option>
-                        <option>Design</option>
-                        <option>Marketing</option>
-                        <option>Sales</option>
-                      </select>
+                        Department
+                      </Label>
+                      <Select
+                        value={t3Dept}
+                        onValueChange={(v) => setT3Dept(v ?? "")}
+                      >
+                        <SelectTrigger
+                          id="department"
+                          aria-label="Department"
+                          className="w-full bg-zinc-900 font-mono text-sm text-white"
+                        >
+                          <SelectValue placeholder="Choose a department" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Engineering">
+                            Engineering
+                          </SelectItem>
+                          <SelectItem value="Design">Design</SelectItem>
+                          <SelectItem value="Marketing">
+                            Marketing
+                          </SelectItem>
+                          <SelectItem value="Sales">Sales</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     <Field
                       label="First day"
@@ -400,16 +444,20 @@ export default function StepTwo() {
                       onChange={setSignature}
                       placeholder="Type your full name"
                     />
-                    <label className="flex cursor-pointer items-center gap-3 font-mono text-sm">
-                      <input
-                        type="checkbox"
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="declare"
                         checked={declared}
-                        onChange={(e) => setDeclared(e.target.checked)}
+                        onCheckedChange={(c) => setDeclared(c === true)}
                         aria-label="I declare the information above is true"
-                        className="h-5 w-5 shrink-0 cursor-pointer accent-blue-600"
                       />
-                      I declare the information above is true
-                    </label>
+                      <Label
+                        htmlFor="declare"
+                        className="cursor-pointer font-mono text-sm font-normal text-zinc-200"
+                      >
+                        I declare the information above is true
+                      </Label>
+                    </div>
                     <Field
                       label="Date"
                       type="date"

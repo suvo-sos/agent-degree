@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Confetti } from "@/components/ui/confetti";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Celebration } from "@/components/celebration";
 import {
@@ -319,10 +320,14 @@ export default function StepFive() {
                     </p>
                   )}
                   <div className="mx-auto mt-6 max-w-md rounded-lg bg-zinc-900/70 p-4">
-                    <p className="font-mono text-sm font-semibold text-zinc-300">
+                    <Label
+                      htmlFor="revenue"
+                      className="font-mono text-sm font-semibold text-zinc-300"
+                    >
                       Total revenue (from the report)
-                    </p>
+                    </Label>
                     <Input
+                      id="revenue"
                       value={revenue}
                       onChange={(e) => setRevenue(e.target.value)}
                       placeholder="$0.00"

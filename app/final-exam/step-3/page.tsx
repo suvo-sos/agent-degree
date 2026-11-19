@@ -10,6 +10,23 @@ import {
   CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
   loadChallengeProgress,
   saveChallengeProgress,
@@ -230,36 +247,36 @@ export default function StepThree() {
               {step === 0 && (
                 <TestCard title="Open the menu and click Option 6." solved={menuSolved}>
                   
-                  <div className="relative mx-auto mt-5 max-w-xs">
-                    <Button
-                      onClick={() => setMenuOpen((v) => !v)}
-                      aria-haspopup="menu"
-                      aria-expanded={menuOpen}
-                      className="w-full font-mono"
-                    >
-                      {menuOpen ? "Close menu ↑" : "Open menu ↓"}
-                    </Button>
-                    {menuOpen && (
-                      <div
-                        role="menu"
-                        className="absolute left-0 right-0 z-10 mt-2 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-900 shadow-xl"
+                  <div className="mx-auto mt-5 max-w-xs">
+                    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                      <DropdownMenuTrigger
+                        render={
+                          <Button
+                            aria-haspopup="menu"
+                            aria-expanded={menuOpen}
+                            className="w-full font-mono"
+                          >
+                            {menuOpen ? "Close menu ↑" : "Open menu ↓"}
+                          </Button>
+                        }
+                      />
+                      <DropdownMenuContent
+                        align="center"
+                        className="w-64 font-mono"
                       >
                         {Array.from({ length: 8 }, (_, i) => (
-                          <button
+                          <DropdownMenuItem
                             key={i}
-                            type="button"
-                            role="menuitem"
                             onClick={() => {
                               setMenuPicked(`Option ${i + 1}`);
                               setMenuOpen(false);
                             }}
-                            className="block w-full px-4 py-3 text-left font-mono text-sm text-zinc-200 hover:bg-zinc-800"
                           >
                             Option {i + 1}
-                          </button>
+                          </DropdownMenuItem>
                         ))}
-                      </div>
-                    )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   {menuPicked && (
                     <p className="mt-4 text-center font-mono text-sm text-zinc-400">
@@ -273,12 +290,7 @@ export default function StepThree() {
                 <TestCard title="Set the progress bar to 75." solved={progressSolved}>
                   
                   <div className="mx-auto mt-5 max-w-md">
-                    <div className="h-4 w-full overflow-hidden rounded-full bg-zinc-800">
-                      <div
-                        className="h-full rounded-full bg-blue-600 transition-all"
-                        style={{ width: `${progValue ?? 0}%` }}
-                      />
-                    </div>
+                    <Progress value={progValue ?? 0} className="h-4" />
                     <p className="mt-2 text-center font-mono text-2xl font-bold tabular-nums">
                       {progValue ?? 0} / 100
                     </p>
@@ -304,14 +316,14 @@ export default function StepThree() {
               {step === 2 && (
                 <TestCard title={<>Pick the colour{" "} <span className="font-bold text-white"> {TARGET_COLOUR} </span>{" "} from the colour picker.</>} solved={colourSolved}>
                   
-                  <div className="mx-auto mt-5 grid max-w-xs grid-cols-3 gap-3">
+                  <div className="mx-auto mt-5 grid w-full max-w-xs grid-cols-3 gap-3">
                     {COLOURS.map((hex, i) => (
                       <button
                         key={hex}
                         type="button"
                         onClick={() => pickColour(i)}
                         aria-label={`Colour ${i + 1}`}
-                        className={`aspect-square rounded-lg transition-all ${
+                        className={`aspect-square w-full rounded-lg transition-all ${
                           wrongColour === i
                             ? "ring-4 ring-red-500"
                             : "ring-1 ring-zinc-700 hover:ring-zinc-300"
@@ -332,25 +344,18 @@ export default function StepThree() {
                 <TestCard title="Turn the switch on." solved={switchSolved}>
                   
                   <div className="mt-6 flex items-center justify-center gap-4">
-                    <span className="font-mono text-sm text-zinc-400">
-                      Notifications
-                    </span>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={switchOn}
-                      aria-label="Notifications switch"
-                      onClick={() => setSwitchOn((v) => !v)}
-                      className={`relative h-8 w-14 rounded-full transition-colors ${
-                        switchOn ? "bg-green-500" : "bg-zinc-700"
-                      }`}
+                    <Label
+                      htmlFor="notifications"
+                      className="font-mono text-sm font-normal text-zinc-400"
                     >
-                      <span
-                        className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition-all ${
-                          switchOn ? "left-7" : "left-1"
-                        }`}
-                      />
-                    </button>
+                      Notifications
+                    </Label>
+                    <Switch
+                      id="notifications"
+                      checked={switchOn}
+                      onCheckedChange={setSwitchOn}
+                      aria-label="Notifications switch"
+                    />
                     <span className="font-mono text-sm font-semibold">
                       {switchOn ? "ON" : "OFF"}
                     </span>
@@ -361,64 +366,74 @@ export default function StepThree() {
               {step === 4 && (
                 <TestCard title="Open the Settings tab." solved={tabsSolved}>
                   
-                  <div
-                    role="tablist"
-                    className="mt-5 flex justify-center gap-1 rounded-lg bg-zinc-900 p-1"
+                  <Tabs
+                    value={activeTab}
+                    onValueChange={setActiveTab}
+                    className="mt-5"
                   >
-                    {TABS.map((t) => (
-                      <button
-                        key={t}
-                        type="button"
-                        role="tab"
-                        aria-selected={activeTab === t}
-                        onClick={() => setActiveTab(t)}
-                        className={`rounded-md px-4 py-2 font-mono text-sm transition-colors ${
-                          activeTab === t
-                            ? "bg-blue-600 text-white"
-                            : "text-zinc-400 hover:text-white"
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="mt-4 text-center font-mono text-sm text-zinc-400">
-                    {activeTab === "Home" && "This is the home panel."}
-                    {activeTab === "Profile" && "This is the profile panel."}
-                    {activeTab === "Settings" &&
-                      "This is the settings panel."}
-                  </p>
+                    <TabsList className="mx-auto flex justify-center bg-zinc-900">
+                      {TABS.map((t) => (
+                        <TabsTrigger
+                          key={t}
+                          value={t}
+                          className="font-mono text-sm"
+                        >
+                          {t}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                    <TabsContent value="Home">
+                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
+                        This is the home panel.
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="Profile">
+                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
+                        This is the profile panel.
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="Settings">
+                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
+                        This is the settings panel.
+                      </p>
+                    </TabsContent>
+                  </Tabs>
                 </TestCard>
               )}
 
               {step === 5 && (
                 <TestCard title="Open Section 3." solved={accordionSolved}>
                   
-                  <div className="mx-auto mt-5 max-w-md space-y-2">
+                  <Accordion
+                    value={
+                      openSection === null ? [] : [`section-${openSection}`]
+                    }
+                    onValueChange={(v) =>
+                      setOpenSection(
+                        v.length > 0
+                          ? Number(
+                              String(v[v.length - 1]).replace("section-", ""),
+                            )
+                          : null,
+                      )
+                    }
+                    className="mx-auto mt-5 max-w-md"
+                  >
                     {[1, 2, 3].map((n) => (
-                      <div
+                      <AccordionItem
                         key={n}
-                        className="overflow-hidden rounded-lg border border-zinc-700"
+                        value={`section-${n}`}
+                        className="border-zinc-700"
                       >
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenSection((cur) => (cur === n ? null : n))
-                          }
-                          aria-expanded={openSection === n}
-                          className="flex w-full items-center justify-between bg-zinc-900 px-4 py-3 font-mono text-sm font-medium"
-                        >
+                        <AccordionTrigger className="bg-zinc-900 px-4 py-3 font-mono text-sm font-medium">
                           Section {n}
-                          <span>{openSection === n ? "−" : "+"}</span>
-                        </button>
-                        {openSection === n && (
-                          <p className="bg-zinc-950 px-4 py-3 font-mono text-sm text-zinc-300">
-                            This is the content of section {n}.
-                          </p>
-                        )}
-                      </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="bg-zinc-950 px-4 py-3 font-mono text-sm text-zinc-300">
+                          This is the content of section {n}.
+                        </AccordionContent>
+                      </AccordionItem>
                     ))}
-                  </div>
+                  </Accordion>
                 </TestCard>
               )}
 
@@ -515,19 +530,22 @@ export default function StepThree() {
                   
                   <div className="mx-auto mt-5 max-w-xs space-y-3">
                     {["Apple", "Banana", "Cherry", "Mango"].map((f) => (
-                      <label
-                        key={f}
-                        className="flex cursor-pointer items-center gap-3 font-mono text-sm"
-                      >
-                        <input
-                          type="checkbox"
+                      <div key={f} className="flex items-center gap-3">
+                        <Checkbox
+                          id={`fruit-${f}`}
                           checked={checked.includes(f)}
-                          onChange={() => toggleFruit(f)}
+                          onCheckedChange={(c) => {
+                            if (c === true || c === false) toggleFruit(f);
+                          }}
                           aria-label={f}
-                          className="h-5 w-5 cursor-pointer accent-blue-600"
                         />
-                        {f}
-                      </label>
+                        <Label
+                          htmlFor={`fruit-${f}`}
+                          className="cursor-pointer font-mono text-sm font-normal text-zinc-200"
+                        >
+                          {f}
+                        </Label>
+                      </div>
                     ))}
                   </div>
                 </TestCard>

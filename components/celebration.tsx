@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,7 @@ import {
   computeScore,
   finishTimer,
   formatDuration,
+  getIdentity,
   getResults,
   getTimer,
   gradeFor,
@@ -99,6 +100,41 @@ export function Celebration({
   const { total, solved, wrong, score, pct } = computeScore(results);
   const { grade, label } = gradeFor(pct);
   const hasResults = total > 0;
+
+  // Save this run to the shared Neon leaderboard once, when the exam is
+  // complete and we know who took it. Best-effort: a failed submit never
+  // breaks the results page. A better re-run submits again (new key).
+  const submittedRef = useRef(false);
+  useEffect(() => {
+    if (!hasResults || !isFinalExamComplete()) return;
+    if (submittedRef.current) return;
+    const identity = getIdentity();
+    if (!identity) return;
+    const ms = timerElapsedMs(getTimer());
+    if (ms === null) return;
+    const seconds = Math.max(1, Math.round(ms / 1000));
+    const key = `agent-degree-leaderboard-submitted-${score}-${seconds}`;
+    if (sessionStorage.getItem(key)) return;
+    submittedRef.current = true;
+    fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: identity.name,
+        x_handle: identity.x,
+        points: score,
+        total,
+        seconds,
+        grade,
+      }),
+    })
+      .then((res) => {
+        if (res.ok) sessionStorage.setItem(key, "1");
+      })
+      .catch(() => {
+        submittedRef.current = false;
+      });
+  }, [hasResults, score, total, grade]);
 
   if (phase === "confetti") {
     return (

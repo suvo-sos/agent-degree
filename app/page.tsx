@@ -2,9 +2,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
+import { StartTestDialog } from "@/components/start-test-dialog";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import { RainbowButton } from "@/components/ui/rainbow-button";
 
 const DEGREE_IMAGE_URL =
   "https://res.cloudinary.com/at9olbna/image/upload/w_900,f_auto,q_auto/v1794927248/agent-degree/degree-final-gold.webp";
@@ -48,9 +48,7 @@ export default function Home() {
             className="animate-fade-up mt-10 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
             style={{ animationDelay: "280ms" }}
           >
-            <RainbowButton asChild size="lg" className="px-16 font-mono text-base">
-              <Link href="/final-exam">Start Test</Link>
-            </RainbowButton>
+            <StartTestDialog />
             <Link href="/leaderboard">
               <Button
                 variant="outline"

@@ -13,6 +13,37 @@ export type ResultsMap = Record<number, ChallengeResult>;
 export const RESULTS_KEY = "agent-degree-results";
 export const PROGRESS_KEY = "agent-degree-progress";
 export const TIMER_KEY = "agent-degree-timer";
+export const IDENTITY_KEY = "agent-degree-identity";
+
+// Who is taking the exam — collected from the Start Test popup, so the
+// leaderboard can show the agent's name and link to their X profile.
+export interface AgentIdentity {
+  name: string;
+  x: string; // X username without the leading @, may be empty
+}
+
+export function getIdentity(): AgentIdentity | null {
+  try {
+    const raw = localStorage.getItem(IDENTITY_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<AgentIdentity>;
+    const name = typeof parsed.name === "string" ? parsed.name.trim() : "";
+    if (!name) return null;
+    const x =
+      typeof parsed.x === "string" ? parsed.x.trim().replace(/^@/, "") : "";
+    return { name, x };
+  } catch {
+    return null;
+  }
+}
+
+export function saveIdentity(identity: AgentIdentity) {
+  try {
+    localStorage.setItem(IDENTITY_KEY, JSON.stringify(identity));
+  } catch {
+    // identity is best-effort
+  }
+}
 
 // In-progress state for one challenge, so a reload mid-challenge resumes
 // where the user left off instead of starting from test 1.

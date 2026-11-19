@@ -1,27 +1,38 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import {
+  computeScore,
+  getIdentity,
+  getResults,
+  getTimer,
+  gradeFor,
+  isFinalExamComplete,
+  timerElapsedMs,
+} from "@/lib/results";
 
-// Seeded with verified full-exam runs. Ranked by most points first, then
-// fastest time — the clock only breaks ties. More agents appear here as
-// they finish the exam. Cap: 10.
+// Shared leaderboard, backed by Neon Postgres. The page reads the live top
+// 10 from /api/leaderboard — most points first, then fastest time. When
+// the API or database is not reachable, it falls back to the seeded entries
+// plus this browser's own finished run (localStorage).
 type Entry = {
   name: string;
+  x?: string;
   points: number;
   total: number;
   seconds: number;
   grade: string;
+  you?: boolean;
 };
 
-const ENTRIES: Entry[] = [
+const SEED: Entry[] = [
   { name: "Kane", points: 27, total: 27, seconds: 12, grade: "A+" },
 ];
-
-const ranked = [...ENTRIES]
-  .sort((a, b) => b.points - a.points || a.seconds - b.seconds)
-  .slice(0, 10);
 
 function formatTime(seconds: number) {
   if (seconds < 60) return `${seconds}s`;
@@ -31,6 +42,85 @@ function formatTime(seconds: number) {
 }
 
 export default function LeaderboardPage() {
+  const [entries, setEntries] = useState<Entry[]>(SEED);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const res = await fetch("/api/leaderboard");
+        const data = (await res.json()) as {
+          entries?: Array<{
+            name: string;
+            x_handle: string;
+            points: number;
+            total: number;
+            seconds: number;
+            grade: string;
+          }>;
+        };
+        const rows = Array.isArray(data.entries) ? data.entries : [];
+        if (!cancelled && rows.length > 0) {
+          const identity = getIdentity();
+          setEntries(
+            rows.slice(0, 10).map((r) => ({
+              name: r.name,
+              x: r.x_handle || undefined,
+              points: r.points,
+              total: r.total,
+              seconds: r.seconds,
+              grade: r.grade,
+              you: identity ? r.name === identity.name : false,
+            })),
+          );
+          return;
+        }
+      } catch {
+        // fall through to the local fallback below
+      }
+      if (cancelled) return;
+      // Fallback: seed + this browser's finished run, when the API is down
+      // or the database is not configured yet.
+      const identity = getIdentity();
+      let all: Entry[] = [...SEED];
+      if (identity && isFinalExamComplete()) {
+        const { total, score, pct } = computeScore(getResults());
+        if (total > 0) {
+          const ms = timerElapsedMs(getTimer());
+          all = [
+            ...all,
+            {
+              name: identity.name,
+              x: identity.x || undefined,
+              points: score,
+              total,
+              seconds: ms === null ? 0 : Math.max(1, Math.round(ms / 1000)),
+              grade: gradeFor(pct).grade,
+              you: true,
+            },
+          ];
+        }
+      }
+      const sorted = [...all].sort(
+        (a, b) => b.points - a.points || a.seconds - b.seconds,
+      );
+      const deduped = sorted.filter(
+        (e, i) => sorted.findIndex((o) => o.name === e.name) === i,
+      );
+      setEntries(deduped.slice(0, 10));
+    }
+
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const ranked = [...entries]
+    .sort((a, b) => b.points - a.points || a.seconds - b.seconds)
+    .slice(0, 10);
+
   return (
     <div className="relative flex min-h-screen items-start overflow-hidden bg-black px-6 pt-24 pb-16 font-sans text-white">
       <Spotlight
@@ -65,7 +155,28 @@ export default function LeaderboardPage() {
                 {i + 1}
               </span>
               <span className="flex-1 text-base font-semibold text-white">
-                {e.name}
+                {e.x ? (
+                  <a
+                    href={`https://x.com/${e.x}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-blue-400 hover:underline"
+                  >
+                    {e.name}
+                  </a>
+                ) : (
+                  e.name
+                )}
+                {e.x && (
+                  <span className="ml-2 text-sm font-normal text-zinc-500">
+                    @{e.x}
+                  </span>
+                )}
+                {e.you && (
+                  <span className="ml-2 rounded-full border border-blue-400/40 bg-blue-400/10 px-2 py-0.5 text-[11px] font-semibold text-blue-300">
+                    you
+                  </span>
+                )}
               </span>
               <span className="font-instrument-serif text-2xl text-amber-400">
                 {e.grade}

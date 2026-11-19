@@ -6,6 +6,7 @@ export type TestStatus = "solved" | "skipped" | "unsolved";
 export interface ChallengeResult {
   solved: boolean[]; // per test, in order
   skipped: number[]; // indices of skipped tests
+  wrong?: number; // wrong attempts in this challenge, each costs -1
 }
 
 export type ResultsMap = Record<number, ChallengeResult>;
@@ -20,6 +21,7 @@ export interface ChallengeProgress {
   step: number; // current test index (0-based)
   solved: boolean[]; // per test, in order
   skipped: number[]; // indices of skipped tests
+  wrong?: number; // wrong attempts so far, each costs -1
 }
 
 export function progressKey(n: number): string {
@@ -34,6 +36,7 @@ export function loadChallengeProgress(
     step: 0,
     solved: Array(total).fill(false),
     skipped: [],
+    wrong: 0,
   };
   try {
     const raw = localStorage.getItem(progressKey(n));
@@ -50,6 +53,7 @@ export function loadChallengeProgress(
       skipped: (Array.isArray(p.skipped) ? p.skipped : []).filter(
         (i) => typeof i === "number" && i >= 0 && i < total,
       ),
+      wrong: typeof p.wrong === "number" ? Math.max(p.wrong, 0) : 0,
     };
   } catch {
     return empty;
@@ -139,6 +143,7 @@ export function saveChallengeResults(
   challenge: number,
   solved: boolean[],
   skipped: number[],
+  wrong = 0,
 ) {
   try {
     const prev = JSON.parse(
@@ -146,7 +151,7 @@ export function saveChallengeResults(
     ) as ResultsMap;
     localStorage.setItem(
       RESULTS_KEY,
-      JSON.stringify({ ...prev, [challenge]: { solved, skipped } }),
+      JSON.stringify({ ...prev, [challenge]: { solved, skipped, wrong } }),
     );
   } catch {
     // progress is best-effort
@@ -219,16 +224,20 @@ export const TEST_NAMES: Record<number, string[]> = {
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
 };
 
-// Each solved test is 1 mark. Skipped or unsolved is 0.
+// Each solved test is 1 mark. Skipped or unsolved is 0. Each wrong
+// attempt costs -1, so the score is solved minus wrong (floored at 0).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;
+  let wrong = 0;
   for (const r of Object.values(results)) {
     total += r.solved.length;
     solved += r.solved.filter(Boolean).length;
+    wrong += r.wrong ?? 0;
   }
-  const pct = total === 0 ? 0 : Math.round((solved / total) * 100);
-  return { total, solved, pct };
+  const score = Math.max(0, solved - wrong);
+  const pct = total === 0 ? 0 : Math.round((score / total) * 100);
+  return { total, solved, wrong, score, pct };
 }
 
 // Grade bands: 90+ A+, 80-89 A, 70-79 B, 60-69 C, 50-59 D, below 50 F.

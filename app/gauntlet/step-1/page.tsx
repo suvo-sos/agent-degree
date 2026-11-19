@@ -176,6 +176,9 @@ export default function StepOne() {
   const [skipped, setSkipped] = useState<number[]>(() =>
     loadChallengeProgress(1, 5).skipped,
   );
+  const [wrong, setWrong] = useState<number>(() =>
+    loadChallengeProgress(1, 5).wrong ?? 0,
+  );
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(1, 5).solved,
   );
@@ -260,8 +263,8 @@ export default function StepOne() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(1, { step, solved, skipped });
-  }, [step, solved, skipped]);
+    saveChallengeProgress(1, { step, solved, skipped, wrong });
+  }, [step, solved, skipped, wrong]);
 
   function pickTile(i: number) {
     if (gridCarTiles.includes(i)) {
@@ -270,6 +273,7 @@ export default function StepOne() {
       );
     } else {
       setWrongPick(i);
+      setWrong((w) => w + 1);
       window.setTimeout(
         () => setWrongPick((cur) => (cur === i ? null : cur)),
         900,
@@ -315,7 +319,7 @@ export default function StepOne() {
       } else {
         saveProgress({ step1Skipped: true });
       }
-      saveChallengeResults(1, solved, skipped);
+      saveChallengeResults(1, solved, skipped, wrong);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
@@ -394,7 +398,7 @@ export default function StepOne() {
                   </div>
                   {wrongPick !== null ? (
                     <p className="mt-4 text-center font-mono text-sm text-red-400">
-                      That one has no car in it. Try again.
+                      That one has no car in it. −1. Try again.
                     </p>
                   ) : (
                     <p className="mt-4 text-center font-mono text-sm text-zinc-500">
@@ -595,8 +599,8 @@ export default function StepOne() {
             <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 1 passed.
             </p>
-            <Link href="/gauntlet/step-2">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Paperwork Hell</Button>
+            <Link href="/gauntlet">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}
@@ -610,8 +614,8 @@ export default function StepOne() {
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
-            <Link href="/gauntlet/step-2">
-              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Continue to Paperwork Hell</Button>
+            <Link href="/gauntlet">
+              <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
         )}

@@ -33,7 +33,7 @@ export function Celebration({
   current,
 }: {
   celebrate?: boolean;
-  current?: { challenge: number; solved: boolean[]; skipped: number[] };
+  current?: { challenge: number; solved: boolean[]; skipped: number[]; wrong?: number };
 }) {
   const [phase, setPhase] = useState<"confetti" | "results">(
     celebrate ? "confetti" : "results",
@@ -81,11 +81,12 @@ export function Celebration({
         [current.challenge]: {
           solved: current.solved,
           skipped: current.skipped,
+          wrong: current.wrong ?? 0,
         },
       }
     : stored;
 
-  const { total, solved, pct } = computeScore(results);
+  const { total, solved, wrong, score, pct } = computeScore(results);
   const { grade, label } = gradeFor(pct);
   const hasResults = total > 0;
 
@@ -183,7 +184,11 @@ export function Celebration({
             <div className="mt-10 rounded-2xl border border-zinc-200 p-6 text-center">
               <p className="font-mono text-sm text-zinc-600">Marks</p>
               <p className="mt-2 font-grotesque text-4xl font-semibold">
-                {solved} / {total}
+                {score} / {total}
+              </p>
+              <p className="mt-1 font-mono text-sm text-zinc-600">
+                {solved} correct
+                {wrong > 0 ? ` · −${wrong} for wrong answers` : ""}
               </p>
               <p className="mt-1 font-mono text-sm text-zinc-600">
                 {pct}% correct

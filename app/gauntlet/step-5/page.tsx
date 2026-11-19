@@ -144,7 +144,10 @@ export default function StepFive() {
   }
 
   function next() {
-    if (currentSolved && step < 2) setStep(step + 1);
+    if (!currentSolved) {
+      setSkipped((prev) => [...prev, step]);
+    }
+    if (step < 2) setStep(step + 1);
   }
 
   function skipTest() {
@@ -440,11 +443,7 @@ export default function StepFive() {
             <Button variant="outline" onClick={skipTest} className="font-mono">
               Skip
             </Button>
-            <Button
-              onClick={next}
-              disabled={!currentSolved}
-              className="font-mono"
-            >
+            <Button onClick={next} className="font-mono">
               Next →
             </Button>
           </div>

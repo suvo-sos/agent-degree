@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +17,7 @@ import {
   saveChallengeResults,
 } from "@/lib/results";
 
-const TARGET_MIN = 70;
-const TARGET_MAX = 80;
+const TARGET = 69;
 const STORAGE_KEY = "agent-degree-progress";
 const TEXT_ANSWER = "AGENT7";
 
@@ -41,6 +40,63 @@ const OTHER_IMAGES = [
   "/challenge-1/tile-8.jpg",
   "/challenge-1/scene-a.jpg",
 ];
+
+// Jigsaw pool — real photos. Each visit picks one at random, plus a random
+// shape and a random gap position.
+const JIGSAW_IMAGES = [
+  "/challenge-1/jigsaw-mountain.jpg",
+  "/challenge-1/jigsaw-beach.jpg",
+  "/challenge-1/jigsaw-city.jpg",
+  "/challenge-1/jigsaw-forest.jpg",
+];
+
+type JigsawShape = "square" | "circle" | "triangle" | "star";
+const JIGSAW_SHAPES: JigsawShape[] = ["square", "circle", "triangle", "star"];
+
+interface JigsawRound {
+  image: string;
+  shape: JigsawShape;
+  gx: number; // 0..1, gap left as a fraction of the free horizontal space
+  gy: number; // 0..1, gap top as a fraction of the free vertical space
+}
+
+function makeJigsawRound(): JigsawRound {
+  return {
+    image: JIGSAW_IMAGES[Math.floor(Math.random() * JIGSAW_IMAGES.length)],
+    shape: JIGSAW_SHAPES[Math.floor(Math.random() * JIGSAW_SHAPES.length)],
+    gx: Math.random(),
+    gy: Math.random(),
+  };
+}
+
+// Piece side = 22% of the picture width.
+const PIECE_FRAC = 0.22;
+
+function shapeClip(shape: JigsawShape): string {
+  switch (shape) {
+    case "circle":
+      return "circle(50% at 50% 50%)";
+    case "triangle":
+      return "polygon(50% 0%, 0% 100%, 100% 100%)";
+    case "star":
+      return "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)";
+    default:
+      return "inset(0 round 6px)";
+  }
+}
+
+function shapeName(shape: JigsawShape): string {
+  switch (shape) {
+    case "circle":
+      return "circle";
+    case "triangle":
+      return "triangle";
+    case "star":
+      return "star";
+    default:
+      return "square";
+  }
+}
 
 interface GridTile {
   src: string;
@@ -127,8 +183,11 @@ export default function StepOne() {
   const [agentChecked, setAgentChecked] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
   const [wrongPick, setWrongPick] = useState<number | null>(null);
-  const [cubeSelected, setCubeSelected] = useState(false);
-  const [cubePlaced, setCubePlaced] = useState(false);
+  const [pieceSelected, setPieceSelected] = useState(false);
+  const [piecePlaced, setPiecePlaced] = useState(false);
+  const [jigsawRound, setJigsawRound] = useState<JigsawRound | null>(null);
+  const [boxSize, setBoxSize] = useState({ w: 0, h: 0 });
+  const boxRef = useRef<HTMLDivElement>(null);
   const [typed, setTyped] = useState("");
   const [gridRound, setGridRound] = useState<{
     tiles: GridTile[];
@@ -141,19 +200,50 @@ export default function StepOne() {
     setGridRound(makeGridRound());
   }, []);
 
+  // Fresh random jigsaw round on every visit: new photo, new shape, new gap.
+  useEffect(() => {
+    setJigsawRound(makeJigsawRound());
+  }, []);
+
+  // Measure the picture box so the piece shows the exact missing part.
+  // Re-measure when the step changes, because the jigsaw box only exists
+  // while test 4 is on screen.
+  useEffect(() => {
+    const measure = () => {
+      const el = boxRef.current;
+      if (el) {
+        const r = el.getBoundingClientRect();
+        setBoxSize({ w: r.width, h: r.height });
+      }
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [step]);
+
   const gridTiles = gridRound?.tiles ?? [];
   const gridCarCount = gridRound?.carCount ?? 0;
   const gridCarTiles = gridTiles
     .map((t, i) => (t.isCar ? i : -1))
     .filter((i) => i >= 0);
 
+  // Jigsaw geometry, in pixels inside the picture box.
+  const piecePx = boxSize.w * PIECE_FRAC;
+  const gapLeft = jigsawRound
+    ? jigsawRound.gx * Math.max(boxSize.w - piecePx, 0)
+    : 0;
+  const gapTop = jigsawRound
+    ? jigsawRound.gy * Math.max(boxSize.h - piecePx, 0)
+    : 0;
+  const shapeLabel = jigsawRound ? shapeName(jigsawRound.shape) : "square";
+
   const checkboxSolved = agentChecked;
   const gridSolved =
     gridRound !== null &&
     gridCarTiles.every((t) => picked.includes(t)) &&
     picked.length === gridCarCount;
-  const sliderSolved = value >= TARGET_MIN && value <= TARGET_MAX;
-  const jigsawSolved = cubePlaced;
+  const sliderSolved = value === TARGET;
+  const jigsawSolved = piecePlaced;
   const textSolved = typed.trim().toUpperCase() === TEXT_ANSWER;
   const liveSolved = [
     checkboxSolved,
@@ -187,13 +277,16 @@ export default function StepOne() {
     }
   }
 
-  function placeCube() {
-    setCubePlaced(true);
-    setCubeSelected(false);
+  function placePiece() {
+    setPiecePlaced(true);
+    setPieceSelected(false);
   }
 
   function next() {
-    if (currentSolved && step < 4) setStep(step + 1);
+    if (!currentSolved) {
+      setSkipped((prev) => [...prev, step]);
+    }
+    if (step < 4) setStep(step + 1);
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -313,7 +406,7 @@ export default function StepOne() {
 
               {step === 2 && (
                 <TestCard
-                  title="Drag the slider into the green zone."
+                  title="Drag the slider to the green dot."
                   solved={sliderSolved}
                 >
                   <p
@@ -327,10 +420,9 @@ export default function StepOne() {
                     <div className="relative h-12 w-full">
                       <div className="absolute left-0 right-0 top-1/2 h-5 -translate-y-1/2 rounded-full bg-zinc-800" />
                       <div
-                        className="pointer-events-none absolute top-1/2 h-5 -translate-y-1/2 rounded-full bg-green-500"
+                        className="pointer-events-none absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-500"
                         style={{
-                          left: `calc(24px + (100% - 48px) * ${TARGET_MIN / 100})`,
-                          width: `calc((100% - 48px) * ${(TARGET_MAX - TARGET_MIN) / 100})`,
+                          left: `calc(24px + (100% - 48px) * ${TARGET / 100})`,
                         }}
                       />
                       <input
@@ -352,60 +444,111 @@ export default function StepOne() {
               )}
 
               {step === 3 && (
-                <TestCard title="Drag the cube into the empty part of the picture — or click the cube, then click the empty part." solved={jigsawSolved}>
-                  
-                  <div className="relative mx-auto mt-5 w-full max-w-[600px]">
+                <TestCard
+                  title={`Drag the ${shapeLabel} piece into the missing ${shapeLabel} hole \u2014 or click the piece, then click the hole.`}
+                  solved={jigsawSolved}
+                >
+                  <div
+                    ref={boxRef}
+                    className="relative mx-auto mt-5 aspect-[3/2] w-full max-w-[600px]"
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src="/challenge-1/jigsaw-base.jpg"
-                      alt="Picture with an empty part"
-                      className="block w-full rounded-lg"
+                      src={jigsawRound?.image ?? "/challenge-1/jigsaw-mountain.jpg"}
+                      alt="Picture with a missing piece"
+                      className="block h-full w-full rounded-lg object-cover"
                     />
-                    {!cubePlaced ? (
+                    {jigsawRound && boxSize.w > 0 && !piecePlaced && (
                       <button
                         type="button"
                         onClick={() => {
-                          if (cubeSelected) placeCube();
+                          if (pieceSelected) placePiece();
                         }}
                         onDragOver={(e) => e.preventDefault()}
                         onDrop={(e) => {
                           e.preventDefault();
-                          placeCube();
+                          placePiece();
                         }}
-                        aria-label="Empty part of the picture"
-                        className="absolute left-[55%] top-[42.5%] h-[30%] w-[20%] cursor-pointer rounded-sm border-2 border-dashed border-white/80 bg-black/60"
-                      />
-                    ) : (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src="/challenge-1/jigsaw-piece.jpg"
-                        alt="Placed picture piece"
-                        className="absolute left-[55%] top-[42.5%] h-[30%] w-[20%] rounded-sm object-cover"
+                        aria-label={`Empty ${shapeLabel} hole in the picture`}
+                        className="absolute cursor-pointer"
+                        style={{
+                          left: gapLeft,
+                          top: gapTop,
+                          width: piecePx,
+                          height: piecePx,
+                        }}
+                      >
+                        <svg viewBox="0 0 100 100" className="h-full w-full">
+                          {jigsawRound.shape === "square" && (
+                            <rect x="3" y="3" width="94" height="94" rx="6" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" />
+                          )}
+                          {jigsawRound.shape === "circle" && (
+                            <circle cx="50" cy="50" r="47" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" />
+                          )}
+                          {jigsawRound.shape === "triangle" && (
+                            <polygon points="50,5 95,95 5,95" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" strokeLinejoin="round" />
+                          )}
+                          {jigsawRound.shape === "star" && (
+                            <polygon points="50,3 61,35 97,35 68,57 79,91 50,70 21,91 32,57 3,35 39,35" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" strokeLinejoin="round" />
+                          )}
+                        </svg>
+                      </button>
+                    )}
+                    {jigsawRound && boxSize.w > 0 && piecePlaced && (
+                      <div
+                        aria-label="Placed picture piece"
+                        className="absolute"
+                        style={{
+                          left: gapLeft,
+                          top: gapTop,
+                          width: piecePx,
+                          height: piecePx,
+                          clipPath: shapeClip(jigsawRound.shape),
+                          backgroundImage: `url(${jigsawRound.image})`,
+                          backgroundSize: `${boxSize.w}px ${boxSize.h}px`,
+                          backgroundPosition: `${-gapLeft}px ${-gapTop}px`,
+                        }}
                       />
                     )}
                   </div>
-                  {!cubePlaced && (
+                  {!piecePlaced && jigsawRound && boxSize.w > 0 && (
                     <div className="mt-5 flex justify-center">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/challenge-1/jigsaw-piece.jpg"
-                        alt="Cube with the missing picture part"
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${shapeLabel} piece with the missing picture part`}
                         draggable
                         onDragStart={(e) => {
-                          e.dataTransfer.setData("text/plain", "cube");
+                          e.dataTransfer.setData("text/plain", "piece");
                         }}
-                        onClick={() => setCubeSelected((v) => !v)}
-                        className={`h-[120px] w-[120px] cursor-grab rounded-lg object-cover transition-all active:cursor-grabbing ${
-                          cubeSelected
-                            ? "ring-4 ring-blue-500"
-                            : "ring-2 ring-zinc-600 hover:ring-zinc-300"
-                        }`}
+                        onClick={() => setPieceSelected((v) => !v)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ")
+                            setPieceSelected((v) => !v);
+                        }}
+                        className="cursor-grab active:cursor-grabbing"
+                        style={{
+                          width: piecePx,
+                          height: piecePx,
+                          clipPath: shapeClip(jigsawRound.shape),
+                          backgroundImage: `url(${jigsawRound.image})`,
+                          backgroundSize: `${boxSize.w}px ${boxSize.h}px`,
+                          backgroundPosition: `${-gapLeft}px ${-gapTop}px`,
+                          filter: pieceSelected
+                            ? "drop-shadow(0 0 10px rgba(59,130,246,0.95))"
+                            : "drop-shadow(0 0 4px rgba(255,255,255,0.35))",
+                        }}
                       />
                     </div>
                   )}
-                  {cubeSelected && !cubePlaced && (
+                  {piecePlaced && (
+                    <p className="mt-5 text-center font-mono text-base font-semibold text-green-400">
+                      Solved ✓ — the piece fits.
+                    </p>
+                  )}
+                  {pieceSelected && !piecePlaced && (
                     <p className="mt-4 text-center font-mono text-sm text-blue-400">
-                      Cube picked up — now click the empty part.
+                      Piece picked up — now click the hole.
                     </p>
                   )}
                 </TestCard>
@@ -481,11 +624,7 @@ export default function StepOne() {
             <Button variant="outline" onClick={skipTest} className="font-mono">
               Skip
             </Button>
-            <Button
-              onClick={next}
-              disabled={!currentSolved}
-              className="font-mono"
-            >
+            <Button onClick={next} className="font-mono">
               Next →
             </Button>
           </div>

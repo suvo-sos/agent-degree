@@ -161,7 +161,10 @@ export default function StepThree() {
   }
 
   function next() {
-    if (currentSolved && step < 9) setStep(step + 1);
+    if (!currentSolved) {
+      setSkipped((prev) => [...prev, step]);
+    }
+    if (step < 9) setStep(step + 1);
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -567,11 +570,7 @@ export default function StepThree() {
             <Button variant="outline" onClick={skipTest} className="font-mono">
               Skip
             </Button>
-            <Button
-              onClick={next}
-              disabled={!currentSolved}
-              className="font-mono"
-            >
+            <Button onClick={next} className="font-mono">
               Next →
             </Button>
           </div>

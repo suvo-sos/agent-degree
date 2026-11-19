@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import {
   DropdownMenu,
@@ -28,6 +27,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import {
   loadChallengeProgress,
   saveChallengeProgress,
   saveChallengeResults,
@@ -35,17 +44,6 @@ import {
 
 const STORAGE_KEY = "agent-degree-progress";
 const TARGET_COLOUR = "#885566";
-const COLOURS = [
-  "#e74c3c",
-  "#3498db",
-  "#2ecc71",
-  "#f1c40f",
-  "#9b59b6",
-  "#885566",
-  "#e67e22",
-  "#1abc9c",
-  "#996677",
-];
 const FRUITS = ["Apple", "Banana", "Cherry", "Mango", "Orange"];
 const TABS = ["Home", "Profile", "Settings"];
 
@@ -65,7 +63,7 @@ function TestCard({
           {title}
         </h2>
       ) : null}
-      <Card className="flex min-h-[520px] flex-col">
+      <Card className="flex min-h-[640px] flex-col">
         <CardContent className="flex flex-1 flex-col justify-center">
           {children}
         </CardContent>
@@ -93,14 +91,17 @@ export default function StepThree() {
   // 1. Menu
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPicked, setMenuPicked] = useState<string | null>(null);
-  // 2. Progress
-  const [progInput, setProgInput] = useState("");
-  const [progValue, setProgValue] = useState<number | null>(null);
-  // 3. Colour
-  const [wrongColour, setWrongColour] = useState<number | null>(null);
-  const [colourPicked, setColourPicked] = useState(false);
-  // 4. Switch
-  const [switchOn, setSwitchOn] = useState(false);
+  // 2. Progress — starts at 23 by default, in the bar and the input.
+  const [progInput, setProgInput] = useState("23");
+  const [progValue, setProgValue] = useState<number | null>(23);
+  // 3. Colour — shadcn Popover colour picker. The agent picks a colour,
+  // clicks Set colour, and the box background becomes that colour.
+  const [pickedColour, setPickedColour] = useState("#000000");
+  const [appliedColour, setAppliedColour] = useState<string | null>(null);
+  // 4. Resizable — left panel to 30%, top panel to 55%.
+  // A small tolerance (2%) because dragging to an exact pixel is hard.
+  const [leftSize, setLeftSize] = useState(50);
+  const [topSize, setTopSize] = useState(25);
   // 5. Tabs
   const [activeTab, setActiveTab] = useState("Home");
   // 6. Accordion
@@ -117,8 +118,9 @@ export default function StepThree() {
 
   const menuSolved = menuPicked === "Option 6";
   const progressSolved = progValue === 75;
-  const colourSolved = colourPicked;
-  const switchSolved = switchOn;
+  const colourSolved = appliedColour === TARGET_COLOUR;
+  const resizeSolved =
+    Math.abs(leftSize - 30) <= 2 && Math.abs(topSize - 55) <= 2;
   const tabsSolved = activeTab === "Settings";
   const accordionSolved = openSection === 3;
   const starsSolved = rating === 4;
@@ -133,7 +135,7 @@ export default function StepThree() {
     menuSolved,
     progressSolved,
     colourSolved,
-    switchSolved,
+    resizeSolved,
     tabsSolved,
     accordionSolved,
     starsSolved,
@@ -165,16 +167,9 @@ export default function StepThree() {
     saveChallengeProgress(3, { step, solved, points, wrong, finished });
   }, [step, solved, points, wrong, finished]);
 
-  function pickColour(i: number) {
-    if (COLOURS[i] === TARGET_COLOUR) {
-      setColourPicked(true);
-    } else {
-      setWrongColour(i);
-      window.setTimeout(
-        () => setWrongColour((cur) => (cur === i ? null : cur)),
-        900,
-      );
-    }
+  function setColour() {
+    const hex = pickedColour.trim().toLowerCase();
+    setAppliedColour(hex);
   }
 
   function setProgress() {
@@ -239,7 +234,7 @@ export default function StepThree() {
         <Confetti className="pointer-events-none absolute inset-0 z-50 size-full" />
       )}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
-      <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col">
+      <div className="relative mx-auto flex w-full max-w-3xl flex-1 flex-col">
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
@@ -331,50 +326,115 @@ export default function StepThree() {
 
               {step === 2 && (
                 <TestCard title={<>Pick the colour{" "} <span className="font-bold text-white"> {TARGET_COLOUR} </span>{" "} from the colour picker.</>} solved={colourSolved}>
-                  
-                  <div className="mx-auto mt-5 grid w-full max-w-xs grid-cols-3 gap-3">
-                    {COLOURS.map((hex, i) => (
-                      <button
-                        key={hex}
-                        type="button"
-                        onClick={() => pickColour(i)}
-                        aria-label={`Colour ${i + 1}`}
-                        className={`aspect-square w-full rounded-lg transition-all ${
-                          wrongColour === i
-                            ? "ring-4 ring-red-500"
-                            : "ring-1 ring-zinc-700 hover:ring-zinc-300"
-                        }`}
-                        style={{ backgroundColor: hex }}
-                      />
-                    ))}
-                  </div>
-                  {wrongColour !== null && (
-                    <p className="mt-4 text-center font-mono text-sm text-red-400">
-                      That is not {TARGET_COLOUR}. Try again.
+
+                  <div className="mx-auto mt-5 flex max-w-md flex-col items-center gap-5">
+                    {/* The box — its background becomes the colour you set. */}
+                    <div
+                      aria-label="Colour preview box"
+                      className="h-32 w-full rounded-lg border border-zinc-700 transition-colors"
+                      style={{
+                        backgroundColor: appliedColour ?? "#18181b",
+                      }}
+                    />
+                    <p className="font-mono text-sm text-zinc-400">
+                      {appliedColour
+                        ? `Box colour: ${appliedColour}`
+                        : "No colour set yet."}
                     </p>
-                  )}
+                    <div className="flex items-center gap-2">
+                      <Popover>
+                        <PopoverTrigger
+                          render={
+                            <Button
+                              variant="outline"
+                              className="font-mono"
+                              aria-label="Pick a colour"
+                            >
+                              <span
+                                className="inline-block h-4 w-4 rounded-sm border border-zinc-600"
+                                style={{ backgroundColor: pickedColour }}
+                              />
+                              Pick a colour
+                            </Button>
+                          }
+                        />
+                        <PopoverContent className="w-64 font-mono">
+                          <div className="space-y-3">
+                            <input
+                              type="color"
+                              value={
+                                /^#[0-9a-fA-F]{6}$/.test(pickedColour)
+                                  ? pickedColour
+                                  : "#000000"
+                              }
+                              onChange={(e) =>
+                                setPickedColour(e.target.value)
+                              }
+                              aria-label="Colour picker"
+                              className="h-10 w-full cursor-pointer rounded-md border border-zinc-700 bg-transparent p-1 [color-scheme:dark]"
+                            />
+                            <Input
+                              value={pickedColour}
+                              onChange={(e) =>
+                                setPickedColour(e.target.value)
+                              }
+                              aria-label="Colour hex value"
+                              placeholder="#885566"
+                              className="font-mono"
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <Button onClick={setColour} className="font-mono">
+                        Set colour
+                      </Button>
+                    </div>
+                  </div>
                 </TestCard>
               )}
 
               {step === 3 && (
-                <TestCard title="Turn the switch on." solved={switchSolved}>
-                  
-                  <div className="mt-6 flex items-center justify-center gap-4">
-                    <Label
-                      htmlFor="notifications"
-                      className="font-mono text-sm font-normal text-zinc-400"
+                <TestCard title="Resize the panels: make the left panel 30% wide and the top-right panel 55% tall." solved={resizeSolved}>
+
+                  <div className="mx-auto mt-5 max-w-md">
+                    <ResizablePanelGroup
+                      orientation="horizontal"
+                      className="max-w-md rounded-lg border border-zinc-700"
                     >
-                      Notifications
-                    </Label>
-                    <Switch
-                      id="notifications"
-                      checked={switchOn}
-                      onCheckedChange={setSwitchOn}
-                      aria-label="Notifications switch"
-                    />
-                    <span className="font-mono text-sm font-semibold">
-                      {switchOn ? "ON" : "OFF"}
-                    </span>
+                      <ResizablePanel
+                        defaultSize={50}
+                        onResize={(size) => setLeftSize(size.asPercentage)}
+                      >
+                        <div className="flex h-[200px] items-center justify-center p-6">
+                          <span className="font-mono font-semibold">One</span>
+                        </div>
+                      </ResizablePanel>
+                      <ResizableHandle withHandle />
+                      <ResizablePanel
+                        defaultSize={50}
+                      >
+                        <ResizablePanelGroup orientation="vertical">
+                          <ResizablePanel
+                            defaultSize={25}
+                            onResize={(size) => setTopSize(size.asPercentage)}
+                          >
+                            <div className="flex h-full items-center justify-center p-6">
+                              <span className="font-mono font-semibold">Two</span>
+                            </div>
+                          </ResizablePanel>
+                          <ResizableHandle withHandle />
+                          <ResizablePanel defaultSize={75}>
+                            <div className="flex h-full items-center justify-center p-6">
+                              <span className="font-mono font-semibold">Three</span>
+                            </div>
+                          </ResizablePanel>
+                        </ResizablePanelGroup>
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                    <p className="mt-4 text-center font-mono text-sm text-zinc-400">
+                      Left: {Math.round(leftSize)}% (need 30%) · Top:{" "}
+                      {Math.round(topSize)}% (need 55%)
+                    </p>
                   </div>
                 </TestCard>
               )}
@@ -597,7 +657,7 @@ export default function StepThree() {
       </div>
       {!done && (
         <div className="absolute inset-x-0 bottom-6">
-          <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6">
+          <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-6">
             <Button variant="outline" onClick={skipTest} className="font-mono">
               Skip
             </Button>

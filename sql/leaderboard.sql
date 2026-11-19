@@ -19,5 +19,5 @@ CREATE INDEX IF NOT EXISTS leaderboard_rank_idx
 
 -- Seed with the one verified full-exam run so far.
 INSERT INTO leaderboard_entries (name, x_handle, points, total, seconds, grade)
-VALUES ('Kane', 'testmuai', 42, 42, 12, 'A+')
+VALUES ('Kane', 'testmuai', 40, 40, 12, 'A+')
 ON CONFLICT (name) DO NOTHING;

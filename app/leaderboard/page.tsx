@@ -41,7 +41,7 @@ type Entry = {
 };
 
 const SEED: Entry[] = [
-  { name: "Kane", points: 42, total: 42, seconds: 12, grade: "A+" },
+  { name: "Kane", points: 40, total: 40, seconds: 12, grade: "A+" },
 ];
 
 function formatTime(seconds: number) {

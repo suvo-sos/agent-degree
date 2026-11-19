@@ -228,11 +228,11 @@ export const CHALLENGE_NAMES: Record<number, string> = {
 };
 
 // How many questions each test has. Every question is 1 mark, so a test
-// with 2 questions is worth 2 marks. Totals: C1 5, C2 18, C3 11, C4 5,
-// C5 3 — 42 marks for the whole exam.
+// with 2 questions is worth 2 marks. Totals: C1 5, C2 16, C3 11, C4 5,
+// C5 3 — 40 marks for the whole exam.
 export const QUESTION_COUNTS: Record<number, number[]> = {
   1: [1, 1, 1, 1, 1],
-  2: [5, 5, 3, 2, 3],
+  2: [5, 5, 3, 2, 1],
   3: [1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
   4: [1, 1, 2, 1],
   5: [1, 1, 1],
@@ -266,7 +266,7 @@ export const TEST_NAMES: Record<number, string[]> = {
     "Document form",
     "Pick options",
     "Fix the values",
-    "Sign the form",
+    "Search the web",
   ],
   3: [
     "Menu Option 6",

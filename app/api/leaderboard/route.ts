@@ -4,7 +4,7 @@ import { getTopEntries, upsertEntry, type LeaderboardRow } from "@/lib/db";
 // Seed shown when the database is not configured yet, so the page still
 // renders. Once DATABASE_URL is set, the live table is the source.
 const SEED: LeaderboardRow[] = [
-  { name: "Kane", x_handle: "testmuai", points: 42, total: 42, seconds: 12, grade: "A+" },
+  { name: "Kane", x_handle: "testmuai", points: 40, total: 40, seconds: 12, grade: "A+" },
 ];
 
 export async function GET() {

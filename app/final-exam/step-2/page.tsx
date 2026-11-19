@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
@@ -20,6 +19,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarGroup,
+  MenubarItem,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 import {
   loadChallengeProgress,
   saveChallengeProgress,
@@ -220,40 +235,21 @@ export default function StepTwo() {
   const [t3Dept, setT3Dept] = useState("");
   const [t3Date, setT3Date] = useState("");
   const [t4, setT4] = useState<Person>(PRIYA_PREFILLED);
-  const [signature, setSignature] = useState("");
-  const [declared, setDeclared] = useState(false);
-  const [signDate, setSignDate] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  // 5. Menubar: click Search the web (Edit > Find > Search the web).
+  const [searchClicked, setSearchClicked] = useState(false);
 
   const transcriptSolved = matchesPerson(t1, ARJUN);
   const documentSolved = matchesPerson(t2, PRIYA);
   const optionsSolved =
     t3Type === "full-time" && t3Dept === "Design" && t3Date === "2025-03-10";
   const fixSolved = matchesPerson(t4, PRIYA);
-  const signatureOk = norm(signature) === norm(ARJUN.name);
-  // Today in IST (and yesterday, for runs around midnight). Computed after
-  // mount so the date never goes stale as the days pass.
-  const [acceptedDates, setAcceptedDates] = useState<string[]>([]);
-  useEffect(() => {
-    const fmt = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Kolkata",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    setAcceptedDates([
-      fmt.format(new Date()),
-      fmt.format(new Date(Date.now() - 24 * 60 * 60 * 1000)),
-    ]);
-  }, []);
-  const dateOk = acceptedDates.includes(signDate);
-  const signSolved = signatureOk && declared && dateOk && submitted;
+  const menuSolved = searchClicked;
   const liveSolved = [
     transcriptSolved,
     documentSolved,
     optionsSolved,
     fixSolved,
-    signSolved,
+    menuSolved,
   ];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   // Per-question points: each field is 1 mark. Test 4 only counts the
@@ -267,7 +263,7 @@ export default function StepTwo() {
       (t3Date === "2025-03-10" ? 1 : 0),
     (norm(t4.age) === norm(PRIYA.age) ? 1 : 0) +
       (norm(t4.city) === norm(PRIYA.city) ? 1 : 0),
-    (signatureOk ? 1 : 0) + (declared ? 1 : 0) + (dateOk ? 1 : 0),
+    menuSolved ? 1 : 0,
   ];
   const points = livePoints.map((v, i) =>
     Math.max(v, savedPoints[i] ?? 0),
@@ -468,46 +464,142 @@ export default function StepTwo() {
               )}
 
               {step === 4 && (
-                <TestCard title="Arjun is signing this form. Type his full name as the signature, tick the declaration, and enter today&apos;s date." solved={signSolved}>
-                  
-                  <div className="mt-5 space-y-4">
-                    <Field
-                      label="Signature"
-                      value={signature}
-                      onChange={setSignature}
-                      placeholder="Type your full name"
-                    />
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id="declare"
-                        checked={declared}
-                        onCheckedChange={(c) => setDeclared(c === true)}
-                        aria-label="I declare the information above is true"
-                      />
-                      <Label
-                        htmlFor="declare"
-                        className="cursor-pointer font-mono text-sm font-normal text-zinc-200"
-                      >
-                        I declare the information above is true
-                      </Label>
-                    </div>
-                    <Field
-                      label="Date"
-                      type="date"
-                      value={signDate}
-                      onChange={setSignDate}
-                      placeholder=""
-                    />
-                    <Button
-                      onClick={() => setSubmitted(true)}
-                      disabled={
-                        !signatureOk || !declared || !dateOk || submitted
-                      }
-                      className="w-full font-mono"
-                    >
-                      {submitted ? "Form submitted ✓" : "Submit the form"}
-                    </Button>
+                <TestCard title="Open the Edit menu, go to Find, and click Search the web." solved={menuSolved}>
+
+                  <div className="mt-8 flex justify-center">
+                    <Menubar className="w-full max-w-xl font-mono">
+                      <MenubarMenu>
+                        <MenubarTrigger>File</MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarGroup>
+                            <MenubarItem>
+                              New Tab <MenubarShortcut>⌘T</MenubarShortcut>
+                            </MenubarItem>
+                            <MenubarItem>
+                              New Window <MenubarShortcut>⌘N</MenubarShortcut>
+                            </MenubarItem>
+                            <MenubarItem disabled>New Incognito Window</MenubarItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarSub>
+                              <MenubarSubTrigger>Share</MenubarSubTrigger>
+                              <MenubarSubContent>
+                                <MenubarGroup>
+                                  <MenubarItem>Email link</MenubarItem>
+                                  <MenubarItem>Messages</MenubarItem>
+                                  <MenubarItem>Notes</MenubarItem>
+                                </MenubarGroup>
+                              </MenubarSubContent>
+                            </MenubarSub>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem>
+                              Print... <MenubarShortcut>⌘P</MenubarShortcut>
+                            </MenubarItem>
+                          </MenubarGroup>
+                        </MenubarContent>
+                      </MenubarMenu>
+                      <MenubarMenu>
+                        <MenubarTrigger>Edit</MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarGroup>
+                            <MenubarItem>
+                              Undo <MenubarShortcut>⌘Z</MenubarShortcut>
+                            </MenubarItem>
+                            <MenubarItem>
+                              Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                            </MenubarItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarSub>
+                              <MenubarSubTrigger>Find</MenubarSubTrigger>
+                              <MenubarSubContent>
+                                <MenubarGroup>
+                                  <MenubarItem
+                                    onClick={() => setSearchClicked(true)}
+                                  >
+                                    Search the web
+                                  </MenubarItem>
+                                </MenubarGroup>
+                                <MenubarSeparator />
+                                <MenubarGroup>
+                                  <MenubarItem>Find...</MenubarItem>
+                                  <MenubarItem>Find Next</MenubarItem>
+                                  <MenubarItem>Find Previous</MenubarItem>
+                                </MenubarGroup>
+                              </MenubarSubContent>
+                            </MenubarSub>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem>Cut</MenubarItem>
+                            <MenubarItem>Copy</MenubarItem>
+                            <MenubarItem>Paste</MenubarItem>
+                          </MenubarGroup>
+                        </MenubarContent>
+                      </MenubarMenu>
+                      <MenubarMenu>
+                        <MenubarTrigger>View</MenubarTrigger>
+                        <MenubarContent className="w-44">
+                          <MenubarGroup>
+                            <MenubarCheckboxItem>Bookmarks Bar</MenubarCheckboxItem>
+                            <MenubarCheckboxItem checked>
+                              Full URLs
+                            </MenubarCheckboxItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem inset>
+                              Reload <MenubarShortcut>⌘R</MenubarShortcut>
+                            </MenubarItem>
+                            <MenubarItem disabled inset>
+                              Force Reload <MenubarShortcut>⇧⌘R</MenubarShortcut>
+                            </MenubarItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem inset>Toggle Fullscreen</MenubarItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem inset>Hide Sidebar</MenubarItem>
+                          </MenubarGroup>
+                        </MenubarContent>
+                      </MenubarMenu>
+                      <MenubarMenu>
+                        <MenubarTrigger>Profiles</MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarRadioGroup value="benoit">
+                            <MenubarRadioItem value="andy">
+                              Andy
+                            </MenubarRadioItem>
+                            <MenubarRadioItem value="benoit">
+                              Benoit
+                            </MenubarRadioItem>
+                            <MenubarRadioItem value="Luis">
+                              Luis
+                            </MenubarRadioItem>
+                          </MenubarRadioGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem inset>Edit...</MenubarItem>
+                          </MenubarGroup>
+                          <MenubarSeparator />
+                          <MenubarGroup>
+                            <MenubarItem inset>Add Profile...</MenubarItem>
+                          </MenubarGroup>
+                        </MenubarContent>
+                      </MenubarMenu>
+                    </Menubar>
                   </div>
+                  {searchClicked && (
+                    <p className="mt-6 text-center font-mono text-sm text-green-400">
+                      You clicked Search the web ✓
+                    </p>
+                  )}
                 </TestCard>
               )}
             </div>

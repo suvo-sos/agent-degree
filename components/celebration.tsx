@@ -3,10 +3,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
+import { Spotlight } from "@/components/ui/spotlight";
 import {
   CHALLENGE_NAMES,
   TEST_NAMES,
@@ -23,11 +29,14 @@ import {
   type ResultsMap,
 } from "@/lib/results";
 
-// The iconic finish: white page, confetti for 3 seconds, "Congratulations",
-// then the full review — every test, marks, grade, and the certificate.
-// `celebrate` plays the 3s confetti intro (used right after the last test).
-// `current` is the just-finished challenge's results, passed in directly
-// so the review includes them before the save effect has run.
+// The finish, redesigned like the home page: black, Instrument Serif,
+// Spotlight glow and grid pattern. One screen, no scroll. The certificate
+// sits centre bottom with a god-ray backlight behind it and a download
+// button under it. Marks and grade are on the left, the test review is
+// on the right and opens a full list when clicked. `celebrate` plays the
+// 3s confetti intro (used right after the last test). `current` is the
+// just-finished challenge's results, passed in directly so the review
+// includes them before the save effect has run.
 export function Celebration({
   celebrate = false,
   current,
@@ -40,6 +49,7 @@ export function Celebration({
   );
   const [stored, setStored] = useState<ResultsMap>({});
   const [timerMs, setTimerMs] = useState<number | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
 
   useEffect(() => {
     setStored(getResults());
@@ -91,11 +101,18 @@ export function Celebration({
 
   if (phase === "confetti") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-white px-6 font-sans text-black">
-        <h1 className="text-center font-grotesque text-6xl font-semibold tracking-tight sm:text-7xl">
+      <div className="relative flex h-dvh flex-col items-center justify-center overflow-hidden bg-black px-6 font-sans text-white">
+        <AnimatedGridPattern
+          numSquares={30}
+          maxOpacity={0.1}
+          duration={3}
+          repeatDelay={1}
+          className="absolute inset-0 h-full w-full mask-[radial-gradient(700px_circle_at_center,white,transparent)]"
+        />
+        <h1 className="relative z-10 text-center font-instrument-serif text-6xl sm:text-7xl">
           Congratulations
         </h1>
-        <p className="mt-4 text-center font-mono text-lg text-zinc-600">
+        <p className="relative z-10 mt-4 text-center font-mono text-lg text-zinc-400">
           You finished the Final Exam.
         </p>
       </div>
@@ -103,129 +120,197 @@ export function Celebration({
   }
 
   return (
-    <div className="min-h-screen bg-white px-6 py-12 font-sans text-black">
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="text-center">
-          <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-600">
-            AGENT DEGREE — RESULTS
+    <div className="relative flex h-dvh flex-col overflow-hidden bg-black px-6 font-sans text-white">
+      <AnimatedGridPattern
+        numSquares={30}
+        maxOpacity={0.1}
+        duration={3}
+        repeatDelay={1}
+        className="absolute inset-0 h-full w-full mask-[radial-gradient(700px_circle_at_center,white,transparent)]"
+      />
+      <Spotlight className="absolute -top-40 left-0 md:-top-20 md:left-60" />
+
+      {/* Header */}
+      <div className="relative z-10 pt-8 text-center">
+        <p className="font-mono text-xs font-semibold tracking-[0.3em] text-blue-400">
+          AGENT DEGREE — RESULTS
+        </p>
+        <h1 className="mt-2 font-instrument-serif text-5xl sm:text-6xl">
+          Congratulations
+        </h1>
+        <p className="mt-2 font-mono text-sm text-zinc-400">
+          You finished the Final Exam. Here is how you did.
+        </p>
+      </div>
+
+      {!hasResults ? (
+        <div className="relative z-10 mx-auto mt-10 w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-6 text-center">
+          <p className="font-mono text-sm text-zinc-400">
+            No results yet. Finish the Final Exam first.
           </p>
-          <h1 className="mt-3 font-grotesque text-4xl font-semibold tracking-tight sm:text-5xl">
-            Congratulations
-          </h1>
-          <p className="mt-3 font-mono text-sm text-zinc-600">
-            You finished the Final Exam. Here is how you did.
-          </p>
+          <Link href="/final-exam">
+            <Button className="mt-5 font-mono">Go to the Final Exam</Button>
+          </Link>
         </div>
-
-        {!hasResults ? (
-          <div className="mt-10 rounded-2xl border border-zinc-200 p-6 text-center">
-            <p className="font-mono text-sm text-zinc-600">
-              No results yet. Finish the Final Exam first.
-            </p>
-            <Link href="/final-exam">
-              <Button className="mt-5 font-mono">Go to the Final Exam</Button>
-            </Link>
-          </div>
-        ) : (
-          <>
-            <div className="mt-10 space-y-4">
-              {[1, 2, 3, 4, 5].map((n) => {
-                const names = TEST_NAMES[n] ?? [];
-                const count =
-                  results[n]?.solved.length ?? names.length;
-                return (
-                  <Card key={n}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                      <CardTitle className="font-grotesque">
-                        Challenge {n} — {CHALLENGE_NAMES[n]}
-                      </CardTitle>
-                      <Badge variant="secondary" className="font-mono">
-                        {results[n]?.solved.filter(Boolean).length ?? 0}/
-                        {count} correct
-                      </Badge>
-                    </CardHeader>
-                    <CardContent>
-                      {Array.from({ length: count }, (_, i) => {
-                        const status = testStatus(n, i, results);
-                        const name = names[i] ?? `Test ${i + 1}`;
-                        return (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between border-b border-zinc-100 py-2 font-mono text-sm last:border-0"
-                          >
-                            <span>
-                              Test {i + 1} — {name}
-                            </span>
-                            {status === "solved" && (
-                              <span className="font-semibold text-green-600">
-                                ✓ Correct
-                              </span>
-                            )}
-                            {status === "unsolved" && (
-                              <span className="font-semibold text-red-600">
-                                ✗ Not solved
-                              </span>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            <div className="mt-10 rounded-2xl border border-zinc-200 p-6 text-center">
-              <p className="font-mono text-sm text-zinc-600">Marks</p>
-              <p className="mt-2 font-grotesque text-4xl font-semibold">
-                {score} / {total}
+      ) : (
+        <>
+          {/* Main: marks left, certificate centre, review right. */}
+          <div className="relative z-10 mx-auto grid w-full max-w-7xl min-h-0 flex-1 grid-cols-3 items-center gap-6">
+            {/* Left: marks, grade, correct / wrong. */}
+            <div className="flex flex-col items-center text-center">
+              <p className="font-mono text-xs font-semibold tracking-[0.3em] text-zinc-500">
+                MARKS
               </p>
-              <p className="mt-1 font-mono text-sm text-zinc-600">
-                {solved} correct
-                {wrong > 0 ? ` · −${wrong} for wrong answers` : ""}
-              </p>
-              <p className="mt-1 font-mono text-sm text-zinc-600">
-                {pct}% correct
-              </p>
-              <Progress value={pct} className="mx-auto mt-4 max-w-md" />
-              <p className="mt-6 font-grotesque text-6xl font-semibold">
+              <p className="mt-2 font-instrument-serif text-8xl leading-none text-white">
                 {grade}
               </p>
-              <p className="mt-1 font-mono text-sm text-zinc-600">{label}</p>
-              {timerMs !== null && (
-                <p className="mt-4 font-mono text-sm text-zinc-600">
-                  Completed in {formatDuration(timerMs)}
-                </p>
-              )}
+              <p className="mt-2 font-mono text-sm text-zinc-400">{label}</p>
+              <p className="mt-6 font-grotesque text-4xl font-semibold text-white">
+                {score}
+                <span className="text-zinc-500"> / {total}</span>
+              </p>
+              <p className="mt-1 font-mono text-sm text-zinc-400">
+                {pct}% correct
+              </p>
+              <div className="mt-6 w-full max-w-[220px] space-y-2 font-mono text-sm">
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                  <span className="text-zinc-400">Correct</span>
+                  <span className="font-semibold text-green-400">
+                    {solved}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
+                  <span className="text-zinc-400">Wrong</span>
+                  <span className="font-semibold text-red-400">{wrong}</span>
+                </div>
+                {timerMs !== null && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-zinc-400">Time</span>
+                    <span className="font-semibold text-white">
+                      {formatDuration(timerMs)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* The award, last: the framed certificate for the grade earned. */}
-            <div className="mt-10 text-center">
+            {/* Centre: certificate with a god-ray backlight, download under it. */}
+            <div className="relative flex min-h-0 flex-col items-center justify-center">
+              {/* Backlight: warm gold glow + slow god rays behind the certificate. */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2"
+              >
+                <div className="h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(250,204,21,0.30),rgba(250,204,21,0.08)_45%,transparent_70%)] blur-2xl" />
+              </div>
+              <div
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[620px] w-[620px] -translate-x-1/2 -translate-y-1/2 animate-[spin_28s_linear_infinite] rounded-full bg-[repeating-conic-gradient(from_0deg,rgba(250,204,21,0.13)_0deg_10deg,transparent_10deg_30deg)] blur-md"
+              />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={certificateImageFor(grade)}
                 alt={`Agent Degree certificate, grade ${grade}`}
-                className="mx-auto w-full max-w-sm rounded-lg"
+                className="h-[46vh] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
               />
               <a
                 href={certificateImageFor(grade)}
                 download="agent-degree-certificate.png"
-                className="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-blue-500"
               >
                 Download certificate
               </a>
             </div>
 
-            <div className="mt-8 text-center">
+            {/* Right: review the tests. */}
+            <div className="flex flex-col items-center text-center">
+              <button
+                type="button"
+                onClick={() => setReviewOpen(true)}
+                className="group w-full max-w-[280px] rounded-2xl border border-zinc-800 bg-zinc-950 p-6 text-left transition-colors hover:border-zinc-600"
+              >
+                <p className="font-grotesque text-2xl font-semibold text-white">
+                  Review tests
+                </p>
+                <p className="mt-2 font-mono text-sm leading-relaxed text-zinc-400">
+                  See every challenge and the marks you got on each one.
+                </p>
+                <p className="mt-4 font-mono text-sm font-semibold text-blue-400 group-hover:text-blue-300">
+                  Open the list →
+                </p>
+              </button>
               <Link href="/final-exam">
-                <Button variant="outline" className="font-mono">
+                <Button
+                  variant="outline"
+                  className="mt-6 font-mono text-zinc-300"
+                >
                   Back to the Final Exam
                 </Button>
               </Link>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+
+          {/* Review list: every challenge, marks obtained, every test. */}
+          <Dialog open={reviewOpen} onOpenChange={setReviewOpen}>
+            <DialogContent className="max-h-[85vh] overflow-y-auto border-zinc-800 bg-zinc-950 text-white sm:max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="font-grotesque text-2xl">
+                  Test review
+                </DialogTitle>
+                <DialogDescription className="font-mono text-sm text-zinc-400">
+                  Every challenge, the marks you got, and every test.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 space-y-6">
+                {[1, 2, 3, 4, 5].map((n) => {
+                  const names = TEST_NAMES[n] ?? [];
+                  const r = results[n];
+                  const count = r?.solved.length ?? names.length;
+                  const correct = r?.solved.filter(Boolean).length ?? 0;
+                  const marks = Math.max(0, correct - (r?.wrong ?? 0));
+                  return (
+                    <div key={n}>
+                      <div className="flex items-baseline justify-between border-b border-zinc-800 pb-2">
+                        <p className="font-grotesque text-lg font-semibold text-white">
+                          Challenge {n} — {CHALLENGE_NAMES[n]}
+                        </p>
+                        <p className="font-mono text-sm font-semibold text-amber-400">
+                          {marks}/{count} marks
+                        </p>
+                      </div>
+                      <div className="mt-2 space-y-1">
+                        {Array.from({ length: count }, (_, i) => {
+                          const status = testStatus(n, i, results);
+                          const name = names[i] ?? `Test ${i + 1}`;
+                          return (
+                            <div
+                              key={i}
+                              className="flex items-center justify-between py-1 font-mono text-sm"
+                            >
+                              <span className="text-zinc-300">
+                                Test {i + 1} — {name}
+                              </span>
+                              {status === "solved" ? (
+                                <span className="font-semibold text-green-400">
+                                  ✓ Correct
+                                </span>
+                              ) : (
+                                <span className="font-semibold text-red-400">
+                                  ✗ Not solved
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </div>
   );
 }

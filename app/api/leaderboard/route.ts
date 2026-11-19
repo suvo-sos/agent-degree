@@ -1,9 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextResponse, connection } from "next/server";
 import { getTopEntries, upsertEntry, type LeaderboardRow } from "@/lib/db";
-
-// Always read the live table on every request, so new finishes show up
-// without a redeploy.
-export const dynamic = "force-dynamic";
 
 // Seed shown when the database is not configured yet, so the page still
 // renders. Once DATABASE_URL is set, the live table is the source.
@@ -12,6 +8,11 @@ const SEED: LeaderboardRow[] = [
 ];
 
 export async function GET() {
+  // Always read the live table on every request, so new finishes show up
+  // without a redeploy. (Route segment `dynamic` is incompatible with the
+  // app's cacheComponents setting, so opt into dynamic rendering with
+  // connection() instead.)
+  await connection();
   try {
     const rows = await getTopEntries(10);
     return NextResponse.json({ entries: rows.length > 0 ? rows : SEED });

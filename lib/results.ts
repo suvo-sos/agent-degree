@@ -282,7 +282,7 @@ export const TEST_NAMES: Record<number, string[]> = {
   ],
   4: [
     "Scratch Card",
-    "Verify Your Email",
+    "Tiny Code",
     "Listen and Book",
     "Project Stack",
     "Test 5",

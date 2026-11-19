@@ -34,6 +34,30 @@ function makeSecretCode() {
   return s;
 }
 
+// 7-segment display: which segments light up for each digit, and
+// where each segment sits inside one digit (14 wide, 24 tall).
+const SEGMENTS: Record<string, string[]> = {
+  "0": ["a", "b", "c", "d", "e", "f"],
+  "1": ["b", "c"],
+  "2": ["a", "b", "d", "e", "g"],
+  "3": ["a", "b", "c", "d", "g"],
+  "4": ["b", "c", "f", "g"],
+  "5": ["a", "c", "d", "f", "g"],
+  "6": ["a", "c", "d", "e", "f", "g"],
+  "7": ["a", "b", "c"],
+  "8": ["a", "b", "c", "d", "e", "f", "g"],
+  "9": ["a", "b", "c", "d", "f", "g"],
+};
+const SEG_RECT: Record<string, { x: number; y: number; w: number; h: number }> = {
+  a: { x: 2, y: 0, w: 10, h: 3 },
+  g: { x: 2, y: 10.5, w: 10, h: 3 },
+  d: { x: 2, y: 21, w: 10, h: 3 },
+  f: { x: 0, y: 1.5, w: 3, h: 9 },
+  b: { x: 11, y: 1.5, w: 3, h: 9 },
+  e: { x: 0, y: 12.5, w: 3, h: 9 },
+  c: { x: 11, y: 12.5, w: 3, h: 9 },
+};
+
 function TestCard({
   title,
   solved,
@@ -88,7 +112,8 @@ export default function StepFour() {
   }, []);
   const [scratchRevealed, setScratchRevealed] = useState(false);
   const [scratchInput, setScratchInput] = useState("");
-  const [scratchError, setScratchError] = useState<string | null>(null);
+  // No error, no revealed answer. Submit just shows "Submitted".
+  const [scratchSubmitted, setScratchSubmitted] = useState(false);
   const [scratchSolved, setScratchSolved] = useState(false);
 
   // Paint the scratch-off coating once the canvas mounts.
@@ -191,23 +216,39 @@ export default function StepFour() {
   }
 
   function checkScratchCode() {
+    // Just show "Submitted". Correct code solves it; a wrong code
+    // shows nothing more (no error, no answer) and the test stays open.
+    setScratchSubmitted(true);
     if (scratchInput.trim() === secretCode) {
       setScratchSolved(true);
-      setScratchError(null);
-    } else {
-      setScratchError("Wrong code. Scratch the card and try again.");
     }
   }
 
-  // 2. Verify your email
-  const [verifyEmail, setVerifyEmail] = useState("");
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [codeSent, setCodeSent] = useState(false);
-  const [sentCode, setSentCode] = useState("");
-  const [inboxOpen, setInboxOpen] = useState(false);
-  const [codeInput, setCodeInput] = useState("");
-  const [codeError, setCodeError] = useState<string | null>(null);
-  const [emailVerified, setEmailVerified] = useState(false);
+  // 2. Tiny code — a super small SVG image with a code written on
+  // it. The agent has to zoom in to read the code, then type it
+  // below and submit. The code is random per attempt.
+  // The digits are drawn as a 7-segment display (shapes only, no
+  // text anywhere in the page), so the only way to read the code
+  // is to zoom in and look at it.
+  const [zoomCode, setZoomCode] = useState("");
+  useEffect(() => {
+    let s = "";
+    for (let i = 0; i < 6; i++) {
+      s += String(Math.floor(Math.random() * 10));
+    }
+    setZoomCode(s);
+  }, []);
+  const [zoomInput, setZoomInput] = useState("");
+  const [zoomSubmitted, setZoomSubmitted] = useState(false);
+  const [zoomSolved, setZoomSolved] = useState(false);
+  function checkZoomCode() {
+    // Just show "Submitted". Correct code solves it; a wrong code
+    // shows nothing more and the test stays open.
+    setZoomSubmitted(true);
+    if (zoomInput.trim() === zoomCode) {
+      setZoomSolved(true);
+    }
+  }
 
   // 3. Listen and book
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -230,13 +271,13 @@ export default function StepFour() {
   const [videoSolved, setVideoSolved] = useState(false);
 
   const scratchCardSolved = scratchSolved;
-  const liveSolved = [scratchCardSolved, emailVerified, audioSolved, videoSolved];
+  const liveSolved = [scratchCardSolved, zoomSolved, audioSolved, videoSolved];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
   // Per-question points: each test is 1 mark, except test 3 (voicemail:
   // the date and the time are 2 separate questions, 1 mark each).
   const livePoints = [
     scratchCardSolved ? 1 : 0,
-    emailVerified ? 1 : 0,
+    zoomSolved ? 1 : 0,
     (tomorrow !== "" && bookDate === tomorrow ? 1 : 0) +
       (bookTime === "16:00" ? 1 : 0),
     videoSolved ? 1 : 0,
@@ -253,39 +294,6 @@ export default function StepFour() {
   useEffect(() => {
     saveChallengeProgress(4, { step, solved, points, wrong, finished });
   }, [step, solved, points, wrong, finished]);
-
-  function makeCode() {
-    return String(Math.floor(100000 + Math.random() * 900000));
-  }
-
-  function sendCode() {
-    if (!/.+@.+\..+/.test(verifyEmail.trim())) {
-      setEmailError("Enter a valid email address.");
-      return;
-    }
-    setEmailError(null);
-    setSentCode(makeCode());
-    setCodeSent(true);
-    setInboxOpen(false);
-    setCodeInput("");
-    setCodeError(null);
-  }
-
-  function resendCode() {
-    setSentCode(makeCode());
-    setInboxOpen(false);
-    setCodeInput("");
-    setCodeError(null);
-  }
-
-  function checkCode() {
-    if (codeInput.trim() === sentCode) {
-      setEmailVerified(true);
-      setCodeError(null);
-    } else {
-      setCodeError("Wrong code. Open the email and try again.");
-    }
-  }
 
   function tomorrowStr() {
     const d = new Date();
@@ -423,21 +431,19 @@ export default function StepFour() {
                       <Input
                         type="text"
                         value={scratchInput}
-                        onChange={(e) => setScratchInput(e.target.value)}
+                        onChange={(e) => {
+                          setScratchInput(e.target.value);
+                          setScratchSubmitted(false);
+                        }}
                         placeholder="Secret Code"
                         aria-label="Secret Code"
                         className="max-w-56 text-center font-mono"
                       />
-                      {scratchError && (
-                        <p className="font-mono text-sm text-red-400">
-                          {scratchError}
-                        </p>
-                      )}
                       <Button
                         onClick={checkScratchCode}
                         className="w-full max-w-56 font-mono"
                       >
-                        Submit
+                        {scratchSubmitted ? "Submitted" : "Submit"}
                       </Button>
                     </div>
                     {/* Scratch-off coating on top. Removed once enough is scratched. */}
@@ -453,121 +459,72 @@ export default function StepFour() {
                       />
                     )}
                   </div>
-                  {scratchSolved && (
-                    <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
-                      Code accepted ✓
-                    </p>
-                  )}
                 </TestCard>
               )}
 
               {step === 1 && (
-                <TestCard title="Type your email. We will send a code — open the email and type the code here." solved={emailVerified}>
-                  
-                  {!codeSent && (
-                    <div className="mx-auto mt-5 max-w-md space-y-4">
-                      <div>
-                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
-                          Email
-                        </Label>
-                        <Input
-                          type="email"
-                          value={verifyEmail}
-                          onChange={(e) => setVerifyEmail(e.target.value)}
-                          placeholder="agent@agentdegree.app"
-                          aria-label="Email"
-                          className="font-mono"
-                        />
-                      </div>
-                      {emailError && (
-                        <p className="text-center font-mono text-sm text-red-400">
-                          {emailError}
-                        </p>
-                      )}
-                      <Button onClick={sendCode} className="w-full font-mono">
-                        Send code
-                      </Button>
-                    </div>
-                  )}
-                  {codeSent && !emailVerified && (
-                    <div className="mx-auto mt-5 max-w-md space-y-4">
-                      <p className="text-center font-mono text-sm text-zinc-400">
-                        Code sent to {verifyEmail.trim()}. Open the email
-                        below.
-                      </p>
-                      <div className="rounded-lg border border-zinc-700">
-                        <p className="border-b border-zinc-700 px-3 py-2 font-mono text-sm font-semibold text-zinc-300">
-                          Your inbox
-                        </p>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => setInboxOpen((v) => !v)}
-                          className="h-auto w-full justify-start px-3 py-3 text-left hover:bg-zinc-800"
-                        >
-                          <span className="block">
-                            <span className="block font-mono text-sm font-semibold">
-                              AgentDegree — Your verification code
-                            </span>
-                            <span className="block font-mono text-xs text-zinc-400">
-                              from AgentDegree
-                            </span>
-                          </span>
-                        </Button>
-                        {inboxOpen && (
-                          <div className="border-t border-zinc-700 px-3 py-3">
-                            <p className="font-mono text-sm text-zinc-300">
-                              To: {verifyEmail.trim()}
-                            </p>
-                            <p className="mt-2 font-mono text-sm text-zinc-300">
-                              Your AgentDegree verification code is{" "}
-                              <span className="text-lg font-bold text-white">
-                                {sentCode}
-                              </span>
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
-                          Verification code
-                        </Label>
-                        <Input
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={6}
-                          value={codeInput}
-                          onChange={(e) => setCodeInput(e.target.value)}
-                          placeholder="6-digit code"
-                          aria-label="Verification code"
-                          className="font-mono"
-                        />
-                      </div>
-                      {codeError && (
-                        <p className="text-center font-mono text-sm text-red-400">
-                          {codeError}
-                        </p>
-                      )}
-                      <Button
-                        onClick={checkCode}
-                        className="w-full font-mono"
+                <TestCard title="The code is tiny. Zoom in to read it, then type it below." solved={zoomSolved}>
+
+                  <div className="mx-auto mt-5 max-w-md space-y-4">
+                    <div className="flex justify-center">
+                      <svg
+                        width="20"
+                        height="5"
+                        viewBox="0 0 104 24"
+                        role="img"
+                        aria-label="Tiny code display. Zoom in to read the digits."
+                        className="rounded border border-zinc-700"
                       >
-                        Verify code
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={resendCode}
-                        className="w-full font-mono"
-                      >
-                        Resend code
-                      </Button>
+                        <rect width="104" height="24" fill="#18181b" />
+                        {zoomCode.split("").map((d, i) => {
+                          const segs = SEGMENTS[d] ?? [];
+                          const ox = i * 18;
+                          return (
+                            <g key={i}>
+                              {segs.map((s) => {
+                                const r = SEG_RECT[s];
+                                return (
+                                  <rect
+                                    key={s}
+                                    x={ox + r.x}
+                                    y={r.y}
+                                    width={r.w}
+                                    height={r.h}
+                                    fill="#ffffff"
+                                  />
+                                );
+                              })}
+                            </g>
+                          );
+                        })}
+                      </svg>
                     </div>
-                  )}
-                  {emailVerified && (
-                    <p className="mt-5 rounded-lg border border-green-500/40 bg-green-500/10 px-4 py-3 text-center font-mono text-sm text-green-400">
-                      Email verified ✓
+                    <p className="text-center font-mono text-sm text-zinc-500">
+                      Too small to read? Zoom in (Ctrl + Plus) to read the code.
                     </p>
-                  )}
+                    <div>
+                      <Label className="mb-1.5 block font-mono text-sm font-medium text-zinc-300">
+                        Code
+                      </Label>
+                      <Input
+                        type="text"
+                        value={zoomInput}
+                        onChange={(e) => {
+                          setZoomInput(e.target.value);
+                          setZoomSubmitted(false);
+                        }}
+                        placeholder="Type the code"
+                        aria-label="Code"
+                        className="text-center font-mono"
+                      />
+                    </div>
+                    <Button
+                      onClick={checkZoomCode}
+                      className="w-full font-mono"
+                    >
+                      {zoomSubmitted ? "Submitted" : "Submit"}
+                    </Button>
+                  </div>
                 </TestCard>
               )}
               {step === 2 && (

@@ -216,9 +216,10 @@ export function Celebration({
               <a
                 href={certificateImageFor(grade)}
                 download="agent-degree-certificate.png"
-                className="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-blue-600 px-6 font-mono text-sm font-semibold text-white transition-colors hover:bg-blue-500"
+                className="group relative mt-5 inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-8 font-instrument-serif text-lg font-semibold tracking-wide text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
               >
-                Download certificate
+                <span className="absolute inset-0 -translate-x-full bg-[linear-gradient(105deg,transparent_40%,rgba(255,255,255,0.55)_50%,transparent_60%)] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                <span className="relative">Download certificate</span>
               </a>
             </div>
 

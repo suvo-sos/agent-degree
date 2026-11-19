@@ -266,12 +266,19 @@ export function isFinalExamComplete(): boolean {
   return finishedChallenges().length === 5;
 }
 
-// Framed certificate image for a grade. A+ uses the A image; F falls back
-// to the lowest tier (D). Images live in public/certificates/.
+// Framed certificate image for a grade. A+ uses the A image; anything
+// unexpected falls back to the lowest tier (F). Images live in
+// public/certificates/.
 export function certificateImageFor(grade: string): string {
   const letter = grade.charAt(0).toUpperCase();
-  if (letter === "A" || letter === "B" || letter === "C" || letter === "D") {
+  if (
+    letter === "A" ||
+    letter === "B" ||
+    letter === "C" ||
+    letter === "D" ||
+    letter === "F"
+  ) {
     return `/certificates/grade-${letter.toLowerCase()}.png`;
   }
-  return "/certificates/grade-d.png";
+  return "/certificates/grade-f.png";
 }

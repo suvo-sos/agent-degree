@@ -282,3 +282,21 @@ export function certificateImageFor(grade: string): string {
       : "f";
   return `https://res.cloudinary.com/at9olbna/image/upload/agent-degree/certificate-grade-${l}.png`;
 }
+
+// Download URL for a grade's certificate. Same Cloudinary image, but
+// with fl_attachment so the server sends Content-Disposition: attachment
+// and the browser downloads it instead of opening it. The plain download
+// attribute on an <a> is ignored for cross-origin URLs, so this flag is
+// what actually makes the download work.
+export function certificateDownloadUrl(grade: string): string {
+  const letter = grade.charAt(0).toUpperCase();
+  const l =
+    letter === "A" ||
+    letter === "B" ||
+    letter === "C" ||
+    letter === "D" ||
+    letter === "F"
+      ? letter.toLowerCase()
+      : "f";
+  return `https://res.cloudinary.com/at9olbna/image/upload/fl_attachment/agent-degree/certificate-grade-${l}.png`;
+}

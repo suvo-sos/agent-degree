@@ -17,6 +17,7 @@ import {
   CHALLENGE_NAMES,
   TEST_NAMES,
   certificateImageFor,
+  certificateDownloadUrl,
   computeScore,
   finishTimer,
   formatDuration,
@@ -214,7 +215,7 @@ export function Celebration({
                 className="h-[46vh] w-auto rounded-lg shadow-2xl ring-1 ring-white/10"
               />
               <a
-                href={certificateImageFor(grade)}
+                href={certificateDownloadUrl(grade)}
                 download="agent-degree-certificate.png"
                 className="group relative mt-5 inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-[linear-gradient(135deg,#8b6914,#d4af37_45%,#f5d76e_55%,#8b6914)] px-8 font-instrument-serif text-lg font-semibold tracking-wide text-[#2a1a05] shadow-[0_0_35px_rgba(212,175,55,0.35)] ring-1 ring-[#6b4f0a] transition-all duration-300 hover:shadow-[0_0_50px_rgba(212,175,55,0.55)]"
               >

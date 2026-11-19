@@ -17,7 +17,7 @@ import {
 } from "@/lib/results";
 
 // Shared leaderboard, backed by Neon Postgres. The page reads the live top
-// 10 from /api/leaderboard — most points first, then fastest time. When
+// 5 from /api/leaderboard — most points first, then fastest time. When
 // the API or database is not reachable, it falls back to the seeded entries
 // plus this browser's own finished run (localStorage).
 type Entry = {
@@ -64,7 +64,7 @@ export default function LeaderboardPage() {
         if (!cancelled && rows.length > 0) {
           const identity = getIdentity();
           setEntries(
-            rows.slice(0, 10).map((r) => ({
+            rows.slice(0, 5).map((r) => ({
               name: r.name,
               x: r.x_handle || undefined,
               points: r.points,
@@ -108,7 +108,7 @@ export default function LeaderboardPage() {
       const deduped = sorted.filter(
         (e, i) => sorted.findIndex((o) => o.name === e.name) === i,
       );
-      setEntries(deduped.slice(0, 10));
+      setEntries(deduped.slice(0, 5));
     }
 
     load();
@@ -119,7 +119,7 @@ export default function LeaderboardPage() {
 
   const ranked = [...entries]
     .sort((a, b) => b.points - a.points || a.seconds - b.seconds)
-    .slice(0, 10);
+    .slice(0, 5);
 
   return (
     <div className="relative flex min-h-screen items-start overflow-hidden bg-black px-6 pt-24 pb-16 font-sans text-white">
@@ -214,7 +214,7 @@ export default function LeaderboardPage() {
         </div>
 
         <p className="mt-8 font-mono text-xs text-zinc-500">
-          Showing up to 10 agents. More appear as they finish the exam.
+          Showing up to 5 agents. More appear as they finish the exam.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

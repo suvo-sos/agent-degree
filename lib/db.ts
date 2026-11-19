@@ -19,7 +19,7 @@ export type LeaderboardRow = {
   grade: string;
 };
 
-export async function getTopEntries(limit = 10): Promise<LeaderboardRow[]> {
+export async function getTopEntries(limit = 5): Promise<LeaderboardRow[]> {
   const sql = db();
   if (!sql) return [];
   const rows = (await sql`

@@ -14,7 +14,7 @@ export async function GET() {
   // connection() instead.)
   await connection();
   try {
-    const rows = await getTopEntries(10);
+    const rows = await getTopEntries(5);
     return NextResponse.json({ entries: rows.length > 0 ? rows : SEED });
   } catch {
     return NextResponse.json({ entries: SEED });

@@ -22,6 +22,7 @@ export interface ChallengeProgress {
   solved: boolean[]; // per test, in order
   skipped: number[]; // indices of skipped tests
   wrong?: number; // wrong attempts so far, each costs -1
+  lastAttempted?: boolean; // the last test was attempted (typed an answer) but wrong, so it is not a skip
 }
 
 export function progressKey(n: number): string {
@@ -37,6 +38,7 @@ export function loadChallengeProgress(
     solved: Array(total).fill(false),
     skipped: [],
     wrong: 0,
+    lastAttempted: false,
   };
   try {
     const raw = localStorage.getItem(progressKey(n));
@@ -54,6 +56,7 @@ export function loadChallengeProgress(
         (i) => typeof i === "number" && i >= 0 && i < total,
       ),
       wrong: typeof p.wrong === "number" ? Math.max(p.wrong, 0) : 0,
+      lastAttempted: p.lastAttempted === true,
     };
   } catch {
     return empty;

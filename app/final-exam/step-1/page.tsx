@@ -240,6 +240,9 @@ export default function StepOne() {
   const [wrong, setWrong] = useState<number>(() =>
     loadChallengeProgress(1, 5).wrong ?? 0,
   );
+  const [lastAttempted, setLastAttempted] = useState<boolean>(() =>
+    loadChallengeProgress(1, 5).lastAttempted === true,
+  );
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(1, 5).solved,
   );
@@ -422,12 +425,20 @@ export default function StepOne() {
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
-  const done = step === 4 && (currentSolved || skipped.includes(step));
+  const done =
+    step === 4 &&
+    (currentSolved || skipped.includes(step) || lastAttempted);
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(1, { step, solved, skipped, wrong });
-  }, [step, solved, skipped, wrong]);
+    saveChallengeProgress(1, {
+      step,
+      solved,
+      skipped,
+      wrong,
+      lastAttempted,
+    });
+  }, [step, solved, skipped, wrong, lastAttempted]);
 
   function pickTile(i: number) {
     if (gridCarTiles.includes(i)) {
@@ -451,7 +462,14 @@ export default function StepOne() {
 
   function next() {
     if (!currentSolved) {
-      setSkipped((prev) => [...prev, step]);
+      // On the last test, a typed answer that is wrong is a wrong
+      // attempt, not a skip. The user tried; they did not skip it.
+      if (step === 4 && typed.trim() !== "") {
+        setWrong((w) => w + 1);
+        setLastAttempted(true);
+      } else {
+        setSkipped((prev) => [...prev, step]);
+      }
     }
     if (step < 4) setStep(step + 1);
   }
@@ -752,8 +770,9 @@ export default function StepOne() {
         {done && !allSolved && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <p className="font-grotesque text-3xl font-semibold text-amber-400">
-              Challenge 1 finished — {skipped.length} test
-              {skipped.length > 1 ? "s" : ""} skipped.
+              {skipped.length > 0
+                ? `Challenge 1 finished — ${skipped.length} test${skipped.length > 1 ? "s" : ""} skipped.`
+                : `Challenge 1 finished — ${solved.length - solvedCount} test${solved.length - solvedCount > 1 ? "s" : ""} not solved.`}
             </p>
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.

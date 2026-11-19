@@ -272,19 +272,19 @@ export const TEST_NAMES: Record<number, string[]> = {
     "Menu Option 6",
     "Progress bar to 75",
     "Colour picker",
-    "Switch on",
-    "Settings tab",
+    "Resizable panels",
+    "Pagination",
     "Accordion Section 3",
     "4 stars",
-    "Search banana",
-    "Counter to 5",
+    "Font picker",
+    "Crop",
     "Tick Apple and Mango",
   ],
   4: [
-    "Log In",
+    "Scratch Card",
     "Verify Your Email",
     "Listen and Book",
-    "Watch and Answer",
+    "Project Stack",
     "Test 5",
   ],
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
@@ -293,7 +293,7 @@ export const TEST_NAMES: Record<number, string[]> = {
 // Each question is 1 mark. A test with N questions is worth N marks.
 // A wrong attempt costs -1. Skipping a test costs nothing and earns no
 // point: it is simply not solved. Score is points minus wrong (floored
-// at 0). Total is the sum of all questions across all challenges (42).
+// at 0). Total is the sum of all questions across all challenges (40).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Confetti } from "@/components/ui/confetti";
 import {
@@ -19,7 +19,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
   AccordionContent,
@@ -37,6 +36,16 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { GOOGLE_FONTS, TARGET_FONTS } from "@/lib/fonts";
+import {
   loadChallengeProgress,
   saveChallengeProgress,
   saveChallengeResults,
@@ -44,8 +53,50 @@ import {
 
 const STORAGE_KEY = "agent-degree-progress";
 const TARGET_COLOUR = "#885566";
-const FRUITS = ["Apple", "Banana", "Cherry", "Mango", "Orange"];
-const TABS = ["Home", "Profile", "Settings"];
+
+// Crop test (test 9): a white image with a big green rectangle in the
+// middle, 480x480. The green rectangle is at (100, 185), 280x110. The crop
+// box starts as the whole photo. The agent shrinks it down, but the crop
+// must stay MUCH BIGGER than the green rectangle and contain it fully —
+// the green shape sits inside a big crop. So the box must be within
+// [340, 430] wide and [180, 310] tall (smaller than the full photo, so
+// the agent has to shrink it, but still much bigger than the green).
+const CROP_SIZE = 480;
+const GREEN_RECT = { x: 100, y: 185, w: 280, h: 110 };
+const CROP_MIN_W = 340;
+const CROP_MIN_H = 180;
+const CROP_MAX_W = 430;
+const CROP_MAX_H = 310;
+
+// A white image with a green rectangle inside it. viewBox crops the region
+// shown, so the same component renders the full photo and the crop preview.
+function CropPhoto({ viewBox, idPrefix }: { viewBox: string; idPrefix: string }) {
+  return (
+    <svg
+      viewBox={viewBox}
+      className="h-full w-full"
+      role="img"
+      aria-label="A white image with a green rectangle inside it"
+    >
+      <rect width={CROP_SIZE} height={CROP_SIZE} fill="#ffffff" />
+      <rect
+        x={GREEN_RECT.x}
+        y={GREEN_RECT.y}
+        width={GREEN_RECT.w}
+        height={GREEN_RECT.h}
+        rx="6"
+        fill="#22c55e"
+      />
+    </svg>
+  );
+}
+// The full Google Fonts list (1,961 families) plus the app's own Grotesque
+// font, which is the one the test wants. Only Grotesque renders in its real
+// font; the rest are names to search through.
+const FONTS = ["Grotesque", ...GOOGLE_FONTS];
+const FONT_CLASS: Record<string, string> = {
+  Grotesque: "font-grotesque",
+};
 
 function TestCard({
   title,
@@ -102,17 +153,123 @@ export default function StepThree() {
   // A small tolerance (2%) because dragging to an exact pixel is hard.
   const [leftSize, setLeftSize] = useState(50);
   const [topSize, setTopSize] = useState(25);
-  // 5. Tabs
-  const [activeTab, setActiveTab] = useState("Home");
+  // 5. Pagination — 250 pages, go to page 3.
+  const [currentPage, setCurrentPage] = useState(1);
   // 6. Accordion
   const [openSection, setOpenSection] = useState<number | null>(null);
   // 7. Stars
   const [rating, setRating] = useState(0);
-  // 8. Search
-  const [query, setQuery] = useState("");
-  const [fruitPicked, setFruitPicked] = useState<string | null>(null);
-  // 9. Counter
-  const [count, setCount] = useState(0);
+  // 8. Font — a different target font is picked on each fresh run, stored
+  // in localStorage so a reload keeps the same target mid-attempt.
+  const TARGET_FONT_KEY = "agent-degree-c3t8-target";
+  const [targetFont, setTargetFont] = useState<string>(() => {
+    if (typeof window === "undefined") return TARGET_FONTS[0];
+    const stored = localStorage.getItem(TARGET_FONT_KEY);
+    if (stored && TARGET_FONTS.includes(stored)) return stored;
+    const pick =
+      TARGET_FONTS[Math.floor(Math.random() * TARGET_FONTS.length)];
+    localStorage.setItem(TARGET_FONT_KEY, pick);
+    return pick;
+  });
+  const [fontQuery, setFontQuery] = useState("");
+  const [pickedFont, setPickedFont] = useState<string | null>(null);
+  const [appliedFont, setAppliedFont] = useState<string | null>(null);
+  // 9. Crop — the crop box starts as the whole photo. The agent drags the
+  // corner handles to shrink it down so it sits fully inside the green
+  // rectangle, then clicks Crop. Any white in the crop costs -1.
+  const cropRef = useRef<HTMLDivElement>(null);
+  const [cropBox, setCropBox] = useState({ x: 0, y: 0, w: CROP_SIZE, h: CROP_SIZE });
+  const [cropApplied, setCropApplied] = useState(false);
+  const cropDrag = useRef<
+    | { type: "move"; dx: number; dy: number }
+    | { type: "resize"; handle: "nw" | "ne" | "sw" | "se" }
+    | null
+  >(null);
+  // The crop is right when the green rectangle sits fully inside a crop
+  // box that is much bigger than the green — not a tight crop, a big one.
+  const cropContainsGreen =
+    cropBox.x <= GREEN_RECT.x &&
+    cropBox.y <= GREEN_RECT.y &&
+    cropBox.x + cropBox.w >= GREEN_RECT.x + GREEN_RECT.w &&
+    cropBox.y + cropBox.h >= GREEN_RECT.y + GREEN_RECT.h;
+  const cropBigEnough =
+    cropBox.w >= CROP_MIN_W &&
+    cropBox.h >= CROP_MIN_H &&
+    cropBox.w <= CROP_MAX_W &&
+    cropBox.h <= CROP_MAX_H;
+  const cropSolved = cropApplied && cropContainsGreen && cropBigEnough;
+
+  function handleCrop() {
+    setCropApplied(true);
+    // A crop that cuts off the green, or is not a big crop, is wrong: -1.
+    if (!cropContainsGreen || !cropBigEnough) setWrong((w) => w + 1);
+  }
+
+  function cropPointerPos(e: React.PointerEvent) {
+    const rect = cropRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  function onCropBoxPointerDown(e: React.PointerEvent) {
+    const p = cropPointerPos(e);
+    if (!p) return;
+    cropDrag.current = { type: "move", dx: p.x - cropBox.x, dy: p.y - cropBox.y };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }
+
+  function onCropHandlePointerDown(handle: "nw" | "ne" | "sw" | "se") {
+    return (e: React.PointerEvent) => {
+      e.stopPropagation();
+      cropDrag.current = { type: "resize", handle };
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    };
+  }
+
+  function onCropPointerMove(e: React.PointerEvent) {
+    const drag = cropDrag.current;
+    if (!drag) return;
+    const p = cropPointerPos(e);
+    if (!p) return;
+    const MIN = 40;
+    setCropBox((b) => {
+      if (drag.type === "move") {
+        const x = Math.max(0, Math.min(CROP_SIZE - b.w, p.x - drag.dx));
+        const y = Math.max(0, Math.min(CROP_SIZE - b.h, p.y - drag.dy));
+        return { ...b, x, y };
+      }
+      // Resize from the dragged corner; the opposite corner stays fixed.
+      const right = b.x + b.w;
+      const bottom = b.y + b.h;
+      let { x, y, w, h } = b;
+      if (drag.handle === "se") {
+        w = Math.max(MIN, Math.min(CROP_SIZE - x, p.x - x));
+        h = Math.max(MIN, Math.min(CROP_SIZE - y, p.y - y));
+      } else if (drag.handle === "sw") {
+        const nx = Math.max(0, Math.min(right - MIN, p.x));
+        w = right - nx;
+        x = nx;
+        h = Math.max(MIN, Math.min(CROP_SIZE - y, p.y - y));
+      } else if (drag.handle === "ne") {
+        w = Math.max(MIN, Math.min(CROP_SIZE - x, p.x - x));
+        const ny = Math.max(0, Math.min(bottom - MIN, p.y));
+        h = bottom - ny;
+        y = ny;
+      } else {
+        const nx = Math.max(0, Math.min(right - MIN, p.x));
+        const ny = Math.max(0, Math.min(bottom - MIN, p.y));
+        w = right - nx;
+        h = bottom - ny;
+        x = nx;
+        y = ny;
+      }
+      return { x, y, w, h };
+    });
+  }
+
+  function onCropPointerUp() {
+    cropDrag.current = null;
+  }
   // 10. Checkboxes
   const [checked, setChecked] = useState<string[]>([]);
 
@@ -121,11 +278,29 @@ export default function StepThree() {
   const colourSolved = appliedColour === TARGET_COLOUR;
   const resizeSolved =
     Math.abs(leftSize - 30) <= 2 && Math.abs(topSize - 55) <= 2;
-  const tabsSolved = activeTab === "Settings";
+  const pageSolved = currentPage === 3;
   const accordionSolved = openSection === 3;
   const starsSolved = rating === 4;
-  const searchSolved = fruitPicked === "Banana";
-  const counterSolved = count === 5;
+  const fontSolved = appliedFont === targetFont;
+
+  // Load a Google Font on demand so the suvo text renders in the real font.
+  // "Grotesque" is the app's own font (font-grotesque class), not Google.
+  function loadGoogleFont(family: string) {
+    if (family === "Grotesque") return;
+    const id = `gf-${family.replace(/\s+/g, "-").toLowerCase()}`;
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `https://fonts.googleapis.com/css2?family=${family.replace(/\s+/g, "+")}:wght@400;700&display=swap`;
+    document.head.appendChild(link);
+  }
+
+  // Preload the target font so it renders instantly when the agent sets it.
+  useEffect(() => {
+    loadGoogleFont(targetFont);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetFont]);
   const boxesSolved =
     checked.includes("Apple") &&
     checked.includes("Mango") &&
@@ -136,11 +311,11 @@ export default function StepThree() {
     progressSolved,
     colourSolved,
     resizeSolved,
-    tabsSolved,
+    pageSolved,
     accordionSolved,
     starsSolved,
-    searchSolved,
-    counterSolved,
+    fontSolved,
+    cropSolved,
     boxesSolved,
   ];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
@@ -212,7 +387,8 @@ export default function StepThree() {
     }
   }
 
-  // Save the result once, when the run ends.
+  // Save the result once, when the run ends. Clear the stored target font
+  // so the next run picks a different one.
   useEffect(() => {
     if (done) {
       saveProgress({ step3: true });
@@ -220,13 +396,19 @@ export default function StepThree() {
         saveProgress({ step3Passed: true });
       }
       saveChallengeResults(3, solved, wrong, points);
+      localStorage.removeItem(TARGET_FONT_KEY);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
 
-  const filteredFruits = FRUITS.filter((f) =>
-    f.toLowerCase().includes(query.trim().toLowerCase()),
-  );
+  // Only search once the agent types; cap the menu at 10 matches so the
+  // list of 1,962 fonts never renders all at once.
+  const filteredFonts =
+    fontQuery.trim() === ""
+      ? []
+      : FONTS.filter((f) =>
+          f.toLowerCase().includes(fontQuery.trim().toLowerCase()),
+        ).slice(0, 10);
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
@@ -440,40 +622,64 @@ export default function StepThree() {
               )}
 
               {step === 4 && (
-                <TestCard title="Open the Settings tab." solved={tabsSolved}>
-                  
-                  <Tabs
-                    value={activeTab}
-                    onValueChange={setActiveTab}
-                    className="mt-5"
-                  >
-                    <TabsList className="mx-auto flex justify-center bg-zinc-900">
-                      {TABS.map((t) => (
-                        <TabsTrigger
-                          key={t}
-                          value={t}
-                          className="font-mono text-sm"
-                        >
-                          {t}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                    <TabsContent value="Home">
-                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
-                        This is the home panel.
-                      </p>
-                    </TabsContent>
-                    <TabsContent value="Profile">
-                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
-                        This is the profile panel.
-                      </p>
-                    </TabsContent>
-                    <TabsContent value="Settings">
-                      <p className="mt-4 text-center font-mono text-sm text-zinc-400">
-                        This is the settings panel.
-                      </p>
-                    </TabsContent>
-                  </Tabs>
+                <TestCard title="Go to page 3 of 250." solved={pageSolved}>
+
+                  <div className="mx-auto mt-5 max-w-md">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage((p) => Math.max(1, p - 1));
+                            }}
+                          />
+                        </PaginationItem>
+                        {[1, 2, 3].map((n) => (
+                          <PaginationItem key={n}>
+                            <PaginationLink
+                              href="#"
+                              isActive={currentPage === n}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentPage(n);
+                              }}
+                            >
+                              {n}
+                            </PaginationLink>
+                          </PaginationItem>
+                        ))}
+                        <PaginationItem>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationLink
+                            href="#"
+                            isActive={currentPage === 250}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(250);
+                            }}
+                          >
+                            250
+                          </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                          <PaginationNext
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage((p) => Math.min(250, p + 1));
+                            }}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                    <p className="mt-4 text-center font-mono text-sm text-zinc-400">
+                      Page {currentPage} of 250
+                    </p>
+                  </div>
                 </TestCard>
               )}
 
@@ -540,24 +746,40 @@ export default function StepThree() {
               )}
 
               {step === 7 && (
-                <TestCard title="Search for banana, then click Banana." solved={searchSolved}>
-                  
+                <TestCard title={<>Make the word suvo use the <span className="font-bold text-white">{targetFont}</span> font.</>} solved={fontSolved}>
+
                   <div className="mx-auto mt-5 max-w-md">
+                    <p
+                      aria-label="Preview text"
+                      className={`text-center text-6xl font-bold ${appliedFont === "Grotesque" ? "font-grotesque" : ""}`}
+                      style={
+                        appliedFont && appliedFont !== "Grotesque"
+                          ? { fontFamily: `'${appliedFont}', sans-serif` }
+                          : undefined
+                      }
+                    >
+                      suvo
+                    </p>
+                    <p className="mt-2 text-center font-mono text-sm text-zinc-400">
+                      {appliedFont
+                        ? `Font: ${appliedFont}`
+                        : "No font set yet."}
+                    </p>
                     <Input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Search the fruits…"
-                      aria-label="Search the fruits"
-                      className="font-mono"
+                      value={fontQuery}
+                      onChange={(e) => setFontQuery(e.target.value)}
+                      placeholder="Search fonts…"
+                      aria-label="Search fonts"
+                      className="mt-5 font-mono"
                     />
                     <div className="mt-3 space-y-2">
-                      {filteredFruits.map((f) => (
+                      {filteredFonts.map((f) => (
                         <button
                           key={f}
                           type="button"
-                          onClick={() => setFruitPicked(f)}
-                          className={`block w-full rounded-lg border px-4 py-3 text-left font-mono text-sm transition-colors ${
-                            fruitPicked === f
+                          onClick={() => setPickedFont(f)}
+                          className={`block w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${FONT_CLASS[f] ?? "font-sans"} ${
+                            pickedFont === f
                               ? "border-blue-500 bg-blue-500/10 text-white"
                               : "border-zinc-700 text-zinc-200 hover:border-zinc-400"
                           }`}
@@ -565,37 +787,81 @@ export default function StepThree() {
                           {f}
                         </button>
                       ))}
-                      {filteredFruits.length === 0 && (
+                      {filteredFonts.length === 0 && (
                         <p className="py-3 text-center font-mono text-sm text-zinc-500">
-                          No fruits found.
+                          No fonts found.
                         </p>
                       )}
                     </div>
+                    <Button
+                      onClick={() => {
+                        if (pickedFont) {
+                          loadGoogleFont(pickedFont);
+                          setAppliedFont(pickedFont);
+                        }
+                      }}
+                      disabled={!pickedFont}
+                      className="mt-4 w-full font-mono"
+                    >
+                      Set
+                    </Button>
                   </div>
                 </TestCard>
               )}
 
               {step === 8 && (
-                <TestCard title="Click the plus button until the counter shows 5." solved={counterSolved}>
-                  
-                  <p className="mt-6 text-center font-mono text-6xl font-bold tabular-nums">
-                    {count}
-                  </p>
-                  <div className="mt-6 flex justify-center gap-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => setCount((c) => Math.max(0, c - 1))}
-                      aria-label="Decrease counter"
-                      className="h-12 w-12 font-mono text-2xl"
+                <TestCard title="Crop a big area around the green rectangle." solved={cropSolved}>
+
+                  <div className="mx-auto mt-5 w-fit">
+                    <div
+                      ref={cropRef}
+                      className="relative overflow-hidden rounded-xl"
+                      style={{ width: CROP_SIZE, height: CROP_SIZE }}
                     >
-                      −
-                    </Button>
+                      <CropPhoto viewBox={`0 0 ${CROP_SIZE} ${CROP_SIZE}`} idPrefix="crop-main" />
+                      {/* crop box — drag the corners to shrink it onto the green rectangle */}
+                      <div
+                        role="slider"
+                        aria-label="Crop rectangle"
+                        aria-valuetext={`Crop box at ${Math.round(cropBox.x)}, ${Math.round(cropBox.y)}, ${Math.round(cropBox.w)} by ${Math.round(cropBox.h)}`}
+                        className="absolute cursor-grab touch-none rounded-sm border-2 border-blue-500 shadow-[0_0_0_9999px_rgba(0,0,0,0.55)] active:cursor-grabbing"
+                        style={{
+                          left: cropBox.x,
+                          top: cropBox.y,
+                          width: cropBox.w,
+                          height: cropBox.h,
+                        }}
+                        onPointerDown={onCropBoxPointerDown}
+                        onPointerMove={onCropPointerMove}
+                        onPointerUp={onCropPointerUp}
+                      >
+                        {/* corner handles — drag to resize, like a normal photo crop tool */}
+                        <span
+                          onPointerDown={onCropHandlePointerDown("nw")}
+                          className="absolute top-0 left-0 h-4 w-4 cursor-nwse-resize rounded-[2px] border border-blue-700 bg-white"
+                        />
+                        <span
+                          onPointerDown={onCropHandlePointerDown("ne")}
+                          className="absolute top-0 right-0 h-4 w-4 cursor-nesw-resize rounded-[2px] border border-blue-700 bg-white"
+                        />
+                        <span
+                          onPointerDown={onCropHandlePointerDown("sw")}
+                          className="absolute bottom-0 left-0 h-4 w-4 cursor-nesw-resize rounded-[2px] border border-blue-700 bg-white"
+                        />
+                        <span
+                          onPointerDown={onCropHandlePointerDown("se")}
+                          className="absolute right-0 bottom-0 h-4 w-4 cursor-nwse-resize rounded-[2px] border border-blue-700 bg-white"
+                        />
+                      </div>
+                    </div>
+                    <p className="mt-3 text-center font-mono text-sm text-zinc-400">
+                      Crop box: {Math.round(cropBox.x)}, {Math.round(cropBox.y)}, {Math.round(cropBox.w)}×{Math.round(cropBox.h)} (green is at 100, 185, 280×110 — the crop must be bigger and contain it)
+                    </p>
                     <Button
-                      onClick={() => setCount((c) => c + 1)}
-                      aria-label="Increase counter"
-                      className="h-12 w-12 font-mono text-2xl"
+                      onClick={handleCrop}
+                      className="mt-4 w-full font-mono"
                     >
-                      +
+                      Crop
                     </Button>
                   </div>
                 </TestCard>

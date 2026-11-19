@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import { Button } from "@/components/ui/button";
+import { Confetti } from "@/components/ui/confetti";
 import {
   Card,
   CardContent
@@ -237,6 +238,9 @@ export default function StepFour() {
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
+      {done && (
+        <Confetti className="pointer-events-none absolute inset-0 z-50 size-full" />
+      )}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
       <div className="relative mx-auto flex w-full max-w-4xl flex-1 flex-col">
         <div className="flex items-center justify-between">

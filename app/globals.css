@@ -111,25 +111,6 @@
   }
 }
 
-/* Siri waveform bars: rise and fall in sequence, like Siri listening. */
-.siri-wave-bar {
-  height: 22px;
-  transform-origin: bottom;
-  animation: siri-wave 1.2s ease-in-out infinite;
-}
-
-@keyframes siri-wave {
-  0%,
-  100% {
-    transform: scaleY(0.2);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
-
 .animate-fade-up {
   opacity: 0;
   animation: fade-up 0.7s ease-out forwards;

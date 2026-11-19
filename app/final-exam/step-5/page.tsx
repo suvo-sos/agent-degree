@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Confetti } from "@/components/ui/confetti";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
@@ -202,6 +203,9 @@ export default function StepFive() {
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden bg-black px-6 pt-12 pb-28 font-sans text-white">
+      {done && (
+        <Confetti className="pointer-events-none absolute inset-0 z-50 size-full" />
+      )}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-96 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.25),transparent_65%)]" />
       <div className="relative mx-auto flex w-full max-w-2xl flex-1 flex-col">
         <div className="flex items-center justify-between">

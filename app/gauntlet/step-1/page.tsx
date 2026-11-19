@@ -156,7 +156,12 @@ export default function StepOne() {
           >
             ← Back
           </Button>
-          <span className="font-mono text-sm text-zinc-400">Challenge 1/5</span>
+          <div className="text-right leading-tight">
+            <div className="font-mono text-sm text-zinc-400">Challenge 1/5</div>
+            <div className="font-mono text-sm text-zinc-500">
+              {step + 1}/{solved.length}
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col justify-center py-8">

@@ -4,12 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardHeader,
+  CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,11 +38,6 @@ function TestCard({
         </h2>
       ) : null}
       <Card className="flex min-h-[520px] flex-col">
-        {solved && (
-          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
-            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-          </CardHeader>
-        )}
         <CardContent className="flex flex-1 flex-col justify-center">
           {children}
         </CardContent>
@@ -239,7 +232,7 @@ export default function StepFour() {
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
-            onClick={() => router.push("/gauntlet")}
+            onClick={() => router.push("/final-exam")}
             className="font-mono"
           >
             ← Back
@@ -588,7 +581,7 @@ export default function StepFour() {
             <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 4 passed.
             </p>
-            <Link href="/gauntlet">
+            <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
@@ -603,7 +596,7 @@ export default function StepFour() {
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
-            <Link href="/gauntlet">
+            <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>

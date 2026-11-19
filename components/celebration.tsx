@@ -123,7 +123,7 @@ export function Celebration({
             <p className="font-mono text-sm text-zinc-600">
               No results yet. Finish the Final Exam first.
             </p>
-            <Link href="/gauntlet">
+            <Link href="/final-exam">
               <Button className="mt-5 font-mono">Go to the Final Exam</Button>
             </Link>
           </div>
@@ -223,7 +223,7 @@ export function Celebration({
             </div>
 
             <div className="mt-8 text-center">
-              <Link href="/gauntlet">
+              <Link href="/final-exam">
                 <Button variant="outline" className="font-mono">
                   Back to the Final Exam
                 </Button>

@@ -38,31 +38,31 @@ const STEPS: Step[] = [
     n: 1,
     title: "I Am Agent",
     icon: BotIcon,
-    href: "/gauntlet/step-1",
+    href: "/final-exam/step-1",
   },
   {
     n: 2,
     title: "Paperwork Hell",
     icon: FileTextIcon,
-    href: "/gauntlet/step-2",
+    href: "/final-exam/step-2",
   },
   {
     n: 3,
     title: "The Control Room",
     icon: SlidersHorizontalIcon,
-    href: "/gauntlet/step-3",
+    href: "/final-exam/step-3",
   },
   {
     n: 4,
     title: "Prove It's You",
     icon: FingerPrintIcon,
-    href: "/gauntlet/step-4",
+    href: "/final-exam/step-4",
   },
   {
     n: 5,
     title: "Homework You Can't Skip",
     icon: ShieldAlertIcon,
-    href: "/gauntlet/step-5",
+    href: "/final-exam/step-5",
   },
 ];
 

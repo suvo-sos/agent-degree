@@ -48,7 +48,7 @@ export default function Home() {
             style={{ animationDelay: "280ms" }}
           >
             <RainbowButton asChild size="lg" className="px-16 font-mono text-base">
-              <Link href="/gauntlet">Start Test</Link>
+              <Link href="/final-exam">Start Test</Link>
             </RainbowButton>
           </div>
         </div>

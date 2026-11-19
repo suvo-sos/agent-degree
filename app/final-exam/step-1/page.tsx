@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
-  CardHeader,
+  CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,7 +17,50 @@ import {
 
 const TARGET = 69;
 const STORAGE_KEY = "agent-degree-progress";
-const TEXT_ANSWER = "AGENT7";
+
+// Type-the-text code: fresh random 10 characters on every visit —
+// uppercase letters, digits and special characters, so it is never the
+// same code twice. At least 2 special characters and 2 digits are forced
+// in, the rest are sampled from the full pool.
+const TEXT_LETTERS = "ABCDEFGHJKMNPQRSTUVWXYZ";
+const TEXT_DIGITS = "23456789";
+const TEXT_SPECIAL = "!@#$%&*?";
+const TEXT_POOL = TEXT_LETTERS + TEXT_DIGITS + TEXT_SPECIAL;
+
+function makeTextCode(): {
+  code: string;
+  chars: { ch: string; rot: number; size: number; dy: number }[];
+  dots: { left: number; top: number; size: number; op: number }[];
+} {
+  const pick = (pool: string) =>
+    pool[Math.floor(Math.random() * pool.length)];
+  const out: string[] = [];
+  // Force 2 special chars and 2 digits so the code always has them.
+  out.push(pick(TEXT_SPECIAL), pick(TEXT_SPECIAL));
+  out.push(pick(TEXT_DIGITS), pick(TEXT_DIGITS));
+  while (out.length < 10) out.push(pick(TEXT_POOL));
+  // Shuffle so the forced chars are not always first.
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  const code = out.join("");
+  const chars = out.map((ch) => ({
+    ch,
+    rot: Math.floor(Math.random() * 41) - 20, // -20..20 degrees
+    size: 34 + Math.floor(Math.random() * 16), // 34..49px
+    dy: Math.floor(Math.random() * 17) - 8, // -8..8px vertical jitter
+  }));
+  // Tiny faded dots scattered over the characters, to break the letterforms
+  // up and make the code extremely hard to read.
+  const dots = Array.from({ length: 110 }, () => ({
+    left: 12 + Math.random() * 76, // % across the text area
+    top: 18 + Math.random() * 64, // % down the text area
+    size: Math.random() < 0.7 ? 1 : 2, // 1-2px, mostly 1px
+    op: 0.3 + Math.random() * 0.5, // faint: 0.3..0.8
+  }));
+  return { code, chars, dots };
+}
 
 // Car-grid image pools. Each visit gets a fresh random round: 1-6 cars
 // picked from the car pool, the rest filled from the non-car pool.
@@ -98,6 +139,40 @@ function shapeName(shape: JigsawShape): string {
   }
 }
 
+// SVG mask that cuts the gap shape out of the picture: white = photo shows,
+// black = hole (transparent). Returns a CSS mask-image data URI, or null.
+function jigsawMask(
+  shape: JigsawShape,
+  w: number,
+  h: number,
+  x: number,
+  y: number,
+  s: number,
+): string | null {
+  if (w <= 0 || h <= 0 || s <= 0) return null;
+  const cx = x + s / 2;
+  const cy = y + s / 2;
+  let hole = "";
+  if (shape === "circle") {
+    hole = `<circle cx="${cx}" cy="${cy}" r="${s / 2}" fill="black"/>`;
+  } else if (shape === "triangle") {
+    hole = `<polygon points="${cx},${y} ${x},${y + s} ${x + s},${y + s}" fill="black"/>`;
+  } else if (shape === "star") {
+    const pts: [number, number][] = [
+      [50, 0], [61, 35], [98, 35], [68, 57], [79, 91],
+      [50, 70], [21, 91], [32, 57], [2, 35], [39, 35],
+    ];
+    const str = pts
+      .map(([px, py]) => `${x + (px / 100) * s},${y + (py / 100) * s}`)
+      .join(" ");
+    hole = `<polygon points="${str}" fill="black"/>`;
+  } else {
+    hole = `<rect x="${x}" y="${y}" width="${s}" height="${s}" rx="6" fill="black"/>`;
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="${w}" height="${h}" fill="white"/>${hole}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+}
+
 interface GridTile {
   src: string;
   isCar: boolean;
@@ -131,15 +206,6 @@ function makeGridRound(): { tiles: GridTile[]; carCount: number } {
   return { tiles, carCount };
 }
 
-const DISTORTED = [
-  { ch: "A", rot: -8, size: 44 },
-  { ch: "G", rot: 6, size: 40 },
-  { ch: "E", rot: -5, size: 46 },
-  { ch: "N", rot: 9, size: 42 },
-  { ch: "T", rot: -7, size: 44 },
-  { ch: "7", rot: 5, size: 40 },
-];
-
 function TestCard({
   title,
   solved,
@@ -157,11 +223,6 @@ function TestCard({
         </h2>
       ) : null}
       <Card className="flex min-h-[520px] flex-col">
-        {solved && (
-          <CardHeader className="flex flex-row items-center justify-end space-y-0 pb-0">
-            <Badge className="bg-green-600 font-mono text-white">Solved ✓</Badge>
-          </CardHeader>
-        )}
         <CardContent className="flex flex-1 flex-col justify-center">
           {children}
         </CardContent>
@@ -192,6 +253,90 @@ export default function StepOne() {
   const [boxSize, setBoxSize] = useState({ w: 0, h: 0 });
   const boxRef = useRef<HTMLDivElement>(null);
   const [typed, setTyped] = useState("");
+  const [textRound, setTextRound] = useState<ReturnType<
+    typeof makeTextCode
+  > | null>(null);
+  const textCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Draw the code as pixels on a canvas, never as DOM text. The agent
+  // must read it with vision — it cannot pull the characters out of the
+  // page, because they are not in the DOM anywhere.
+  useEffect(() => {
+    const canvas = textCanvasRef.current;
+    if (!canvas || !textRound) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const W = canvas.width;
+    const H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    // Characters: faint grey, each rotated and jittered.
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const slot = W / textRound.chars.length;
+    textRound.chars.forEach((c, i) => {
+      const x = slot * (i + 0.5);
+      const y = H / 2 + c.dy;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate((c.rot * Math.PI) / 180);
+      ctx.font = `700 ${c.size}px ui-monospace, monospace`;
+      ctx.fillStyle = "rgba(113, 113, 122, 0.7)";
+      ctx.fillText(c.ch, 0, 0);
+      ctx.restore();
+    });
+    // Thick hand-drawn orange band across the middle of the characters:
+    // only the top of each character and a little of the bottom stay
+    // visible. Wavy edges so it reads like a pencil stroke, not a ruler.
+    const bandTop = H / 2 - 10;
+    const bandBottom = H / 2 + 10;
+    const wobble = () => (Math.random() - 0.5) * 5;
+    ctx.beginPath();
+    ctx.moveTo(6, bandTop + wobble());
+    for (let x = 6; x <= W - 6; x += 18) {
+      ctx.lineTo(x, bandTop + wobble());
+    }
+    ctx.lineTo(W - 6, bandBottom + wobble());
+    for (let x = W - 6; x >= 6; x -= 18) {
+      ctx.lineTo(x, bandBottom + wobble());
+    }
+    ctx.closePath();
+    ctx.fillStyle = "rgba(249, 115, 22, 0.92)";
+    ctx.fill();
+    // A thinner sketchy orange stroke along the band, for the pencil feel.
+    ctx.beginPath();
+    ctx.moveTo(6, bandTop + 3 + wobble());
+    for (let x = 6; x <= W - 6; x += 22) {
+      ctx.lineTo(x, bandTop + 3 + wobble());
+    }
+    ctx.strokeStyle = "rgba(234, 88, 12, 0.7)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Crossing noise lines, faint.
+    ctx.strokeStyle = "rgba(82, 82, 91, 0.6)";
+    ctx.lineWidth = 1;
+    const lines: [number, number, number, number][] = [
+      [10, H * 0.35, W - 10, H * 0.55],
+      [10, H * 0.6, W - 10, H * 0.4],
+      [10, H * 0.25, W - 10, H * 0.7],
+      [10, H * 0.75, W - 10, H * 0.3],
+      [10, H * 0.5, W - 10, H * 0.5],
+    ];
+    for (const [x1, y1, x2, y2] of lines) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+    // Tiny faded dots over the characters.
+    for (const d of textRound.dots) {
+      const x = (d.left / 100) * W;
+      const y = (d.top / 100) * H;
+      ctx.fillStyle = `rgba(161, 161, 170, ${d.op})`;
+      ctx.beginPath();
+      ctx.arc(x, y, d.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }, [textRound, step]);
   const [gridRound, setGridRound] = useState<{
     tiles: GridTile[];
     carCount: number;
@@ -206,6 +351,11 @@ export default function StepOne() {
   // Fresh random jigsaw round on every visit: new photo, new shape, new gap.
   useEffect(() => {
     setJigsawRound(makeJigsawRound());
+  }, []);
+
+  // Fresh random 10-character code on every visit.
+  useEffect(() => {
+    setTextRound(makeTextCode());
   }, []);
 
   // Measure the picture box so the piece shows the exact missing part.
@@ -239,6 +389,18 @@ export default function StepOne() {
     ? jigsawRound.gy * Math.max(boxSize.h - piecePx, 0)
     : 0;
   const shapeLabel = jigsawRound ? shapeName(jigsawRound.shape) : "square";
+  // The hole is a plain cut in the picture (mask), no dark fill, no outline.
+  const holeMask =
+    jigsawRound && !piecePlaced
+      ? jigsawMask(
+          jigsawRound.shape,
+          boxSize.w,
+          boxSize.h,
+          gapLeft,
+          gapTop,
+          piecePx,
+        )
+      : null;
 
   const checkboxSolved = agentChecked;
   const gridSolved =
@@ -247,7 +409,8 @@ export default function StepOne() {
     picked.length === gridCarCount;
   const sliderSolved = value === TARGET;
   const jigsawSolved = piecePlaced;
-  const textSolved = typed.trim().toUpperCase() === TEXT_ANSWER;
+  const textSolved =
+    textRound !== null && typed.trim().toUpperCase() === textRound.code;
   const liveSolved = [
     checkboxSolved,
     gridSolved,
@@ -333,7 +496,7 @@ export default function StepOne() {
         <div className="flex items-center justify-between">
           <Button
             variant="outline"
-            onClick={() => router.push("/gauntlet")}
+            onClick={() => router.push("/final-exam")}
             className="font-mono"
           >
             ← Back
@@ -449,7 +612,7 @@ export default function StepOne() {
 
               {step === 3 && (
                 <TestCard
-                  title={`Drag the ${shapeLabel} piece into the missing ${shapeLabel} hole \u2014 or click the piece, then click the hole.`}
+                  title={`Put the ${shapeLabel} piece in the hole.`}
                   solved={jigsawSolved}
                 >
                   <div
@@ -461,6 +624,15 @@ export default function StepOne() {
                       src={jigsawRound?.image ?? "/challenge-1/jigsaw-mountain.jpg"}
                       alt="Picture with a missing piece"
                       className="block h-full w-full rounded-lg object-cover"
+                      style={
+                        holeMask
+                          ? {
+                              maskImage: holeMask,
+                              WebkitMaskImage: holeMask,
+                              maskMode: "luminance",
+                            }
+                          : undefined
+                      }
                     />
                     {jigsawRound && boxSize.w > 0 && !piecePlaced && (
                       <button
@@ -474,29 +646,14 @@ export default function StepOne() {
                           placePiece();
                         }}
                         aria-label={`Empty ${shapeLabel} hole in the picture`}
-                        className="absolute cursor-pointer"
+                        className="absolute cursor-pointer bg-transparent"
                         style={{
                           left: gapLeft,
                           top: gapTop,
                           width: piecePx,
                           height: piecePx,
                         }}
-                      >
-                        <svg viewBox="0 0 100 100" className="h-full w-full">
-                          {jigsawRound.shape === "square" && (
-                            <rect x="3" y="3" width="94" height="94" rx="6" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" />
-                          )}
-                          {jigsawRound.shape === "circle" && (
-                            <circle cx="50" cy="50" r="47" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" />
-                          )}
-                          {jigsawRound.shape === "triangle" && (
-                            <polygon points="50,5 95,95 5,95" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" strokeLinejoin="round" />
-                          )}
-                          {jigsawRound.shape === "star" && (
-                            <polygon points="50,3 61,35 97,35 68,57 79,91 50,70 21,91 32,57 3,35 39,35" fill="rgba(0,0,0,0.65)" stroke="rgba(255,255,255,0.9)" strokeWidth="2.5" strokeDasharray="7 5" strokeLinejoin="round" />
-                          )}
-                        </svg>
-                      </button>
+                      />
                     )}
                     {jigsawRound && boxSize.w > 0 && piecePlaced && (
                       <div
@@ -545,11 +702,6 @@ export default function StepOne() {
                       />
                     </div>
                   )}
-                  {piecePlaced && (
-                    <p className="mt-5 text-center font-mono text-base font-semibold text-green-400">
-                      Solved ✓ — the piece fits.
-                    </p>
-                  )}
                   {pieceSelected && !piecePlaced && (
                     <p className="mt-4 text-center font-mono text-sm text-blue-400">
                       Piece picked up — now click the hole.
@@ -561,24 +713,16 @@ export default function StepOne() {
               {step === 4 && (
                 <TestCard title="Type the characters you see." solved={textSolved}>
                   
-                  <div
-                    className="relative mx-auto flex items-end justify-center gap-1 py-8"
-                    aria-label="Distorted text to type"
-                  >
-                    {DISTORTED.map((l, i) => (
-                      <span
-                        key={i}
-                        className="inline-block font-mono font-bold text-white"
-                        style={{
-                          transform: `rotate(${l.rot}deg)`,
-                          fontSize: l.size,
-                        }}
-                      >
-                        {l.ch}
-                      </span>
-                    ))}
-                    <span className="pointer-events-none absolute left-1/2 top-1/2 h-0.5 w-64 -translate-x-1/2 -translate-y-1/2 rotate-6 bg-zinc-500/70" />
-                    <span className="pointer-events-none absolute left-1/2 top-1/2 h-0.5 w-64 -translate-x-1/2 -translate-y-1/2 -rotate-3 bg-zinc-500/70" />
+                  <div className="relative mx-auto flex justify-center py-8">
+                    {/* The code is pixels on a canvas, not DOM text — the
+                        agent has to see it to read it. */}
+                    <canvas
+                      ref={textCanvasRef}
+                      width={520}
+                      height={120}
+                      aria-label="Distorted text to type"
+                      className="h-[120px] w-[520px] max-w-full"
+                    />
                   </div>
                   <Input
                     value={typed}
@@ -599,7 +743,7 @@ export default function StepOne() {
             <p className="font-grotesque text-3xl font-semibold text-green-400">
               Challenge 1 passed.
             </p>
-            <Link href="/gauntlet">
+            <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>
@@ -614,7 +758,7 @@ export default function StepOne() {
             <p className="mt-3 font-mono text-base text-zinc-400">
               Solve every test to pass. Retry from the Final Exam.
             </p>
-            <Link href="/gauntlet">
+            <Link href="/final-exam">
               <Button className="mt-8 h-12 px-8 font-mono text-base font-semibold">Back to the Final Exam</Button>
             </Link>
           </div>

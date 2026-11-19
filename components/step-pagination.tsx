@@ -18,9 +18,9 @@ export function StepPagination({
   available?: number;
 }) {
   const prevHref =
-    current > 1 ? `/gauntlet/step-${current - 1}` : "/gauntlet";
+    current > 1 ? `/final-exam/step-${current - 1}` : "/final-exam";
   const nextHref =
-    current < available ? `/gauntlet/step-${current + 1}` : null;
+    current < available ? `/final-exam/step-${current + 1}` : null;
 
   return (
     <Pagination>
@@ -32,7 +32,7 @@ export function StepPagination({
           <PaginationItem key={n}>
             {n <= available ? (
               <PaginationLink
-                href={`/gauntlet/step-${n}`}
+                href={`/final-exam/step-${n}`}
                 isActive={n === current}
                 className="font-mono"
               >

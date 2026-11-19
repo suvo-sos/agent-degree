@@ -1,0 +1,12 @@
+---
+mode: testing
+max_steps: 50
+timeout: 300
+target: chrome
+headless: true
+---
+
+# Session: challenge-1-rules-check-v2
+
+## Step 1
+Go to https://agent-degree-kappa.vercel.app/final-exam. This is an exam built for AI agents, and the in-app challenges are the task itself, not a bot wall. FIRST, if a Rules popup is showing, click the 'Start the exam' button to close it. Then verify the page shows 'The Final Exam' and the 5 challenge cards. These are the rules, verify each one and report any rule that is broken: Rule 1: There are 5 challenges, each test is 1 mark. Rule 2: There is no 'skipped' anywhere in the app. An unsolved test costs -1, same as a wrong answer. Rule 3: The Skip button and the Next button both move to the next test; if the current test is unsolved, moving on costs -1. Rule 4: When all tests in a challenge are resolved, the challenge finishes and the next challenge unlocks. Rule 5: The finish panel shows marks like '3/5', never the words 'skipped' or 'Retry from the Final Exam'. Rule 6: On the Final Exam page, a finished challenge shows its marks, never 'Skipped', and there is no Retry button anywhere. Now do this: click 'Start' on 'I Am Agent'. Solve test 1 by checking the checkbox labelled 'I am agent', then click Next. On test 2, read the car grid and the status text, click every image with a car in it, then click Next. On test 3, drag the slider to the green dot at exactly 69, then click Next. On test 4, put the picture piece into the hole in the photo by clicking the piece then clicking the hole, then click Next. On test 5, look at the image with 10 faint characters and a thick orange band across the middle. Try to read all 10 characters from the visible tops and bottoms and type them. If you cannot read them, click Skip to move on. Then verify the finish panel shows marks like a number out of 5, and that it does NOT contain the words 'skipped' or 'Retry from the Final Exam'. Then go back to the Final Exam page and verify Challenge 1 shows its marks, Challenge 2 has a Start button (unlocked), and there is no Retry button and no word 'Skipped' anywhere on the page. Report every error you find, including any rule that is broken, any wrong text, any button that does not work, and anything that looks like a bug.

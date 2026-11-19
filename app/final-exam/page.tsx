@@ -24,6 +24,7 @@ import {
 import { GlareHover } from "@/components/ui/glare-hover";
 import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedBeam } from "@/components/ui/animated-beam";
+import SiriWave from "@/components/siri-wave";
 import { ensureTimerStart, getResults } from "@/lib/results";
 
 type Step = {
@@ -122,6 +123,18 @@ export default function FinalExam() {
     (s) => passed[`step${s.n}`] || passed[`step${s.n}Skipped`],
   );
 
+  // The current challenge: the first one that is unlocked but not yet
+  // completed. It gets the Siri wave at the bottom of its card.
+  const currentN = STEPS.find((s) => {
+    const isCompleted =
+      !!passed[`step${s.n}`] || !!passed[`step${s.n}Skipped`];
+    const prevCompleted =
+      s.n === 1 ||
+      !!passed[`step${s.n - 1}`] ||
+      !!passed[`step${s.n - 1}Skipped`];
+    return prevCompleted && !isCompleted;
+  })?.n;
+
   // Marks for a completed-but-not-passed challenge, e.g. "3/5".
   function challengeMarks(n: number): string {
     return marks[n] ?? "Completed";
@@ -212,6 +225,7 @@ export default function FinalExam() {
                           />
                         </div>
                       )}
+                      {step.n === currentN && <SiriWave />}
                     </Card>
                   </MagicCard>
                 </GlareHover>

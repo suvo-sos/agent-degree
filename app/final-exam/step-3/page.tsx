@@ -86,6 +86,9 @@ export default function StepThree() {
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(3, 10).solved,
   );
+  const [savedPoints] = useState<number[]>(() =>
+    loadChallengeProgress(3, 10).points ?? Array(10).fill(0),
+  );
 
   // 1. Menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -139,6 +142,19 @@ export default function StepThree() {
     boxesSolved,
   ];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
+  // Per-question points: each test is 1 mark, except test 10 (Apple and
+  // Mango are 2 separate questions, 1 mark each).
+  const livePoints = liveSolved.map((v, i) =>
+    i === 9
+      ? (checked.includes("Apple") ? 1 : 0) +
+        (checked.includes("Mango") ? 1 : 0)
+      : v
+        ? 1
+        : 0,
+  );
+  const points = livePoints.map((v, i) =>
+    Math.max(v, savedPoints[i] ?? 0),
+  );
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 10;
   const currentSolved = solved[step];
@@ -146,8 +162,8 @@ export default function StepThree() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(3, { step, solved, wrong, finished });
-  }, [step, solved, wrong, finished]);
+    saveChallengeProgress(3, { step, solved, points, wrong, finished });
+  }, [step, solved, points, wrong, finished]);
 
   function pickColour(i: number) {
     if (COLOURS[i] === TARGET_COLOUR) {
@@ -208,7 +224,7 @@ export default function StepThree() {
       if (allSolved) {
         saveProgress({ step3Passed: true });
       }
-      saveChallengeResults(3, solved, wrong);
+      saveChallengeResults(3, solved, wrong, points);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

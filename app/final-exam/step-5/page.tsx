@@ -56,6 +56,9 @@ export default function StepFive() {
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(5, 3).solved,
   );
+  const [savedPoints] = useState<number[]>(() =>
+    loadChallengeProgress(5, 3).points ?? [0, 0, 0],
+  );
 
   // 1. Confirm the booking
   // The task: confirm the booking for Room 101. Every click is logged
@@ -89,6 +92,11 @@ export default function StepFive() {
 
   const liveSolved = [bookingSolved, downloadSolved, pictureSolved];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
+  // Per-question points: every test here is 1 question, 1 mark.
+  const livePoints = liveSolved.map((v) => (v ? 1 : 0));
+  const points = livePoints.map((v, i) =>
+    Math.max(v, savedPoints[i] ?? 0),
+  );
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 3;
   const currentSolved = solved[step];
@@ -96,8 +104,8 @@ export default function StepFive() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(5, { step, solved, wrong, finished });
-  }, [step, solved, wrong, finished]);
+    saveChallengeProgress(5, { step, solved, points, wrong, finished });
+  }, [step, solved, points, wrong, finished]);
 
   useEffect(() => {
     if (!downloading || downloadCancelled || downloadTimedOut) return;
@@ -176,7 +184,7 @@ export default function StepFive() {
       if (allSolved) {
         saveProgress({ step5Passed: true });
       }
-      saveChallengeResults(5, solved, wrong);
+      saveChallengeResults(5, solved, wrong, points);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

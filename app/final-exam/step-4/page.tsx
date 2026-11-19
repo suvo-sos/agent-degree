@@ -60,6 +60,9 @@ export default function StepFour() {
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(4, 4).solved,
   );
+  const [savedPoints] = useState<number[]>(() =>
+    loadChallengeProgress(4, 4).points ?? [0, 0, 0, 0],
+  );
 
   // 1. Log in
   const [email, setEmail] = useState("");
@@ -86,6 +89,12 @@ export default function StepFour() {
   const [bookTime, setBookTime] = useState("");
   const [bookError, setBookError] = useState<string | null>(null);
   const [audioSolved, setAudioSolved] = useState(false);
+  // Tomorrow's date string, computed after mount (new Date() during
+  // render breaks the build).
+  const [tomorrow, setTomorrow] = useState("");
+  useEffect(() => {
+    setTomorrow(tomorrowStr());
+  }, []);
 
   // 4. Watch and answer
   const [answer, setAnswer] = useState("");
@@ -95,6 +104,18 @@ export default function StepFour() {
   const loginSolved = loggedIn;
   const liveSolved = [loginSolved, emailVerified, audioSolved, videoSolved];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
+  // Per-question points: each test is 1 mark, except test 3 (voicemail:
+  // the date and the time are 2 separate questions, 1 mark each).
+  const livePoints = [
+    loginSolved ? 1 : 0,
+    emailVerified ? 1 : 0,
+    (tomorrow !== "" && bookDate === tomorrow ? 1 : 0) +
+      (bookTime === "16:00" ? 1 : 0),
+    videoSolved ? 1 : 0,
+  ];
+  const points = livePoints.map((v, i) =>
+    Math.max(v, savedPoints[i] ?? 0),
+  );
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 4;
   const currentSolved = solved[step];
@@ -102,8 +123,8 @@ export default function StepFour() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(4, { step, solved, wrong, finished });
-  }, [step, solved, wrong, finished]);
+    saveChallengeProgress(4, { step, solved, points, wrong, finished });
+  }, [step, solved, points, wrong, finished]);
 
   function tryLogin() {
     if (
@@ -226,7 +247,7 @@ export default function StepFour() {
       if (allSolved) {
         saveProgress({ step4Passed: true });
       }
-      saveChallengeResults(4, solved, wrong);
+      saveChallengeResults(4, solved, wrong, points);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

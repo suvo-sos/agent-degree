@@ -87,6 +87,16 @@ function matchesPerson(p: Person, target: Person) {
   );
 }
 
+function countMatchingFields(p: Person, target: Person) {
+  let n = 0;
+  if (norm(p.name) === norm(target.name)) n++;
+  if (norm(p.age) === norm(target.age)) n++;
+  if (norm(p.job) === norm(target.job)) n++;
+  if (norm(p.company) === norm(target.company)) n++;
+  if (norm(p.city) === norm(target.city)) n++;
+  return n;
+}
+
 function TestCard({
   title,
   solved,
@@ -201,6 +211,9 @@ export default function StepTwo() {
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(2, 5).solved,
   );
+  const [savedPoints] = useState<number[]>(() =>
+    loadChallengeProgress(2, 5).points ?? [0, 0, 0, 0, 0],
+  );
   const [t1, setT1] = useState<Person>(EMPTY_PERSON);
   const [t2, setT2] = useState<Person>(EMPTY_PERSON);
   const [t3Type, setT3Type] = useState("");
@@ -243,6 +256,22 @@ export default function StepTwo() {
     signSolved,
   ];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
+  // Per-question points: each field is 1 mark. Test 4 only counts the
+  // 2 fields that were wrong (age, city); the other 3 were pre-filled
+  // correctly, so they are not questions the agent answers.
+  const livePoints = [
+    countMatchingFields(t1, ARJUN),
+    countMatchingFields(t2, PRIYA),
+    (t3Type === "full-time" ? 1 : 0) +
+      (t3Dept === "Design" ? 1 : 0) +
+      (t3Date === "2025-03-10" ? 1 : 0),
+    (norm(t4.age) === norm(PRIYA.age) ? 1 : 0) +
+      (norm(t4.city) === norm(PRIYA.city) ? 1 : 0),
+    (signatureOk ? 1 : 0) + (declared ? 1 : 0) + (dateOk ? 1 : 0),
+  ];
+  const points = livePoints.map((v, i) =>
+    Math.max(v, savedPoints[i] ?? 0),
+  );
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
@@ -250,8 +279,8 @@ export default function StepTwo() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(2, { step, solved, wrong, finished });
-  }, [step, solved, wrong, finished]);
+    saveChallengeProgress(2, { step, solved, points, wrong, finished });
+  }, [step, solved, points, wrong, finished]);
 
   function next() {
     if (step < 4) {
@@ -287,7 +316,7 @@ export default function StepTwo() {
       if (allSolved) {
         saveProgress({ step2Passed: true });
       }
-      saveChallengeResults(2, solved, wrong);
+      saveChallengeResults(2, solved, wrong, points);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);
@@ -332,20 +361,24 @@ export default function StepTwo() {
               {step === 1 && (
                 <TestCard title="Read the document, then fill in the form." solved={documentSolved}>
                   
-                  <div className="mx-auto mt-5 max-w-md">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/challenge-2/document.jpg"
-                      alt="Employee record document"
-                      className="w-full rounded-lg border border-zinc-700"
-                    />
+                  <div className="mt-5 flex items-start gap-6">
+                    <div className="w-56 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/challenge-2/document.jpg"
+                        alt="Employee record document"
+                        className="w-full rounded-lg border border-zinc-700"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <PersonForm value={t2} onChange={setT2} />
+                    </div>
                   </div>
-                  <PersonForm value={t2} onChange={setT2} />
                 </TestCard>
               )}
 
               {step === 2 && (
-                <TestCard title="Arjun joins Brightlane as a full-time designer in the Design team. His first day is 10 March 2025." solved={optionsSolved}>
+                <TestCard title="Fill in Arjun's employment details: full-time, Design team, starting 10 March 2025." solved={optionsSolved}>
                   
                   <div className="mt-5 space-y-5">
                     <div>

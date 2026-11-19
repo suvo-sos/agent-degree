@@ -15,6 +15,7 @@ import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { Spotlight } from "@/components/ui/spotlight";
 import {
   CHALLENGE_NAMES,
+  QUESTION_COUNTS,
   TEST_NAMES,
   certificateImageFor,
   certificateDownloadUrl,
@@ -26,6 +27,7 @@ import {
   getTimer,
   gradeFor,
   isFinalExamComplete,
+  pointsForSolved,
   testStatus,
   timerElapsedMs,
   type ResultsMap,
@@ -310,9 +312,12 @@ export function Celebration({
                 {[1, 2, 3, 4, 5].map((n) => {
                   const names = TEST_NAMES[n] ?? [];
                   const r = results[n];
-                  const count = r?.solved.length ?? names.length;
-                  const correct = r?.solved.filter(Boolean).length ?? 0;
-                  const marks = Math.max(0, correct - (r?.wrong ?? 0));
+                  const counts = QUESTION_COUNTS[n] ?? [];
+                  const count = counts.reduce((a, b) => a + b, 0);
+                  const pts =
+                    r?.points ?? pointsForSolved(n, r?.solved ?? []);
+                  const earned = pts.reduce((a, b) => a + b, 0);
+                  const marks = Math.max(0, earned - (r?.wrong ?? 0));
                   return (
                     <div key={n}>
                       <div className="flex items-baseline justify-between border-b border-zinc-800 pb-2">
@@ -324,29 +329,39 @@ export function Celebration({
                         </p>
                       </div>
                       <div className="mt-2 space-y-1">
-                        {Array.from({ length: count }, (_, i) => {
-                          const status = testStatus(n, i, results);
-                          const name = names[i] ?? `Test ${i + 1}`;
-                          return (
-                            <div
-                              key={i}
-                              className="flex items-center justify-between py-1 font-mono text-sm"
-                            >
-                              <span className="text-zinc-300">
-                                Test {i + 1} — {name}
-                              </span>
-                              {status === "solved" ? (
-                                <span className="font-semibold text-green-400">
-                                  ✓ Correct
+                        {Array.from(
+                          { length: r?.solved.length ?? names.length },
+                          (_, i) => {
+                            const status = testStatus(n, i, results);
+                            const name = names[i] ?? `Test ${i + 1}`;
+                            const q = counts[i] ?? 1;
+                            const p = pts[i] ?? 0;
+                            return (
+                              <div
+                                key={i}
+                                className="flex items-center justify-between py-1 font-mono text-sm"
+                              >
+                                <span className="text-zinc-300">
+                                  Test {i + 1} — {name}
                                 </span>
-                              ) : (
-                                <span className="font-semibold text-red-400">
-                                  ✗ Not solved
-                                </span>
-                              )}
-                            </div>
-                          );
-                        })}
+                                {status === "solved" ? (
+                                  <span className="font-semibold text-green-400">
+                                    ✓ Correct
+                                    {q > 1 ? ` (${p}/${q})` : ""}
+                                  </span>
+                                ) : p > 0 ? (
+                                  <span className="font-semibold text-amber-400">
+                                    {p}/{q} correct
+                                  </span>
+                                ) : (
+                                  <span className="font-semibold text-red-400">
+                                    ✗ Not solved
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          },
+                        )}
                       </div>
                     </div>
                   );

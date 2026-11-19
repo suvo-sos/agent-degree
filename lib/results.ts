@@ -5,6 +5,7 @@ export type TestStatus = "solved" | "unsolved";
 
 export interface ChallengeResult {
   solved: boolean[]; // per test, in order
+  points?: number[]; // per test, correct questions (1 mark each)
   wrong?: number; // wrong attempts in this challenge, each costs -1
 }
 
@@ -50,6 +51,7 @@ export function saveIdentity(identity: AgentIdentity) {
 export interface ChallengeProgress {
   step: number; // current test index (0-based)
   solved: boolean[]; // per test, in order
+  points?: number[]; // per test, correct questions (1 mark each)
   wrong?: number; // wrong attempts so far, each costs -1
   finished?: boolean; // the challenge is done (all tests resolved, solved or not)
 }
@@ -74,12 +76,17 @@ export function loadChallengeProgress(
     const p = JSON.parse(raw) as Partial<ChallengeProgress>;
     const solved = Array.isArray(p.solved) ? p.solved.slice(0, total) : [];
     while (solved.length < total) solved.push(false);
+    const points = Array.isArray(p.points)
+      ? p.points.slice(0, total)
+      : pointsForSolved(n, solved.map(Boolean));
+    while (points.length < total) points.push(0);
     return {
       step:
         typeof p.step === "number"
           ? Math.min(Math.max(p.step, 0), total - 1)
           : 0,
       solved: solved.map(Boolean),
+      points: points.map((v) => (typeof v === "number" ? Math.max(v, 0) : 0)),
       wrong: typeof p.wrong === "number" ? Math.max(p.wrong, 0) : 0,
       finished: p.finished === true,
     };
@@ -171,6 +178,7 @@ export function saveChallengeResults(
   challenge: number,
   solved: boolean[],
   wrong = 0,
+  points?: number[],
 ) {
   try {
     const prev = JSON.parse(
@@ -178,7 +186,14 @@ export function saveChallengeResults(
     ) as ResultsMap;
     localStorage.setItem(
       RESULTS_KEY,
-      JSON.stringify({ ...prev, [challenge]: { solved, wrong } }),
+      JSON.stringify({
+        ...prev,
+        [challenge]: {
+          solved,
+          points: points ?? pointsForSolved(challenge, solved),
+          wrong,
+        },
+      }),
     );
   } catch {
     // progress is best-effort
@@ -211,6 +226,31 @@ export const CHALLENGE_NAMES: Record<number, string> = {
   4: "Prove It's You",
   5: "Homework You Can't Skip",
 };
+
+// How many questions each test has. Every question is 1 mark, so a test
+// with 2 questions is worth 2 marks. Totals: C1 5, C2 18, C3 11, C4 5,
+// C5 3 — 42 marks for the whole exam.
+export const QUESTION_COUNTS: Record<number, number[]> = {
+  1: [1, 1, 1, 1, 1],
+  2: [5, 5, 3, 2, 3],
+  3: [1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+  4: [1, 1, 2, 1],
+  5: [1, 1, 1],
+};
+
+export function totalQuestions(challenge: number): number {
+  return (QUESTION_COUNTS[challenge] ?? []).reduce((a, b) => a + b, 0);
+}
+
+// Points for a test: full marks if solved, 0 if not. Used when a saved
+// result has no per-question points (results saved before points existed).
+export function pointsForSolved(
+  challenge: number,
+  solved: boolean[],
+): number[] {
+  const counts = QUESTION_COUNTS[challenge] ?? [];
+  return solved.map((s, i) => (s ? (counts[i] ?? 1) : 0));
+}
 
 // Test names per challenge (index = test number - 1).
 export const TEST_NAMES: Record<number, string[]> = {
@@ -250,21 +290,28 @@ export const TEST_NAMES: Record<number, string[]> = {
   5: ["Confirm the Booking", "The 40GB Report", "The Picture That Talks"],
 };
 
-// Each solved test is 1 mark. A wrong attempt costs -1. Skipping a test
-// costs nothing and earns no point: it is simply not solved. Score is
-// solved minus wrong (floored at 0).
+// Each question is 1 mark. A test with N questions is worth N marks.
+// A wrong attempt costs -1. Skipping a test costs nothing and earns no
+// point: it is simply not solved. Score is points minus wrong (floored
+// at 0). Total is the sum of all questions across all challenges (42).
 export function computeScore(results: ResultsMap) {
   let total = 0;
   let solved = 0;
+  let points = 0;
   let wrong = 0;
-  for (const r of Object.values(results)) {
-    total += r.solved.length;
+  for (const [key, r] of Object.entries(results)) {
+    const challenge = Number(key);
+    const counts = QUESTION_COUNTS[challenge] ?? [];
+    total += counts.reduce((a, b) => a + b, 0);
     solved += r.solved.filter(Boolean).length;
+    const pts =
+      r.points ?? pointsForSolved(challenge, r.solved);
+    points += pts.reduce((a, b) => a + b, 0);
     wrong += r.wrong ?? 0;
   }
-  const score = Math.max(0, solved - wrong);
+  const score = Math.max(0, points - wrong);
   const pct = total === 0 ? 0 : Math.round((score / total) * 100);
-  return { total, solved, wrong, score, pct };
+  return { total, solved, wrong, points, score, pct };
 }
 
 // Grade bands: 90+ A+, 80-89 A, 70-79 B, 60-69 C, 50-59 D, below 50 F.

@@ -244,6 +244,9 @@ export default function StepOne() {
   const [savedSolved] = useState<boolean[]>(() =>
     loadChallengeProgress(1, 5).solved,
   );
+  const [savedPoints] = useState<number[]>(() =>
+    loadChallengeProgress(1, 5).points ?? [0, 0, 0, 0, 0],
+  );
   const [value, setValue] = useState(0);
   const [agentChecked, setAgentChecked] = useState(false);
   const [picked, setPicked] = useState<number[]>([]);
@@ -420,6 +423,11 @@ export default function StepOne() {
     textSolved,
   ];
   const solved = liveSolved.map((v, i) => v || savedSolved[i]);
+  // Per-question points: every test here is 1 question, 1 mark.
+  const livePoints = liveSolved.map((v) => (v ? 1 : 0));
+  const points = livePoints.map((v, i) =>
+    Math.max(v, savedPoints[i] ?? 0),
+  );
   const solvedCount = solved.filter(Boolean).length;
   const allSolved = solvedCount === 5;
   const currentSolved = solved[step];
@@ -427,8 +435,8 @@ export default function StepOne() {
 
   // Persist in-progress state so a reload resumes where you left off.
   useEffect(() => {
-    saveChallengeProgress(1, { step, solved, wrong, finished });
-  }, [step, solved, wrong, finished]);
+    saveChallengeProgress(1, { step, solved, points, wrong, finished });
+  }, [step, solved, points, wrong, finished]);
 
   function pickTile(i: number) {
     if (gridCarTiles.includes(i)) {
@@ -484,7 +492,7 @@ export default function StepOne() {
       if (allSolved) {
         saveProgress({ step1Passed: true });
       }
-      saveChallengeResults(1, solved, wrong);
+      saveChallengeResults(1, solved, wrong, points);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [done]);

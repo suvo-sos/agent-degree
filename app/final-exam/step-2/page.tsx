@@ -450,16 +450,20 @@ export default function StepTwo() {
 
               {step === 3 && (
                 <TestCard title="This form was filled from Priya&apos;s record. Two values are wrong — compare with her record below and fix them." solved={fixSolved}>
-                  
-                  <div className="mx-auto mt-5 max-w-sm">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/challenge-2/document.jpg"
-                      alt="Employee record document"
-                      className="w-full rounded-lg border border-zinc-700"
-                    />
+
+                  <div className="mt-5 flex items-start gap-6">
+                    <div className="w-56 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/challenge-2/document.jpg"
+                        alt="Employee record document"
+                        className="w-full rounded-lg border border-zinc-700"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <PersonForm value={t4} onChange={setT4} />
+                    </div>
                   </div>
-                  <PersonForm value={t4} onChange={setT4} />
                 </TestCard>
               )}
 

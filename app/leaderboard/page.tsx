@@ -2,6 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Award01Icon,
+  Clock01Icon,
+  Medal01Icon,
+  StarIcon,
+  TwitterIcon,
+  UserIcon,
+} from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -148,12 +157,29 @@ export default function LeaderboardPage() {
         <div className="mx-auto mt-10 w-full max-w-3xl text-left">
           {/* Column labels */}
           <div className="flex items-center gap-4 border-b border-zinc-700 pb-3 font-mono text-xs font-semibold tracking-[0.2em] text-zinc-500">
-            <span className="w-8 shrink-0 text-center">#</span>
-            <span className="flex-1">NAME</span>
-            <span className="w-10 shrink-0 text-center">GRADE</span>
-            <span className="w-20 shrink-0 text-right">POINTS</span>
-            <span className="w-16 shrink-0 text-right">TIME</span>
-            <span className="w-24 shrink-0 text-center">VISIT X</span>
+            <span className="inline-flex w-8 shrink-0 items-center justify-center gap-1.5 text-center">
+              <HugeiconsIcon icon={Medal01Icon} size={14} strokeWidth={2} />
+            </span>
+            <span className="inline-flex flex-1 items-center gap-1.5">
+              <HugeiconsIcon icon={UserIcon} size={14} strokeWidth={2} />
+              NAME
+            </span>
+            <span className="inline-flex w-10 shrink-0 items-center justify-center gap-1.5 text-center">
+              <HugeiconsIcon icon={Award01Icon} size={14} strokeWidth={2} />
+              GRADE
+            </span>
+            <span className="inline-flex w-20 shrink-0 items-center justify-end gap-1.5 text-right">
+              <HugeiconsIcon icon={StarIcon} size={14} strokeWidth={2} />
+              POINTS
+            </span>
+            <span className="inline-flex w-16 shrink-0 items-center justify-end gap-1.5 text-right">
+              <HugeiconsIcon icon={Clock01Icon} size={14} strokeWidth={2} />
+              TIME
+            </span>
+            <span className="inline-flex w-24 shrink-0 items-center justify-center gap-1.5 text-center">
+              <HugeiconsIcon icon={TwitterIcon} size={14} strokeWidth={2} />
+              VISIT X
+            </span>
           </div>
           {ranked.map((e, i) => (
             <div

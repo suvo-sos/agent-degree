@@ -20,8 +20,60 @@ import {
 const TARGET_MIN = 70;
 const TARGET_MAX = 80;
 const STORAGE_KEY = "agent-degree-progress";
-const CAR_TILES = [1, 3, 6];
 const TEXT_ANSWER = "AGENT7";
+
+// Car-grid image pools. Each visit gets a fresh random round: 1-6 cars
+// picked from the car pool, the rest filled from the non-car pool.
+const CAR_IMAGES = [
+  "/challenge-1/tile-1.jpg",
+  "/challenge-1/tile-3.jpg",
+  "/challenge-1/tile-6.jpg",
+  "/challenge-1/car-a.jpg",
+  "/challenge-1/car-b.jpg",
+  "/challenge-1/car-c.jpg",
+];
+const OTHER_IMAGES = [
+  "/challenge-1/tile-0.jpg",
+  "/challenge-1/tile-2.jpg",
+  "/challenge-1/tile-4.jpg",
+  "/challenge-1/tile-5.jpg",
+  "/challenge-1/tile-7.jpg",
+  "/challenge-1/tile-8.jpg",
+  "/challenge-1/scene-a.jpg",
+];
+
+interface GridTile {
+  src: string;
+  isCar: boolean;
+}
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function makeGridRound(): { tiles: GridTile[]; carCount: number } {
+  const carCount = 1 + Math.floor(Math.random() * 6); // 1..6 cars
+  const cars = shuffle(CAR_IMAGES).slice(0, carCount);
+  const othersNeeded = 9 - carCount;
+  let others = shuffle(OTHER_IMAGES).slice(
+    0,
+    Math.min(othersNeeded, OTHER_IMAGES.length),
+  );
+  // Only if we need more non-cars than the pool holds, reuse from a reshuffle.
+  while (others.length < othersNeeded) {
+    others = [...others, ...shuffle(OTHER_IMAGES)].slice(0, othersNeeded);
+  }
+  const tiles = shuffle([
+    ...cars.map((src) => ({ src, isCar: true })),
+    ...others.map((src) => ({ src, isCar: false })),
+  ]);
+  return { tiles, carCount };
+}
 
 const DISTORTED = [
   { ch: "A", rot: -8, size: 44 },
@@ -78,10 +130,28 @@ export default function StepOne() {
   const [cubeSelected, setCubeSelected] = useState(false);
   const [cubePlaced, setCubePlaced] = useState(false);
   const [typed, setTyped] = useState("");
+  const [gridRound, setGridRound] = useState<{
+    tiles: GridTile[];
+    carCount: number;
+  } | null>(null);
+
+  // Fresh random car grid on every visit (generated after mount so the
+  // server prerender and the client agree).
+  useEffect(() => {
+    setGridRound(makeGridRound());
+  }, []);
+
+  const gridTiles = gridRound?.tiles ?? [];
+  const gridCarCount = gridRound?.carCount ?? 0;
+  const gridCarTiles = gridTiles
+    .map((t, i) => (t.isCar ? i : -1))
+    .filter((i) => i >= 0);
 
   const checkboxSolved = agentChecked;
   const gridSolved =
-    CAR_TILES.every((t) => picked.includes(t)) && picked.length === 3;
+    gridRound !== null &&
+    gridCarTiles.every((t) => picked.includes(t)) &&
+    picked.length === gridCarCount;
   const sliderSolved = value >= TARGET_MIN && value <= TARGET_MAX;
   const jigsawSolved = cubePlaced;
   const textSolved = typed.trim().toUpperCase() === TEXT_ANSWER;
@@ -104,7 +174,7 @@ export default function StepOne() {
   }, [step, solved, skipped]);
 
   function pickTile(i: number) {
-    if (CAR_TILES.includes(i)) {
+    if (gridCarTiles.includes(i)) {
       setPicked((prev) =>
         prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i],
       );
@@ -205,9 +275,9 @@ export default function StepOne() {
                 <TestCard title="Select every image with a car in it." solved={gridSolved}>
                   
                   <div className="mx-auto mt-5 grid max-w-md grid-cols-3 gap-2">
-                    {Array.from({ length: 9 }, (_, i) => (
+                    {gridTiles.map((tile, i) => (
                       <button
-                        key={i}
+                        key={`${tile.src}-${i}`}
                         type="button"
                         onClick={() => pickTile(i)}
                         aria-label={`Photo tile ${i + 1}`}
@@ -222,7 +292,7 @@ export default function StepOne() {
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={`/challenge-1/tile-${i}.jpg`}
+                          src={tile.src}
                           alt={`Photo tile ${i + 1}`}
                           className="h-full w-full object-cover"
                         />
@@ -235,23 +305,23 @@ export default function StepOne() {
                     </p>
                   ) : (
                     <p className="mt-4 text-center font-mono text-sm text-zinc-500">
-                      {picked.length} of 3 cars picked
+                      {picked.length} of {gridCarCount} cars picked
                     </p>
                   )}
                 </TestCard>
               )}
 
               {step === 2 && (
-                <TestCard solved={sliderSolved}>
+                <TestCard
+                  title="Drag the slider into the green zone."
+                  solved={sliderSolved}
+                >
                   <p
                     className={`text-center font-mono text-5xl font-bold tabular-nums ${
                       inZone ? "text-green-400" : "text-white"
                     }`}
                   >
                     {value}
-                  </p>
-                  <p className="mt-1 text-center font-mono text-sm text-zinc-500">
-                    drag into the green · 70–80
                   </p>
                   <div className="relative mt-8 px-6">
                     <div className="relative h-12 w-full">

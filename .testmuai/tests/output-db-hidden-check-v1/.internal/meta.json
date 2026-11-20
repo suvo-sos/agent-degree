@@ -1,0 +1,18 @@
+{
+  "test_id": "28aad369-593a-4e42-8011-0241288a7676",
+  "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
+  "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
+  "org_id": "3433793",
+  "session_name": "db-hidden-check-v1",
+  "commit_id": "ec307d5d-78f3-4801-b67f-3c350f53d9c0",
+  "testcase_id": "01M7WMPNENREPYXAXJAJFGCNBK",
+  "executions": [
+    {
+      "execution_id": "cba1a229-10d6-4d2b-8880-c781ec9c4f98",
+      "run_kind": "author",
+      "status": "failed",
+      "valid": true,
+      "at": "2026-11-20T14:12:57.778Z"
+    }
+  ]
+}

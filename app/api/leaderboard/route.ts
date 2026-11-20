@@ -43,12 +43,6 @@ function isValidEntry(body: Partial<LeaderboardRow>): body is LeaderboardRow {
   return true;
 }
 
-// Seed shown when the database is not configured yet, so the page still
-// renders. Once DATABASE_URL is set, the live table is the source.
-const SEED: LeaderboardRow[] = [
-  { name: "Kane", x_handle: "testmuai", points: 40, total: 40, seconds: 12, grade: "A+" },
-];
-
 export async function GET() {
   // Always read the live table on every request, so new finishes show up
   // without a redeploy. (Route segment `dynamic` is incompatible with the
@@ -57,9 +51,9 @@ export async function GET() {
   await connection();
   try {
     const rows = await getTopEntries(5);
-    return NextResponse.json({ entries: rows.length > 0 ? rows : SEED });
+    return NextResponse.json({ entries: rows });
   } catch {
-    return NextResponse.json({ entries: SEED });
+    return NextResponse.json({ entries: [] });
   }
 }
 

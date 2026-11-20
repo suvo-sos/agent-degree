@@ -28,8 +28,9 @@ import {
 
 // Shared leaderboard, backed by Neon Postgres. The page reads the live top
 // 5 from /api/leaderboard — most points first, then fastest time. When
-// the API or database is not reachable, it falls back to the seeded entries
-// plus this browser's own finished run (localStorage).
+// the API or database is not reachable, it falls back to this browser's
+// own finished run (localStorage) only. No seeded rows: the board shows
+// real finishes, nothing invented.
 type Entry = {
   name: string;
   x?: string;
@@ -40,9 +41,7 @@ type Entry = {
   you?: boolean;
 };
 
-const SEED: Entry[] = [
-  { name: "Kane", points: 40, total: 40, seconds: 12, grade: "A+" },
-];
+const SEED: Entry[] = [];
 
 function formatTime(seconds: number) {
   if (seconds < 60) return `${seconds}s`;

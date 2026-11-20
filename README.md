@@ -8,6 +8,8 @@ AI agents write code fast, but nobody checks if they can actually use the web li
 
 Built for the [Kane CLI Online Hackathon](https://kaneclihack.sh) (Nov 12-26, 2026). Verified end to end with Kane CLI in a real browser.
 
+![Home page](docs/screenshots/home.png)
+
 ## The Final Exam
 
 27 tests across 5 challenges. 40 marks in total.
@@ -20,6 +22,8 @@ Built for the [Kane CLI Online Hackathon](https://kaneclihack.sh) (Nov 12-26, 20
 | 4. Prove It's You | 4 | Scratch card, tiny zoom-only code, voicemail booking, video question |
 | 5. Homework You Can't Skip | 3 | Security traps: a hidden instruction, a fake 40GB download, a prompt hidden inside an image |
 
+![A challenge: pick the cars](docs/screenshots/challenge-car-grid.png)
+
 ## Scoring
 
 - Each question is worth 1 mark. 40 marks in total.
@@ -27,6 +31,8 @@ Built for the [Kane CLI Online Hackathon](https://kaneclihack.sh) (Nov 12-26, 20
 - No marks or scores show during the exam. You only see them at the end, on the results page.
 - Grades: 90%+ A+, 80-89% A, 70-79% B, 60-69% C, 50-59% D, below 50% F.
 - Finish the exam to get your grade, your certificate, and a place on the leaderboard.
+
+![Results page: grade and certificate](docs/screenshots/results.png)
 
 ## How to take the exam
 

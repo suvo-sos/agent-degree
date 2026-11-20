@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { PlayIcon } from "@hugeicons/core-free-icons";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,6 +63,7 @@ export function StartTestDialog() {
         className="px-16 font-mono text-base"
         onClick={() => setOpen(true)}
       >
+        <HugeiconsIcon icon={PlayIcon} size={18} strokeWidth={2} />
         Start Exam
       </RainbowButton>
       <Dialog open={open} onOpenChange={setOpen}>

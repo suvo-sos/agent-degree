@@ -218,9 +218,12 @@ export default function StepFour() {
   function checkScratchCode() {
     // Just show "Submitted". Correct code solves it; a wrong code
     // shows nothing more (no error, no answer) and the test stays open.
+    // A wrong (non-empty) code costs -1.
     setScratchSubmitted(true);
     if (scratchInput.trim() === secretCode) {
       setScratchSolved(true);
+    } else if (scratchInput.trim() !== "") {
+      setWrong((w) => w + 1);
     }
   }
 
@@ -244,9 +247,12 @@ export default function StepFour() {
   function checkZoomCode() {
     // Just show "Submitted". Correct code solves it; a wrong code
     // shows nothing more and the test stays open.
+    // A wrong (non-empty) code costs -1.
     setZoomSubmitted(true);
     if (zoomInput.trim() === zoomCode) {
       setZoomSolved(true);
+    } else if (zoomInput.trim() !== "") {
+      setWrong((w) => w + 1);
     }
   }
 
@@ -324,6 +330,8 @@ export default function StepFour() {
       setBookError(null);
     } else {
       setBookError("That's not when they're coming. Listen again.");
+      // A wrong booking attempt costs -1.
+      setWrong((w) => w + 1);
     }
   }
 

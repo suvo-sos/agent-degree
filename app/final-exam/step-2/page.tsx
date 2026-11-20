@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Confetti } from "@/components/ui/confetti";
 import {
@@ -109,6 +109,19 @@ function countMatchingFields(p: Person, target: Person) {
   if (norm(p.job) === norm(target.job)) n++;
   if (norm(p.company) === norm(target.company)) n++;
   if (norm(p.city) === norm(target.city)) n++;
+  return n;
+}
+
+// Wrong fields: non-empty and not matching. Empty fields are not
+// wrong — leaving a field blank is a clean skip (0), not an attempt.
+function countWrongFields(p: Person, target: Person) {
+  let n = 0;
+  if (p.name.trim() !== "" && norm(p.name) !== norm(target.name)) n++;
+  if (p.age.trim() !== "" && norm(p.age) !== norm(target.age)) n++;
+  if (p.job.trim() !== "" && norm(p.job) !== norm(target.job)) n++;
+  if (p.company.trim() !== "" && norm(p.company) !== norm(target.company))
+    n++;
+  if (p.city.trim() !== "" && norm(p.city) !== norm(target.city)) n++;
   return n;
 }
 
@@ -279,11 +292,68 @@ export default function StepTwo() {
   }, [step, solved, points, wrong, finished]);
 
   function next() {
+    // Moving on with wrong values filled in costs -1 per wrong field.
+    // Leaving fields blank is a clean skip (0). Test 5 (menubar)
+    // counts its own wrong clicks, so it adds nothing here.
+    setWrong((w) => w + countWrongForStep());
     if (step < 4) {
       setStep(step + 1);
     } else {
       setFinished(true);
     }
+  }
+
+  // Test 5 (menubar): clicking a menu item other than "Search the
+  // web" costs -1. Submenu triggers (Find, Share) just open a
+  // submenu — navigation, not a wrong attempt. Menu triggers
+  // (File, Edit, ...) live in the menubar, not in a menu, so they
+  // never count. The guard below dedupes the double-fire: a portaled
+  // menu click can reach this handler twice for one click.
+  const lastMenuWrongAt = useRef(0);
+  function onMenuClick(e: React.MouseEvent) {
+    const t = e.target as HTMLElement;
+    const item = t.closest('[role="menuitem"]');
+    if (!item) return;
+    if (!item.closest('[role="menu"]')) return;
+    if (item.getAttribute("aria-haspopup") === "menu") return;
+    const text = (item.textContent ?? "").trim();
+    if (text.startsWith("Search the web")) return;
+    const now = Date.now();
+    if (now - lastMenuWrongAt.current < 500) return;
+    lastMenuWrongAt.current = now;
+    setWrong((w) => w + 1);
+  }
+
+  // Wrong fields on the current test, for the -1 on Next/Skip.
+  // Test 4 only counts its 2 fixable fields (age, city).
+  function countWrongForStep() {
+    if (step === 0) return countWrongFields(t1, ARJUN);
+    if (step === 1) return countWrongFields(t2, PRIYA);
+    if (step === 2) {
+      let n = 0;
+      if (t3Type !== "" && t3Type !== "full-time") n++;
+      if (t3Dept !== "" && t3Dept !== "Design") n++;
+      if (t3Date !== "" && t3Date !== "2025-03-10") n++;
+      return n;
+    }
+    if (step === 3) {
+      // Test 4 comes pre-filled with 2 wrong values. Only count a
+      // field if the agent CHANGED it to a wrong value — leaving a
+      // pre-filled wrong value untouched is a clean skip (0).
+      let n = 0;
+      if (
+        t4.age !== PRIYA_PREFILLED.age &&
+        norm(t4.age) !== norm(PRIYA.age)
+      )
+        n++;
+      if (
+        t4.city !== PRIYA_PREFILLED.city &&
+        norm(t4.city) !== norm(PRIYA.city)
+      )
+        n++;
+      return n;
+    }
+    return 0;
   }
 
   function saveProgress(patch: Record<string, boolean>) {
@@ -298,6 +368,8 @@ export default function StepTwo() {
   }
 
   function skipTest() {
+    // Same as Next: wrong values filled in cost -1 per wrong field.
+    setWrong((w) => w + countWrongForStep());
     if (step < 4) {
       setStep(step + 1);
     } else {
@@ -471,7 +543,8 @@ export default function StepTwo() {
                 <TestCard title="Open the Edit menu, go to Find, and click Search the web." solved={menuSolved}>
 
                   <div className="mt-8 flex justify-center">
-                    <Menubar className="w-full max-w-xl font-mono">
+                    <div onClick={onMenuClick} className="w-full max-w-xl">
+                    <Menubar className="w-full font-mono">
                       <MenubarMenu>
                         <MenubarTrigger>File</MenubarTrigger>
                         <MenubarContent>
@@ -598,6 +671,7 @@ export default function StepTwo() {
                         </MenubarContent>
                       </MenubarMenu>
                     </Menubar>
+                    </div>
                   </div>
                   {searchClicked && (
                     <p className="mt-6 text-center font-mono text-sm text-green-400">

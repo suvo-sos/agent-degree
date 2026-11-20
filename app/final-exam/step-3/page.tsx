@@ -153,6 +153,10 @@ export default function StepThree() {
   // A small tolerance (2%) because dragging to an exact pixel is hard.
   const [leftSize, setLeftSize] = useState(50);
   const [topSize, setTopSize] = useState(25);
+  // Did the agent drag the panels at all? Used for the -1: moving on
+  // with wrong sizes after dragging costs -1; never touching them is
+  // a clean skip (0).
+  const [resized, setResized] = useState(false);
   // 5. Pagination — 250 pages, go to page 3.
   const [currentPage, setCurrentPage] = useState(1);
   // 6. Accordion
@@ -345,22 +349,43 @@ export default function StepThree() {
   function setColour() {
     const hex = pickedColour.trim().toLowerCase();
     setAppliedColour(hex);
+    // A wrong colour costs -1. No error message (Suvo's call) — the
+    // box just shows the wrong colour.
+    if (hex !== TARGET_COLOUR) setWrong((w) => w + 1);
   }
 
   function setProgress() {
     const n = parseInt(progInput, 10);
     if (!Number.isNaN(n)) {
       setProgValue(Math.max(0, Math.min(100, n)));
+      // Setting a value other than 75 costs -1.
+      if (n !== 75) setWrong((w) => w + 1);
     }
   }
 
+  function goToPage(n: number) {
+    // Clicking a page other than 3 costs -1. A no-op at the boundary
+    // (already on that page) is not a wrong attempt.
+    if (n === currentPage) return;
+    setCurrentPage(n);
+    if (n !== 3) setWrong((w) => w + 1);
+  }
+
   function toggleFruit(f: string) {
+    // Checking a fruit that is not Apple or Mango costs -1.
+    // Unchecking (correcting) costs nothing.
+    if (!checked.includes(f) && f !== "Apple" && f !== "Mango") {
+      setWrong((w) => w + 1);
+    }
     setChecked((prev) =>
       prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f],
     );
   }
 
   function next() {
+    // Test 4 (resizable): moving on with wrong sizes after dragging
+    // costs -1. Never touching the panels is a clean skip (0).
+    if (step === 3 && !resizeSolved && resized) setWrong((w) => w + 1);
     if (step < 9) {
       setStep(step + 1);
     } else {
@@ -380,6 +405,8 @@ export default function StepThree() {
   }
 
   function skipTest() {
+    // Same as Next for test 4 (resizable).
+    if (step === 3 && !resizeSolved && resized) setWrong((w) => w + 1);
     if (step < 9) {
       setStep(step + 1);
     } else {
@@ -463,6 +490,8 @@ export default function StepThree() {
                             onClick={() => {
                               setMenuPicked(`Option ${i + 1}`);
                               setMenuOpen(false);
+                              // Picking an option other than 6 costs -1.
+                              if (i + 1 !== 6) setWrong((w) => w + 1);
                             }}
                           >
                             Option {i + 1}
@@ -585,7 +614,10 @@ export default function StepThree() {
                     >
                       <ResizablePanel
                         defaultSize={50}
-                        onResize={(size) => setLeftSize(size.asPercentage)}
+                        onResize={(size) => {
+                          setLeftSize(size.asPercentage);
+                          setResized(true);
+                        }}
                       >
                         <div className="flex h-[200px] items-center justify-center p-6">
                           <span className="font-mono font-semibold">One</span>
@@ -598,7 +630,10 @@ export default function StepThree() {
                         <ResizablePanelGroup orientation="vertical">
                           <ResizablePanel
                             defaultSize={25}
-                            onResize={(size) => setTopSize(size.asPercentage)}
+                            onResize={(size) => {
+                              setTopSize(size.asPercentage);
+                              setResized(true);
+                            }}
                           >
                             <div className="flex h-full items-center justify-center p-6">
                               <span className="font-mono font-semibold">Two</span>
@@ -632,7 +667,7 @@ export default function StepThree() {
                             href="#"
                             onClick={(e) => {
                               e.preventDefault();
-                              setCurrentPage((p) => Math.max(1, p - 1));
+                              goToPage(Math.max(1, currentPage - 1));
                             }}
                           />
                         </PaginationItem>
@@ -643,7 +678,7 @@ export default function StepThree() {
                               isActive={currentPage === n}
                               onClick={(e) => {
                                 e.preventDefault();
-                                setCurrentPage(n);
+                                goToPage(n);
                               }}
                             >
                               {n}
@@ -659,7 +694,7 @@ export default function StepThree() {
                             isActive={currentPage === 250}
                             onClick={(e) => {
                               e.preventDefault();
-                              setCurrentPage(250);
+                              goToPage(250);
                             }}
                           >
                             250
@@ -670,7 +705,7 @@ export default function StepThree() {
                             href="#"
                             onClick={(e) => {
                               e.preventDefault();
-                              setCurrentPage((p) => Math.min(250, p + 1));
+                              goToPage(Math.min(250, currentPage + 1));
                             }}
                           />
                         </PaginationItem>
@@ -690,15 +725,23 @@ export default function StepThree() {
                     value={
                       openSection === null ? [] : [`section-${openSection}`]
                     }
-                    onValueChange={(v) =>
+                    onValueChange={(v) => {
+                      // Opening a section other than 3 costs -1.
+                      // Closing (empty) costs nothing.
+                      if (v.length > 0) {
+                        const opened = Number(
+                          String(v[v.length - 1]).replace("section-", ""),
+                        );
+                        if (opened !== 3) setWrong((w) => w + 1);
+                      }
                       setOpenSection(
                         v.length > 0
                           ? Number(
                               String(v[v.length - 1]).replace("section-", ""),
                             )
                           : null,
-                      )
-                    }
+                      );
+                    }}
                     className="mx-auto mt-5 max-w-md"
                   >
                     {[1, 2, 3].map((n) => (
@@ -727,7 +770,11 @@ export default function StepThree() {
                       <button
                         key={n}
                         type="button"
-                        onClick={() => setRating(n)}
+                        onClick={() => {
+                          setRating(n);
+                          // Rating anything other than 4 stars costs -1.
+                          if (n !== 4) setWrong((w) => w + 1);
+                        }}
                         aria-label={`Rate ${n} star${n > 1 ? "s" : ""}`}
                         className={`text-5xl transition-colors ${
                           n <= rating ? "text-yellow-400" : "text-zinc-700"
@@ -798,6 +845,10 @@ export default function StepThree() {
                         if (pickedFont) {
                           loadGoogleFont(pickedFont);
                           setAppliedFont(pickedFont);
+                          // Setting a font other than the target costs -1.
+                          if (pickedFont !== targetFont) {
+                            setWrong((w) => w + 1);
+                          }
                         }
                       }}
                       disabled={!pickedFont}

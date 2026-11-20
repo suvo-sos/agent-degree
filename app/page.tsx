@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { TrophyIcon } from "@hugeicons/core-free-icons";
+import { Medal01Icon } from "@hugeicons/core-free-icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight";
@@ -58,7 +58,7 @@ export default function Home() {
                 size="lg"
                 className="px-8 font-mono text-base"
               >
-                <HugeiconsIcon icon={TrophyIcon} size={18} strokeWidth={2} />
+                <HugeiconsIcon icon={Medal01Icon} size={18} strokeWidth={2} />
                 View leaderboard
               </Button>
             </Link>

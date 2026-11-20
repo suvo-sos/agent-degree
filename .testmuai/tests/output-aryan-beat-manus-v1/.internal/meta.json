@@ -1,0 +1,18 @@
+{
+  "test_id": "b4380220-c241-490b-9522-3cbcb60eab37",
+  "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
+  "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
+  "org_id": "3433793",
+  "session_name": "aryan-beat-manus-v1",
+  "commit_id": "8519d46e-7034-4861-97a8-4be5f5e8a1d1",
+  "testcase_id": "01M7WQ1Q90BWTTRJG6QYKD1QQH",
+  "executions": [
+    {
+      "execution_id": "0c3083ee-eb17-495e-8772-c3f9510765d3",
+      "run_kind": "author",
+      "status": "failed",
+      "valid": true,
+      "at": "2026-11-20T15:10:10.749Z"
+    }
+  ]
+}

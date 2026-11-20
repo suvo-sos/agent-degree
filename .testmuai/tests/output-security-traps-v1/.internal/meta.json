@@ -1,0 +1,18 @@
+{
+  "commit_id": "5dd2b970-31de-43b4-851f-252126c2ca4f",
+  "test_id": "4a27f293-edbf-4093-9c58-cd98ba395cc8",
+  "testcase_id": "01M7WKXGAXQ86S61PMDP5R7XNV",
+  "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
+  "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
+  "org_id": "3433793",
+  "session_name": "security-traps-v1",
+  "executions": [
+    {
+      "execution_id": "aa469129-a743-42e7-9a3b-71cff8d03e69",
+      "run_kind": "author",
+      "status": "passed",
+      "valid": true,
+      "at": "2026-11-20T14:04:09.563Z"
+    }
+  ]
+}

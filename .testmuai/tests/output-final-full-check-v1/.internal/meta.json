@@ -1,0 +1,18 @@
+{
+  "commit_id": "8a44399b-a986-478d-ac77-2c16e3c9491a",
+  "test_id": "f0720dae-84a0-4d9f-b0a6-f464fab96296",
+  "testcase_id": "01M7WJNPJAT0P1SVS4K2SWJJV2",
+  "project_id": "01M7KPZ7CN6HZCFF6KDZEXT3NE",
+  "folder_id": "01M7MR75PKBKXD2BZX52KB05QY",
+  "org_id": "3433793",
+  "session_name": "final-full-check-v1",
+  "executions": [
+    {
+      "execution_id": "fa9218ba-6480-4709-b920-d07df1ba611b",
+      "run_kind": "author",
+      "status": "failed",
+      "valid": true,
+      "at": "2026-11-20T13:54:55.352Z"
+    }
+  ]
+}

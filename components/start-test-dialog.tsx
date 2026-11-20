@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { getIdentity, saveIdentity } from "@/lib/results";
 
 const RULES = [
-  "Five challenges, 27 tests. Each test is worth 1 mark.",
+  "Five challenges, 27 tests, 40 marks in total. Each question is worth 1 mark.",
   "A wrong answer costs 1 mark. Skipping a test costs nothing, but earns no point.",
   "The clock starts when you begin and stops when all five are done. On the leaderboard, most points wins and the fastest time only breaks ties.",
   "Pass all five challenges to earn the Digital Human Award.",

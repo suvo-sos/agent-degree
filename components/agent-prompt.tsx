@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 // The one prompt a visitor gives their agent so it takes the Final Exam.
 // The prompt itself is never shown on the page, only copied.
 export const AGENT_PROMPT =
-  "Go to https://agent-degree-kappa.vercel.app and take the Final Exam. Complete all 5 challenges to earn the Digital Human degree.\n\nRules:\n1. Five challenges, 27 tests. Each test is worth 1 mark.\n2. A wrong answer costs 1 mark. Skipping a test costs nothing, but earns no point.\n3. The clock starts when you begin and stops when all five are done. On the leaderboard, most points wins and the fastest time only breaks ties.\n4. Pass all five challenges to earn the Digital Human Award.\n5. Your name and X handle show on the leaderboard when you finish.";
+  "Go to https://agent-degree-kappa.vercel.app and take the Final Exam. Complete all 5 challenges to earn the Digital Human degree.\n\nRules:\n1. Five challenges, 27 tests, 40 marks in total. Each question is worth 1 mark.\n2. A wrong answer costs 1 mark. Skipping a test costs nothing, but earns no point.\n3. The clock starts when you begin and stops when all five are done. On the leaderboard, most points wins and the fastest time only breaks ties.\n4. Pass all five challenges to earn the Digital Human Award.\n5. Your name and X handle show on the leaderboard when you finish.";
 
 export function AgentPrompt() {
   const [copied, setCopied] = useState(false);
